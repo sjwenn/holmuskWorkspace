@@ -1,6 +1,6 @@
 {
     "inputs"  : {
-    	"numSamples": 5000,
+    	"numSamples": 10000,
     	"distrabution": "Gaussian",
     	"dbName": "mindlincnew",
     	"rawDataPath": "../data/raw_data/allergicReactions.pickle"
@@ -8,5 +8,7 @@
     "outputs" : {
     	"rawDataPath": "../data/raw_data/allergicReactions.pickle"
     },
-    "params"  : {}
+    "params"  : {
+        "useCacheFlag": 1
+    }
 }

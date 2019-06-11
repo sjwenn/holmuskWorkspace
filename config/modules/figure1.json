@@ -1,0 +1,13 @@
+{
+    "inputs"  : {
+    	"dbName": "mindlincnew",
+    	"rawDataPath": "../data/raw_data/diagnoses.pickle",
+        "dsmPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv"
+    }, 
+    "outputs" : {
+    	"rawDataPath": "../data/raw_data/diagnoses.pickle"
+    },
+    "params"  : {
+        "useCacheFlag": 1
+    }
+}

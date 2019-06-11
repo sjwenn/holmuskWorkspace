@@ -1,7 +1,13 @@
 [
     {
-        "moduleName" : "module1",
-        "path"       : "modules/module1/module1.py",
+        "moduleName" : "table1",
+        "path"       : "modules/table1/table1.py",
+        "execute"    : false,
+        "description": "",
+        "owner"      : ""
+    }, {
+        "moduleName" : "figure1",
+        "path"       : "modules/figure1/figure1.py",
         "execute"    : true,
         "description": "",
         "owner"      : ""

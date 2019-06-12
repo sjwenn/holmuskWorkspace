@@ -1,6 +1,5 @@
 {
     "inputs"  : {
-    	"maxNumSamples": 10000,
     	"dbName": "mindlincnew",
     	"intermediatePath": "../data/intermediate/"
     }, 

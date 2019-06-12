@@ -6,11 +6,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 sns.set(style="dark")
+sns.set_palette(sns.diverging_palette(240, 120, l=60, n=3, center="dark"))
 from scipy import stats
 from scipy.stats import chi2
 from scipy.stats import chi2_contingency
 import pickle
 import math
+import re
 
 import dask.array as da
 import dask.dataframe as dd
@@ -48,26 +50,10 @@ def main(logger, resultsDict):
         command line arguments. These can be used for
         overwriting command line arguments as needed.
     '''
-
-    # try:
-    #     numSamples = module1_config["inputs"]["numSamples"]
-    #     distrabution = module1_config["inputs"]["distrabution"]
-
-    #     if distrabution == 'Gaussian':
-    #         data =  (np.random.normal(0, 1, numSamples), np.random.normal(0, 1, numSamples))
-    #     else:
-    #         data = None
-
-    #     ax = sns.jointplot(data[0], data[1], alpha=0.3)
-        
-    #     slope, intercept, r_value, p_value, std_err = stats.linregress(data[0], data[1])
-    #     xi = np.linspace(-3, 3, num=20000)
-    #     ax.ax_joint.plot(xi, slope*xi+intercept, color=(0.0, 0.48, 0.1), dashes=(5, 2))
-
+    dbName = module1_config["inputs"]["dbName"]
     if module1_config["params"]["useCacheFlag"] == 0: #check if redownload requested THIS IS NOT PEP8 BUT JSON NO WORK WITH PYTHON BOOL
 
         try: # SET UP QUERY
-            dbName = module1_config["inputs"]["dbName"]
             genRetrieve = pgIO.getDataIterator("select * from jingwen.diagnoses" + ";",\
                                                 dbName = dbName, chunks = 100)
 
@@ -81,43 +67,91 @@ def main(logger, resultsDict):
             logger.error(f'Issue with SQL query: " {e}')
 
 
-        try: #SAVE THE PICKLE
-            print("-"*20) 
-            print("Saved to pickle")
-            print(rawData)
-            fileObjectSave = open(module1_config["outputs"]["rawDataPath"],'wb') 
-            pickle.dump(rawData, fileObjectSave)   
-            fileObjectSave.close()
+        try: #SAVE THE PICKLE FOR DIAGNOSES
+            fileSaveDiagnosisRaw = open(module1_config["outputs"]["intermediatePath"]+"diagnosisRaw.pickle",'wb') 
+            pickle.dump(rawData, fileSaveDiagnosisRaw)   
+            fileSaveDiagnosisRaw.close()
 
         except Exception as e:
             logger.error(f'Issue saving to pickle: " {e}')
 
     else:
-        try: #LOAD THE PICKLE
-            print("-"*20) 
-            fileObjectLoad = open(module1_config["inputs"]["rawDataPath"],'rb') 
-            rawData = pickle.load(fileObjectLoad)   
-            fileObjectLoad.close()
-            print("Load from pickle")
-            print(rawData)
+        try: #LOAD THE PICKLE FOR DIAGNOSES
+            fileLoadDiagnosisRaw = open(module1_config["inputs"]["intermediatePath"]+"diagnosisRaw.pickle",'rb') 
+            rawData = pickle.load(fileLoadDiagnosisRaw)   
+            fileLoadDiagnosisRaw.close()
 
         except Exception as e:
             logger.error(f'Issue loading from pickle: " {e}')
-
 
     try: #CONVERT TO DATAFRAME (TODO: DIRECTLY APPEND FROM SQL TO FATAFRAME)
         df = dd.io.from_dask_array(rawData, columns=['id','siteid','race','sex','age_numeric','visit_type','age', 'dsm', 'diagnosis'])
         df = df.compute() #convert to pandas TODO be less inefficient
 
     except Exception as e:
-        logger.error(f'Issue with frequency count: " {e}')
+        logger.error(f'Issue in convert dask array to dataframe: " {e}')
 
     dsm = pd.read_csv(module1_config["inputs"]["dsmPath"])
-    test = dsm.isin(['296.00']).dropna(how='all')
-    print(test[test].dropna())
-    #df['dsm']
+
+    if module1_config["params"]["useCacheFlag"] == 0: #check if redownload requested
+        try: #USE SQL TO COUNT HOW MANY DIAGNOSES PER TYPE PER RACE 
+            diagnosesBuf = [] #GET QUERY PER RACE
+            for race in ['AA', 'NHPI', 'MR']:
+                raceTotal = pgIO.getAllData("select count(*) from jingwen.comorbid where (race='"+race+"')" #TOTAL NO. PEOPLE IN RACE
+                                            ,dbName = dbName).pop()[0] 
+                print((race + " done: ").ljust(12) + str(raceTotal))
+                for column in dsm: #REMOVE FLAG
+                    queryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"')and(" #BASE QUERY
+                    for row in dsm[column]:
+                        if row==row: #TEST IF NOT NAN
+                            queryString = queryString + "(dsmno='"+row+"')or" #ADD TO QUERY
+
+                    queryString = queryString[:-2] + ")"
+                    valRetrieve = pgIO.getAllData(queryString,dbName = dbName).pop()[0]
+                    diagnosesBuf.append([valRetrieve/raceTotal*100, re.sub(r'\([^)]*\)', #REGEX TO REMOVE TEXT IN BRACKETS (CHILDHOOD-ONSET)
+                                                                           '', column), race])
+            diagnoses = pd.DataFrame(diagnosesBuf, columns=['%', 'Diagnosis', 'Race']) 
+
+        except Exception as e:
+            logger.error(f'Issue with frequency count " {e}')
+
+        try: #SAVE THE PICKLE FOR DIAGNOSES
+            fileSaveDiagnosisCount = open(module1_config["outputs"]["intermediatePath"]+"diagnosisCount.pickle",'wb') 
+            pickle.dump(diagnoses, fileSaveDiagnosisCount)   
+            fileSaveDiagnosisCount.close()
+
+        except Exception as e:
+            logger.error(f'Issue saving to pickle: " {e}')
+
+    else:
+        try: #LOAD THE PICKLE FOR DIAGNOSES
+            fileLoadDiagnosisCount = open(module1_config["inputs"]["intermediatePath"]+"diagnosisCount.pickle",'rb') 
+            diagnoses = pickle.load(fileLoadDiagnosisCount)   
+            fileLoadDiagnosisCount.close()
+
+        except Exception as e:
+            logger.error(f'Issue loading from pickle: " {e}')
 
 
+
+    try: #PLOT BARCHART
+        plt.figure(figsize=(15,8)) 
+        ax = sns.barplot(x="Diagnosis", y="%", hue="Race", data=diagnoses)
+        plt.xticks(rotation=45)
+
+        for p in ax.patches: #PUT NUMERICAL LABELS ABOVE BARS IN BAR CHART
+            height = p.get_height()
+            ax.text(p.get_x()+p.get_width()/2.,
+                    height + 0.5,
+                    '{:1.0f}'.format(height),
+                    ha="center") 
+
+
+        plt.savefig(module1_config["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
+        plt.show()
+        
+    except Exception as e:
+        logger.error(f'Issue drawing barchart: " {e}')
 
     return
 

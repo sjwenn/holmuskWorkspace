@@ -8,12 +8,18 @@
     }, {
         "moduleName" : "figure1",
         "path"       : "modules/figure1/figure1.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }, {
+        "moduleName" : "readmeGenerator",
+        "path"       : "modules/readmeGenerator/readmeGenerator.py",
+        "execute"    : true,
+        "description": "",
+        "owner"      : ""
+    },{
         "moduleName" : "celeryCheck",
-        "path"       : "modules/celeryCheck/celeryCheck.py",
+        "path"       : "modules/readmeGenerator/readmeGenerator.py",
         "execute"    : false,
         "description": "",
         "owner"      : ""

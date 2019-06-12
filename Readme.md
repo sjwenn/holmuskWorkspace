@@ -1,6 +1,12 @@
-# workspace
+# Comorbid Substance Use Disorders 
 
-One Paragraph of project description goes here
+A replication of a [study done in 2013](https://www.sciencedirect.com/science/article/abs/pii/S0022395613002732?via%3Dihub), however using data currently in the MindLinc database.
+
+| Tables        | Are           | Cool  |
+| ------------- |:-------------:| -----:|
+| col 3 is      | right-aligned | $1600 |
+| col 2 is      | centered      |   $12 
+| zebra stripes | are neat      |    $1 |
 
 ## Getting Started
 
@@ -50,9 +56,4 @@ Saw Jing Wen - Initial work (2019)
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details
 
-## Acknowledgments
-
- - Hat tip to anyone who's code was used
- - Inspiration
- - etc.
  

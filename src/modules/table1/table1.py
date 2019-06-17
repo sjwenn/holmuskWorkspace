@@ -94,6 +94,8 @@ def fetchTable1MD(logger, df):
                 valSex.at[race,label] = value
                 tableSex.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
                                                                                     + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
+                
+                                        
     except Exception as e:
         logger.error(f'Issue with printing Table 1 (Sex): " {e}')
 
@@ -108,7 +110,7 @@ def fetchTable1MD(logger, df):
                                  .replace("18-34", "**18-34**").replace("35-49", "**35-49**") \
                                  .replace("50+", "**50+**") \
                                  .replace("M", "**M**").replace("F", "**F**").replace("Others", "**Others**")\
-                                 .replace("age", "Age").replace("sex", "Sex")
+                                 .replace("age", "Age").replace("sex", "Sex").replace("race", "Race")
 
     except Exception as e:
         logger.error(f'Issue with printing Table 1 output string: " {e}')

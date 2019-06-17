@@ -113,10 +113,11 @@ def fetchTable1MD(logger, df):
                                  .replace("18-34", "**18-34**").replace("35-49", "**35-49**") \
                                  .replace("50+", "**50+**") \
                                  .replace("M", "**M**").replace("F", "**F**").replace("Others", "**Others**")\
-                                 .replace("age", "Age").replace("sex", "Sex").replace("race", "Race")\
+                                 .replace("age", "Age").replace("sex", "Sex").replace("race", "Race") \
                                  .replace("MR", "MR ("+str(raceCounts['MR'][0])+")") \
                                  .replace("AA", "AA ("+str(raceCounts['AA'][0])+")") \
                                  .replace("NHPI", "NHPI ("+str(raceCounts['NHPI'][0])+")")
+                                 # TODO: REPLACE RACECOUNTS TO LOOK BETTER
 
 
 

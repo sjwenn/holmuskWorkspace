@@ -107,7 +107,7 @@ def main(logger, resultsDict):
                 for age in ageList:
                     raceAgeTotal = pgIO.getAllData("select count(*) from jingwen.comorbid_updated where (race='"+race+"') and (age_categorical='"+age+"')" #TOTAL NO. PEOPLE IN RACE AND AGE
                             ,dbName = dbName).pop()[0] 
-                    print((Race + " done: ").ljust(12) + str(raceAgeTotal)) #DEBUG
+                    print((race + age + " done: ").ljust(12) + str(raceAgeTotal)) #DEBUG
                     for column in dsm: #REMOVE FLAG
                         queryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"') and (age_categorical='"+age+"') and (" #BASE QUERY
                         for row in dsm[column]:

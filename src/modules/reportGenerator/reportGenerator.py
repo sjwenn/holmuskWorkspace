@@ -21,8 +21,8 @@ import pandas as pd
 from lib.databaseIO import pgIO
 
 config = jsonref.load(open('../config/config.json'))
-jsonConfig = jsonref.load(open('../config/modules/readmeGenerator.json'))
-logBase = config['logging']['logBase'] + '.modules.readmeGenerator.readmeGenerator'
+jsonConfig = jsonref.load(open('../config/modules/reportGenerator.json'))
+logBase = config['logging']['logBase'] + '.modules.reportGenerator.reportGenerator'
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):

@@ -9,6 +9,6 @@
     	"intermediatePath": "../data/intermediate/"
     },
     "params"  : {
-        "useCacheFlag": 0
+        "useCacheFlag": 1
     }
 }

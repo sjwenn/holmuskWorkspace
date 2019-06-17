@@ -61,15 +61,9 @@ def fetchTable1MD(logger, df):
 
         tableString += "### Overview\n"
         tableString += "#### Total Sample Size = " + str(len(df.index)) + "\n"
-        for item in ['race','age','sex']: #,'visit_type'
-            tableString += "#### " + item + "\n\n"
-            out = df[item].value_counts().compute().to_frame()
-            out = out.transpose()
-            tableString += tabulate(out, tablefmt="pipe", headers="keys", showindex=False)
-            tableString += "\n\n"
 
     except Exception as e:
-        logger.error(f'Issue with printing column "All": " {e}')
+        logger.error(f'Issue with column "All": " {e}')
         return
 
     try: #Table 1: Age
@@ -81,10 +75,12 @@ def fetchTable1MD(logger, df):
                 valAge.at[race,label] = value
                 tableAge.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
                                                                                     + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
-            tableAge = tableAge.fillna(value="0.0 (0.0-0.0)")
+        tableAge = tableAge.fillna(value="0.0 (0.0-0.0)").transpose().sort_index() 
+        tableAge.insert(loc=0, column='All', value = df['age'].value_counts().compute().to_frame())
+
 
     except Exception as e:
-        logger.error(f'Issue with printing Table 1 (Age): " {e}')
+        logger.error(f'Issue with Table 1 (Age): " {e}')
         return
 
 
@@ -98,17 +94,19 @@ def fetchTable1MD(logger, df):
                 valSex.at[race,label] = value
                 tableSex.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
                                                                                     + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
-            tableSex = tableSex.fillna(value="0.0 (0.0-0.0)")
+            
+        tableSex = tableSex.fillna(value="0.0 (0.0-0.0)").transpose().sort_index()
+        tableSex.insert(loc=0, column='All', value = df['sex'].value_counts().compute().to_frame())
                                         
     except Exception as e:
-        logger.error(f'Issue with printing Table 1 (Sex): " {e}')
+        logger.error(f'Issue with Table 1 (Sex): " {e}')
 
 
     try: #Table 1 Output String
         tableString += "### Age-Race\n" \
-                    + tabulate(tableAge.transpose() , tablefmt="pipe", headers="keys") \
+                    + tabulate(tableAge, tablefmt="pipe", headers="keys") \
                     + "\n\n### Sex-Race \n" \
-                    + tabulate(tableSex.transpose() , tablefmt="pipe", headers="keys")
+                    + tabulate(tableSex , tablefmt="pipe", headers="keys")
 
         tableString = tableString.replace("1-11", "**1-11**").replace("12-17", "**12-17**") \
                                  .replace("18-34", "**18-34**").replace("35-49", "**35-49**") \
@@ -117,8 +115,8 @@ def fetchTable1MD(logger, df):
                                  .replace("age", "Age").replace("sex", "Sex").replace("race", "Race")
 
     except Exception as e:
-        logger.error(f'Issue with printing Table 1 output string: " {e}')
-        tableString =  'Issue with printing Table 1 output string: check log'
+        logger.error(f'Issue with Table 1 output string: " {e}')
+        tableString =  'Issue with Table 1 output string: check log'
 
     return tableString
 

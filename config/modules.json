@@ -13,7 +13,7 @@
         "owner"      : ""
     }, {
         "moduleName" : "readmeGenerator",
-        "path"       : "modules/readmeGenerator/readmeGenerator.py",
+        "path"       : "modules/reportGenerator/reportGenerator.py",
         "execute"    : true,
         "description": "",
         "owner"      : ""

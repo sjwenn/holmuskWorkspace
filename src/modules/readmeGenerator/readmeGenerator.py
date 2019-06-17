@@ -55,8 +55,8 @@ def main(logger, resultsDict):
 
     try: #FIGURE 1
         outputString += "\n## Figure 1: DSM-IV"
-        outputString += "\n![image](figure1.png)"
         outputString += "\nDSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people."
+        outputString += "\n![image](figure1.png)"
         outputString += "\n"
 
     except Exception as e:

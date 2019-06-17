@@ -62,8 +62,8 @@ def fetchTable1MD(logger, df):
         out = df.loc[df['race'] == race]['sex'].value_counts().compute().to_dict().items()
         for idx, (label, value) in enumerate(out):
             valSex.at[race,label] = value
-            tableSex.at[race,label] = str(round(value/n*100,1)).ljust(5) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
-                                                                                + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
+            tableSex.at[race,label] = "<pre>" + str(round(value/n*100,1)).ljust(5) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
+                                                                                          + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ") </pre>" 
 
     tableString = "### Age\n" \
                 + tabulate(tableAge.transpose() , tablefmt="pipe", headers="keys") \

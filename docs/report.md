@@ -1,6 +1,16 @@
 
 ## Table 1: Selected Characteristics
-Selected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people
+Selected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people.
+### Overview
+|      |   **M**R |   AA |   NHPI |
+|:-----|-----:|-----:|-------:|
+|  | 3176 | 2154 |    688 |
+|     |   **18-34** |   **35-49** |   **12-17** |   **50+** |   **1-11** |
+|:----|--------:|--------:|--------:|------:|-------:|
+|  |    1798 |    1170 |    1140 |  1008 |    902 |
+|     |    **F** |    **M** |   **Others** |
+|:----|-----:|-----:|---------:|
+|  | 3203 | 2806 |        9 |
 ### Age
 | age   | **M**R               | AA               | NHPI             |
 |:------|:-----------------|:-----------------|:-----------------|

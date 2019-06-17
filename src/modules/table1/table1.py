@@ -45,9 +45,12 @@ def fetchTable1MD(logger, df):
         tableAge = pd.DataFrame(columns=ageList, index=raceList)
         tableSex = pd.DataFrame(columns=sexList, index=raceList)
 
-
-        for item in ['race','age','sex','visit_type']: 
-            out = df[item].value_counts().compute().to_dict().items()
+        tableString += "### Overview\n"
+        for item in ['race','age','sex']: #,'visit_type'
+            out = df[item].value_counts().compute().to_frame()
+            tableString += tabulate(out.transpose(), tablefmt="pipe", headers="keys") \
+                                                                                    .replace("age", "").replace("race", "").replace("sex", "") #REMOVE HEADINGS
+            tableString += "\n"
 
     except Exception as e:
         logger.error(f'Issue with printing column "All": " {e}')
@@ -58,7 +61,7 @@ def fetchTable1MD(logger, df):
             n = df['race'].value_counts().compute().to_dict()[race]
 
             out = df.loc[df['race'] == race]['age'].value_counts().compute().to_dict().items()
-            for idx, (label, value) in enumerate(out):
+            for (label, value) in out:
                 valAge.at[race,label] = value
                 tableAge.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
                                                                                     + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
@@ -72,7 +75,7 @@ def fetchTable1MD(logger, df):
             n = df['race'].value_counts().compute().to_dict()[race]
 
             out = df.loc[df['race'] == race]['sex'].value_counts().compute().to_dict().items()
-            for idx, (label, value) in enumerate(out):
+            for (label, value) in out:
                 valSex.at[race,label] = value
                 tableSex.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
                                                                                     + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
@@ -93,7 +96,7 @@ def fetchTable1MD(logger, df):
 
     except Exception as e:
         logger.error(f'Issue with printing Table 1 output string: " {e}')
-        tableString =  (f'Issue with printing Table 1 output string: " {e}')
+        tableString =  'Issue with printing Table 1 output string: check log'
 
     return tableString
 

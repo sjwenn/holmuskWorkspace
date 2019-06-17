@@ -46,7 +46,7 @@ def main(logger, resultsDict):
         fileObjectLoad.close()
 
         outputString += "\n## Table 1: Selected Characteristics"
-        outputString += "\nSelected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people"
+        outputString += "\nSelected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people."
         outputString += "\n" + table1String
 
     except Exception as e:

@@ -53,6 +53,7 @@ def fetchTable1MD(logger, df):
     ageList = df['age'].unique().compute()
     sexList = df['sex'].unique().compute()
 
+
     try: #COLUMN 'ALL'
         valAge = pd.DataFrame(columns=ageList, index=raceList) # FOR USE IN CHI2
         valSex = pd.DataFrame(columns=sexList, index=raceList) # FOR USE IN CHI2
@@ -95,7 +96,7 @@ def fetchTable1MD(logger, df):
                 tableSex.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
                                                                                     + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
             
-        tableSex = tableSex.fillna(value="0.0 (0.0-0.0)").transpose().sort_index()
+        tableSex = tableSex.fillna(value="0.0 (0.0-0.0)").transpose()
         tableSex.insert(loc=0, column='All', value = df['sex'].value_counts().compute().to_frame())
                                         
     except Exception as e:
@@ -103,9 +104,9 @@ def fetchTable1MD(logger, df):
 
 
     try: #Table 1 Output String
-        tableString += "### Age-Race\n" \
+        tableString += "### Age \n" \
                     + tabulate(tableAge, tablefmt="pipe", headers="keys") \
-                    + "\n\n### Sex-Race \n" \
+                    + "\n\n### Sex \n" \
                     + tabulate(tableSex , tablefmt="pipe", headers="keys")
 
         tableString = tableString.replace("1-11", "**1-11**").replace("12-17", "**12-17**") \

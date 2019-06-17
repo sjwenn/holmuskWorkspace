@@ -80,6 +80,8 @@ def fetchTable1MD(logger, df):
                 valAge.at[race,label] = value
                 tableAge.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
                                                                                     + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
+            tableAge.fillna(value="0.0 (0.0-0.0)")
+
     except Exception as e:
         logger.error(f'Issue with printing Table 1 (Age): " {e}')
         return
@@ -90,11 +92,12 @@ def fetchTable1MD(logger, df):
             n = df['race'].value_counts().compute().to_dict()[race]
 
             out = df.loc[df['race'] == race]['sex'].value_counts().compute().to_dict().items()
+
             for (label, value) in out:
                 valSex.at[race,label] = value
                 tableSex.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
                                                                                     + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
-                
+            tableSex.fillna(value="0.0 (0.0-0.0)")
                                         
     except Exception as e:
         logger.error(f'Issue with printing Table 1 (Sex): " {e}')

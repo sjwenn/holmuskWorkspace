@@ -48,10 +48,13 @@ def main(logger, resultsDict):
 
 
     try: #figure 1
+        outputString = table1String
+        outputString += "\n## Figure 1"
+        outputString += "\n![image](figure1.png)"
+        outputString += "\nDSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people."
+        outputString += "\n"
         with open(jsonConfig["outputs"]["reportPath"] + 'report.md', 'w') as f:
-            f.write( table1String + "\n## Figure 1 \n \
-                                       DSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people. \
-                                     \n![image](figure1.png)\n" )
+            f.write( outputString )
 
     except Exception as e:
         logger.error(f'Issue with Figure 1: " {e}')

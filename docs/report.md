@@ -14,5 +14,5 @@
 | **F**      | **55.4** (53.3-57.5) | **50.6** (46.8-54.3) | **52.3** (50.6-54.0) |
 | **Others** | **0.0** (-0.0-0.1)   | **0.6** (0.0-1.1)    | **0.1** (0.0-0.2)    |
 ## Figure 1 
-                                        DSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people.                                      
+DSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people.                                      
 ![image](figure1.png)

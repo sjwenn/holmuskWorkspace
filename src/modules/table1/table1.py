@@ -80,7 +80,7 @@ def fetchTable1MD(logger, df):
                 valAge.at[race,label] = value
                 tableAge.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
                                                                                     + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
-            tableAge.fillna(value="0.0 (0.0-0.0)")
+            tableAge = tableAge.fillna(value="0.0 (0.0-0.0)")
 
     except Exception as e:
         logger.error(f'Issue with printing Table 1 (Age): " {e}')
@@ -97,7 +97,7 @@ def fetchTable1MD(logger, df):
                 valSex.at[race,label] = value
                 tableSex.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
                                                                                     + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
-            tableSex.fillna(value="0.0 (0.0-0.0)")
+            tableSex = tableSex.fillna(value="0.0 (0.0-0.0)")
                                         
     except Exception as e:
         logger.error(f'Issue with printing Table 1 (Sex): " {e}')

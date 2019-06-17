@@ -6,7 +6,7 @@
     }, 
     "outputs" : {
     	"intermediatePath": "../data/intermediate/",
-        "saveFigPath": "../results/figure1.png"
+        "saveFigPath": "../docs/figure1.png"
     },
     "params"  : {
         "useCacheFlag": 0,

@@ -3,16 +3,19 @@
 Selected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people.
 ### Overview
 ####race
+
 |   **M**R |   AA |   NHPI |
 |-----:|-----:|-------:|
 | 3176 | 2154 |    688 |
 
 ####Age
+
 |   **18-34** |   **35-49** |   **12-17** |   **50+** |   **1-11** |
 |--------:|--------:|--------:|------:|-------:|
 |    1798 |    1170 |    1140 |  1008 |    902 |
 
 ####Sex
+
 |    **F** |    **M** |   **Others** |
 |-----:|-----:|---------:|
 | 3203 | 2806 |        9 |

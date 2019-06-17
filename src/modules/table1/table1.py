@@ -61,7 +61,7 @@ def fetchTable1MD(logger, df):
 
         tableString += "### Overview\n"
         for item in ['race','age','sex']: #,'visit_type'
-            tableString += "####" + item + "\n"
+            tableString += "####" + item + "\n\n"
             out = df[item].value_counts().compute().to_frame()
             out = out.transpose()
             tableString += tabulate(out, tablefmt="pipe", headers="keys", showindex=False)

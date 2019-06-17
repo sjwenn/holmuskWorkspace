@@ -50,7 +50,7 @@ def fetchTable1MD(logger, df):
             out = df[item].value_counts().compute().to_frame()
             tableString += tabulate(out.transpose(), tablefmt="pipe", headers="keys") #\
                                                                                     #.replace("age", "").replace("race", "").replace("sex", "") #REMOVE HEADINGS
-            tableString += "\n"
+            #tableString += "\n"
 
     except Exception as e:
         logger.error(f'Issue with printing column "All": " {e}')

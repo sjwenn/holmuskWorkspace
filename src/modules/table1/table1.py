@@ -60,6 +60,7 @@ def fetchTable1MD(logger, df):
         tableSex = pd.DataFrame(columns=sexList, index=raceList)
 
         tableString += "### Overview\n"
+        tableString += "#### Total Sample Size = " + str(len(df.index)) + "\n"
         for item in ['race','age','sex']: #,'visit_type'
             tableString += "#### " + item + "\n\n"
             out = df[item].value_counts().compute().to_frame()

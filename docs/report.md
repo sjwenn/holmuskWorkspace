@@ -2,6 +2,7 @@
 ## Table 1: Selected Characteristics
 Selected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people.
 ### Overview
+#### Total Sample Size = 5546
 #### Race
 
 |   **M**R |   AA |   NHPI |

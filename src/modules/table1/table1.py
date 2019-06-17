@@ -48,9 +48,8 @@ def fetchTable1MD(logger, df):
         logger.error(f'Issue with printing column "All": " {e}')
         return
 
-
     try: #Table 1: Age
-        for race in ["AA","NHPI","MR"]:
+        for race in df['race'].unique().compute():
             n = df['race'].value_counts().compute().to_dict()[race]
 
             out = df.loc[df['race'] == race]['age'].value_counts().compute().to_dict().items()

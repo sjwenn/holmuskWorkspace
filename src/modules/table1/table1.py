@@ -48,8 +48,8 @@ def fetchTable1MD(logger, df):
         tableString += "### Overview\n"
         for item in ['race','age','sex']: #,'visit_type'
             out = df[item].value_counts().compute().to_frame()
-            tableString += tabulate(out.transpose(), tablefmt="pipe", headers="keys") \
-                                                                                    .replace("age", "").replace("race", "").replace("sex", "") #REMOVE HEADINGS
+            tableString += tabulate(out.transpose(), tablefmt="pipe", headers="keys") #\
+                                                                                    #.replace("age", "").replace("race", "").replace("sex", "") #REMOVE HEADINGS
             tableString += "\n"
 
     except Exception as e:

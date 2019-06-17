@@ -34,11 +34,16 @@ def CI(logger, p, n, CL):
 @lD.log(logBase + '.plotTable1MD')
 def fetchTable1MD(logger, df):
     tableString = ""
+
+    raceList = df['race'].unique().compute()
+    ageList = df['age'].unique().compute()
+    sexList = df['sex'].unique().compute()
+
     try: #COLUMN 'ALL'
-        valAge = pd.DataFrame(columns=["1-11","12-17","18-34","35-49","50+"], index=["AA","NHPI","MR"]) # FOR USE IN CHI2
-        valSex = pd.DataFrame(columns=["M","F","Others"], index=["AA","NHPI","MR"]) # FOR USE IN CHI2
-        tableAge = pd.DataFrame(columns=["1-11","12-17","18-34","35-49","50+"], index=["AA","NHPI","MR"])
-        tableSex = pd.DataFrame(columns=["M","F","Others"], index=["AA","NHPI","MR"])
+        valAge = pd.DataFrame(columns=ageList, index=raceList) # FOR USE IN CHI2
+        valSex = pd.DataFrame(columns=sexList, index=raceList) # FOR USE IN CHI2
+        tableAge = pd.DataFrame(columns=ageList, index=raceList)
+        tableSex = pd.DataFrame(columns=sexList, index=raceList)
 
 
         for item in ['race','age','sex','visit_type']: 
@@ -49,7 +54,7 @@ def fetchTable1MD(logger, df):
         return
 
     try: #Table 1: Age
-        for race in df['race'].unique().compute():
+        for race in raceList:
             n = df['race'].value_counts().compute().to_dict()[race]
 
             out = df.loc[df['race'] == race]['age'].value_counts().compute().to_dict().items()
@@ -63,7 +68,7 @@ def fetchTable1MD(logger, df):
 
 
     try: #Table 1: Sex
-        for race in ["AA","NHPI","MR"]:
+        for race in raceList:
             n = df['race'].value_counts().compute().to_dict()[race]
 
             out = df.loc[df['race'] == race]['sex'].value_counts().compute().to_dict().items()

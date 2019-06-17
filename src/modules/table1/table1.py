@@ -33,6 +33,7 @@ def CI(logger, p, n, CL):
 
 @lD.log(logBase + '.plotTable1MD')
 def fetchTable1MD(logger, df):
+    tableString = ""
     try: #COLUMN 'ALL'
         valAge = pd.DataFrame(columns=["1-11","12-17","18-34","35-49","50+"], index=["AA","NHPI","MR"]) # FOR USE IN CHI2
         valSex = pd.DataFrame(columns=["M","F","Others"], index=["AA","NHPI","MR"]) # FOR USE IN CHI2
@@ -47,36 +48,50 @@ def fetchTable1MD(logger, df):
         logger.error(f'Issue with printing column "All": " {e}')
         return
 
-    for race in ["AA","NHPI","MR"]:
-        n = df['race'].value_counts().compute().to_dict()[race]
 
-        out = df.loc[df['race'] == race]['age'].value_counts().compute().to_dict().items()
-        for idx, (label, value) in enumerate(out):
-            valAge.at[race,label] = value
-            tableAge.at[race,label] = str(round(value/n*100,1)).ljust(5) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
-                                                                                + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
+    try: #Table 1: Age
+        for race in ["AA","NHPI","MR"]:
+            n = df['race'].value_counts().compute().to_dict()[race]
 
-    for race in ["AA","NHPI","MR"]:
-        n = df['race'].value_counts().compute().to_dict()[race]
+            out = df.loc[df['race'] == race]['age'].value_counts().compute().to_dict().items()
+            for idx, (label, value) in enumerate(out):
+                valAge.at[race,label] = value
+                tableAge.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
+                                                                                    + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
+    except Exception as e:
+        logger.error(f'Issue with printing Table 1 (Age): " {e}')
+        return
 
-        out = df.loc[df['race'] == race]['sex'].value_counts().compute().to_dict().items()
-        for idx, (label, value) in enumerate(out):
-            valSex.at[race,label] = value
-            tableSex.at[race,label] = "<pre>" + str(round(value/n*100,1)).ljust(5) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
-                                                                                          + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ") </pre>" 
 
-    tableString = "### Age\n" \
-                + tabulate(tableAge.transpose() , tablefmt="pipe", headers="keys") \
-                + "\n\n### Sex \n" \
-                + tabulate(tableSex.transpose() , tablefmt="pipe", headers="keys")
+    try: #Table 1: Sex
+        for race in ["AA","NHPI","MR"]:
+            n = df['race'].value_counts().compute().to_dict()[race]
 
-    tableString = tableString.replace("1-11", "**1-11**").replace("12-17", "**12-17**") \
-                             .replace("18-34", "**18-34**").replace("35-49", "**35-49**") \
-                             .replace("50+", "**50+**") \
-                             .replace("M", "**M**").replace("F", "**F**").replace("Others", "**Others**")
+            out = df.loc[df['race'] == race]['sex'].value_counts().compute().to_dict().items()
+            for idx, (label, value) in enumerate(out):
+                valSex.at[race,label] = value
+                tableSex.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
+                                                                                    + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
+    except Exception as e:
+        logger.error(f'Issue with printing Table 1 (Sex): " {e}')
+
+
+    try: #Table 1 Output String
+        tableString += "### Age\n" \
+                    + tabulate(tableAge.transpose() , tablefmt="pipe", headers="keys") \
+                    + "\n\n### Sex \n" \
+                    + tabulate(tableSex.transpose() , tablefmt="pipe", headers="keys")
+
+        tableString = tableString.replace("1-11", "**1-11**").replace("12-17", "**12-17**") \
+                                 .replace("18-34", "**18-34**").replace("35-49", "**35-49**") \
+                                 .replace("50+", "**50+**") \
+                                 .replace("M", "**M**").replace("F", "**F**").replace("Others", "**Others**")
+
+    except Exception as e:
+        logger.error(f'Issue with printing Table 1 output string: " {e}')
+        tableString =  (f'Issue with printing Table 1 output string: " {e}')
 
     return tableString
-
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):

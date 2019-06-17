@@ -34,7 +34,7 @@ Selected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders,
 |:-------|:-----------------|:-----------------|:-----------------|
 | **M**      | 47.3 (45.5-49.0) | 44.0 (41.8-46.2) | 48.3 (44.1-52.5) |
 | **F**      | 52.6 (50.9-54.4) | 56.0 (53.8-58.2) | 51.7 (47.5-55.9) |
-| **Others** | 0.1 (-0.0-0.2)   | nan              | nan              |
+| **Others** | 0.1 (-0.0-0.2)   | 0.0 (0.0-0.0)    | 0.0 (0.0-0.0)    |
 ## Figure 1: DSM-IV
 DSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people.
 ![image](figure1.png)

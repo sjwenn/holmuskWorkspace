@@ -21,7 +21,7 @@ import pandas as pd
 from lib.databaseIO import pgIO
 
 config = jsonref.load(open('../config/config.json'))
-module1_config = jsonref.load(open('../config/modules/readmeGenerator.json'))
+jsonConfig = jsonref.load(open('../config/modules/readmeGenerator.json'))
 logBase = config['logging']['logBase'] + '.modules.readmeGenerator.readmeGenerator'
 
 @lD.log(logBase + '.main')
@@ -38,16 +38,22 @@ def main(logger, resultsDict):
     logger : {logging.Logger}
         The logger used for logging error information
     '''
-    try: #LOAD THE PICKLE
-        fileObjectLoad = open(module1_config["inputs"]["intermediatePath"]+"table1String.pickle",'rb') 
+    try: #table 1
+        fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"table1String.pickle",'rb') 
         table1String = pickle.load(fileObjectLoad)   
         fileObjectLoad.close()
 
     except Exception as e:
-        logger.error(f'Issue loading from pickle: " {e}')
+        logger.error(f'Issue with Table 1: " {e}')
 
-    with open('../results/report.md', 'w') as f:
-        f.write( table1String + "\n# Figure 1 \n![image](figure1.png)\n" )
+
+    try: #figure 1
+        with open(jsonConfig["outputs"]["reportPath"] + 'report.md', 'w') as f:
+            f.write( table1String + "\n# Figure 1 \n![image](figure1.png)\n" )
+
+    except Exception as e:
+        logger.error(f'Issue with Figure 1: " {e}')
+
 
     return
 

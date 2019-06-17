@@ -49,7 +49,9 @@ def main(logger, resultsDict):
 
     try: #figure 1
         with open(jsonConfig["outputs"]["reportPath"] + 'report.md', 'w') as f:
-            f.write( table1String + "\n# Figure 1 \n![image](figure1.png)\n" )
+            f.write( table1String + "\n## Figure 1 \n \
+                                       DSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people. \
+                                     \n![image](figure1.png)\n" )
 
     except Exception as e:
         logger.error(f'Issue with Figure 1: " {e}')

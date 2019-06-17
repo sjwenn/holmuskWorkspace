@@ -46,7 +46,7 @@ def main(logger, resultsDict):
     except Exception as e:
         logger.error(f'Issue loading from pickle: " {e}')
 
-    with open('../results/table1.md', 'w') as f:
+    with open('../results/report.md', 'w') as f:
         f.write( table1String + "\n# Figure 1 \n![image](figure1.png)\n" )
 
     return

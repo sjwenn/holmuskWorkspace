@@ -47,7 +47,7 @@ def main(logger, resultsDict):
 
         outputString += "\n## Table 1: Selected Characteristics"
         outputString += "\nSelected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people"
-        outputString += table1String
+        outputString += "\n" + table1String
 
     except Exception as e:
         logger.error(f'Issue with Table 1: " {e}')

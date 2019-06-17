@@ -1,4 +1,6 @@
-### Age
+
+## Table 1: Selected Characteristics
+Selected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people### Age
 |       | AA                   | NHPI                 | **M**R                   |
 |:------|:---------------------|:---------------------|:---------------------|
 | **1-11**  | **8.9** (7.7-10.1)   | **14.1** (11.5-16.7) | **19.3** (17.9-20.7) |
@@ -13,6 +15,6 @@
 | **M**      | **44.5** (42.4-46.6) | **48.8** (45.1-52.6) | **47.6** (45.8-49.3) |
 | **F**      | **55.4** (53.3-57.5) | **50.6** (46.8-54.3) | **52.3** (50.6-54.0) |
 | **Others** | **0.0** (-0.0-0.1)   | **0.6** (0.0-1.1)    | **0.1** (0.0-0.2)    |
-## Figure 1: DSM-IV                                 
+## Figure 1: DSM-IV
 ![image](figure1.png)
-**DSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people.**     
+DSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people.

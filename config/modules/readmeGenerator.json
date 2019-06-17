@@ -7,6 +7,5 @@
         "reportPath": "../docs/"
     },
     "params"  : {
-        "useCacheFlag": 0
     }
 }

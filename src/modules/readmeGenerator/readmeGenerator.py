@@ -38,26 +38,37 @@ def main(logger, resultsDict):
     logger : {logging.Logger}
         The logger used for logging error information
     '''
-    try: #table 1
+    outputString = ""
+
+    try: #TABLE 1  
         fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"table1String.pickle",'rb') 
         table1String = pickle.load(fileObjectLoad)   
         fileObjectLoad.close()
+
+        outputString += "\n## Table 1: Selected Characteristics"
+        outputString += "\nSelected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people"
+        outputString += table1String
 
     except Exception as e:
         logger.error(f'Issue with Table 1: " {e}')
 
 
-    try: #figure 1
-        outputString = table1String
-        outputString += "\n## Figure 1"
+    try: #FIGURE 1
+        outputString += "\n## Figure 1: DSM-IV"
         outputString += "\n![image](figure1.png)"
         outputString += "\nDSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people."
         outputString += "\n"
+
+    except Exception as e:
+        logger.error(f'Issue with Figure 1: " {e}')
+
+
+    try: #FINAL OUTPUT
         with open(jsonConfig["outputs"]["reportPath"] + 'report.md', 'w') as f:
             f.write( outputString )
 
     except Exception as e:
-        logger.error(f'Issue with Figure 1: " {e}')
+        logger.error(f'Issue with final output: " {e}')
 
 
     return

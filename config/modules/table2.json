@@ -1,0 +1,17 @@
+{
+    "inputs"  : {
+    	"dbName": "mindlincnew",
+    	"intermediatePath": "../data/intermediate/",
+        "dsmPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
+        "tableNameComorbid": "jingwen.comorbid_updated",
+        "tableNameDiagnoses": "jingwen.diagnoses"
+    }, 
+    "outputs" : {
+    	"intermediatePath": "../data/intermediate/",
+        "saveFigPath": "../docs/figure2.png"
+    },
+    "params"  : {
+        "useCacheFlag": 0,
+        "showGraphFlag" : 0
+    }
+}

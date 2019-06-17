@@ -23,13 +23,13 @@ import time
 from lib.databaseIO import pgIO
 
 config = jsonref.load(open('../config/config.json'))
-jsonConfig = jsonref.load(open('../config/modules/figure1.json'))
-logBase = config['logging']['logBase'] + '.modules.figure1.figure1'
+jsonConfig = jsonref.load(open('../config/modules/table2.json'))
+logBase = config['logging']['logBase'] + '.modules.table2.table2'
 
 
 @lD.log(logBase + '.CI')
 def CI(logger, p, n, CL):
-    SE = math.sqrt(p*(1-p)/n)
+    SE = math.sqrt(p*(1-p)/n)  
     z_star = stats.norm.ppf((1-CL)/2)
     ME = z_star * SE
     return ME
@@ -53,6 +53,7 @@ def main(logger, resultsDict):
         overwriting command line arguments as needed.
     '''
     dbName = jsonConfig["inputs"]["dbName"]
+
     if jsonConfig["params"]["useCacheFlag"] == 0: #check if redownload requested THIS IS NOT PEP8 BUT JSON NO WORK WITH PYTHON BOOL
 
         try: # SET UP QUERY
@@ -70,7 +71,7 @@ def main(logger, resultsDict):
 
 
         try: #SAVE THE PICKLE FOR DIAGNOSES
-            fileSaveDiagnosisRaw = open(jsonConfig["outputs"]["intermediatePath"]+"diagnosisRaw.pickle",'wb') 
+            fileSaveDiagnosisRaw = open(jsonConfig["outputs"]["intermediatePath"]+"sudRaw.pickle",'wb') 
             pickle.dump(rawData, fileSaveDiagnosisRaw)   
             fileSaveDiagnosisRaw.close()
 
@@ -79,7 +80,7 @@ def main(logger, resultsDict):
 
     else:
         try: #LOAD THE PICKLE FOR DIAGNOSES
-            fileLoadDiagnosisRaw = open(jsonConfig["inputs"]["intermediatePath"]+"diagnosisRaw.pickle",'rb') 
+            fileLoadDiagnosisRaw = open(jsonConfig["inputs"]["intermediatePath"]+"sudRaw.pickle",'rb') 
             rawData = pickle.load(fileLoadDiagnosisRaw)   
             fileLoadDiagnosisRaw.close()
 
@@ -103,26 +104,27 @@ def main(logger, resultsDict):
         try: #FORM SQL QUERY
             diagnosesBuf = [] #GET QUERY PER RACE
             for race in raceList:
-                raceTotal = pgIO.getAllData("select count(*) from jingwen.comorbid_updated where (race='"+race+"')" #TOTAL NO. PEOPLE IN RACE
-                                            ,dbName = dbName).pop()[0] 
-                print((race + " done: ").ljust(12) + str(raceTotal)) #DEBUG
-                for column in dsm: #REMOVE FLAG
-                    queryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"')and(" #BASE QUERY
-                    for row in dsm[column]:
-                        if row==row: #TEST IF NOT NAN
-                            queryString = queryString + "(dsmno='"+row+"')or" #ADD TO QUERY
+                for age in ageList:
+                    raceAgeTotal = pgIO.getAllData("select count(*) from jingwen.comorbid_updated where (race='"+race+"') and (age_categorical='"+age+"')" #TOTAL NO. PEOPLE IN RACE AND AGE
+                            ,dbName = dbName).pop()[0] 
+                    print((Race + " done: ").ljust(12) + str(raceAgeTotal)) #DEBUG
+                    for column in dsm: #REMOVE FLAG
+                        queryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"') and (age_categorical='"+age+"') and (" #BASE QUERY
+                        for row in dsm[column]:
+                            if row==row: #TEST IF NOT NAN
+                                queryString = queryString + "(dsmno='"+str(row)+"')or" #ADD TO QUERY
 
-                    queryString = queryString[:-2] + ")" #REMOVE LAST "OR"
-                    valRetrieve = pgIO.getAllData(queryString,dbName = dbName).pop()[0]
-                    diagnosesBuf.append([valRetrieve/raceTotal*100, re.sub(r'\([^)]*\)', #REGEX TO REMOVE TEXT IN BRACKETS (CHILDHOOD-ONSET)
-                                                                           '', column), race])
-            diagnoses = pd.DataFrame(diagnosesBuf, columns=['%', 'Diagnosis', 'Race'])
+                        queryString = queryString[:-2] + ")" #REMOVE LAST "OR"
+                        valRetrieve = pgIO.getAllData(queryString,dbName = dbName).pop()[0]
+                        diagnosesBuf.append([valRetrieve/raceAgeTotal*100, re.sub(r'\([^)]*\)', #REGEX TO REMOVE TEXT IN BRACKETS (CHILDHOOD-ONSET)
+                                                                               '', column), race, age])
+            diagnoses = pd.DataFrame(diagnosesBuf, columns=['%', 'Diagnosis', 'Race', 'Age'])
 
         except Exception as e:
             logger.error(f'Issue with frequency count " {e}')
 
         try: #SAVE THE PICKLE FOR DIAGNOSES
-            fileSaveDiagnosisCount = open(jsonConfig["outputs"]["intermediatePath"]+"diagnosisCount.pickle",'wb') 
+            fileSaveDiagnosisCount = open(jsonConfig["outputs"]["intermediatePath"]+"sudCount.pickle",'wb') 
             pickle.dump(diagnoses, fileSaveDiagnosisCount)   
             fileSaveDiagnosisCount.close()
 
@@ -131,24 +133,14 @@ def main(logger, resultsDict):
 
     else:
         try: #LOAD THE PICKLE FOR DIAGNOSES
-            fileLoadDiagnosisCount = open(jsonConfig["inputs"]["intermediatePath"]+"diagnosisCount.pickle",'rb') 
+            fileLoadDiagnosisCount = open(jsonConfig["inputs"]["intermediatePath"]+"sudCount.pickle",'rb') 
             diagnoses = pickle.load(fileLoadDiagnosisCount)   
             fileLoadDiagnosisCount.close()
 
         except Exception as e:
             logger.error(f'Issue loading from pickle: " {e}')
 
-    try: #FILTER OUT FREQUENCY < 3% DIAGNOSES
-    # TODO: MORE CONCISE CODE
-        for diagnosis in diagnoses['Diagnosis'].unique():
-            diagnosesBuf = diagnoses[diagnoses['Diagnosis']==diagnosis]
-            if (diagnosesBuf['%'] < 3).all():
-                diagnoses = diagnoses.drop(diagnosesBuf.index)
-
-    except Exception as e:
-        logger.error(f'Issue filtering out low freq data: " {e}')
-
-
+    print(diagnoses[diagnoses['Race']=='AA'])
     
     try: #PLOT BARCHART
         plt.figure(figsize=(15,8)) 
@@ -159,7 +151,7 @@ def main(logger, resultsDict):
             height = p.get_height()
             ax.text(p.get_x()+p.get_width()/2.,
                     height + 0.5,
-                    '{:1.0f}'.format(height),
+                    '{:1.2f}'.format(height),
                     ha="center") 
 
 

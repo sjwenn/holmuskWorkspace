@@ -26,6 +26,22 @@ logBase = config['logging']['logBase'] + '.modules.table1.table1'
 
 @lD.log(logBase + '.CI')
 def CI(logger, p, n, CL):
+    '''CI
+    
+    Confidence interval
+    
+    Decorators:
+        lD.log
+    
+    Arguments:
+        logger -- Logs errors
+        p  -- Probability
+        n  -- NUmber of samples
+        CL -- Confidence (e.g. 0.95)
+    
+    Returns:
+        [type] -- [description]
+    '''
     SE = math.sqrt(p*(1-p)/n)
     z_star = stats.norm.ppf((1-CL)/2)
     ME = z_star * SE

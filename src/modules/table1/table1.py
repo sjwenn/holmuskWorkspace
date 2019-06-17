@@ -33,6 +33,20 @@ def CI(logger, p, n, CL):
 
 @lD.log(logBase + '.plotTable1MD')
 def fetchTable1MD(logger, df):
+    '''fetchTable1MD
+    
+    Generate table
+    
+    Decorators:
+        lD.log
+    
+    Arguments:
+        logger {[type]} -- [description]
+        df {[type]} -- [description]
+    
+    Returns:
+        string -- Markdown string of table 1
+    '''
     tableString = ""
 
     raceList = df['race'].unique().compute()
@@ -47,8 +61,10 @@ def fetchTable1MD(logger, df):
 
         tableString += "### Overview\n"
         for item in ['race','age','sex']: #,'visit_type'
+            tableString += "####" + item
             out = df[item].value_counts().compute().to_frame()
-            tableString += tabulate(out.transpose(), tablefmt="pipe", headers="keys", showindex=False) #.drop('', axis=1)
+            out = out.transpose()
+            tableString += tabulate(out, tablefmt="pipe", headers="keys", showindex=False)
             tableString += "\n\n"
 
     except Exception as e:
@@ -91,7 +107,8 @@ def fetchTable1MD(logger, df):
         tableString = tableString.replace("1-11", "**1-11**").replace("12-17", "**12-17**") \
                                  .replace("18-34", "**18-34**").replace("35-49", "**35-49**") \
                                  .replace("50+", "**50+**") \
-                                 .replace("M", "**M**").replace("F", "**F**").replace("Others", "**Others**")
+                                 .replace("M", "**M**").replace("F", "**F**").replace("Others", "**Others**")\
+                                 .replace("age", "Age").replace("sex", "Sex")
 
     except Exception as e:
         logger.error(f'Issue with printing Table 1 output string: " {e}')
@@ -123,7 +140,7 @@ def main(logger, resultsDict):
         try: # SET UP QUERY
             maxNumSamples = str(jsonConfig["inputs"]["maxNumSamples"]) 
             dbName = jsonConfig["inputs"]["dbName"]
-            genRetrieve = pgIO.getDataIterator("select * from jingwen.comorbid \
+            genRetrieve = pgIO.getDataIterator("select * from jingwen.comorbid_updated \
                                                 limit " + maxNumSamples + ";",\
                                                 dbName = dbName, chunks = 100)
 

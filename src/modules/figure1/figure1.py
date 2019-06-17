@@ -99,7 +99,7 @@ def main(logger, resultsDict):
         try: #FORM SQL QUERY
             diagnosesBuf = [] #GET QUERY PER RACE
             for race in ['AA', 'NHPI', 'MR']:
-                raceTotal = pgIO.getAllData("select count(*) from jingwen.comorbid where (race='"+race+"')" #TOTAL NO. PEOPLE IN RACE
+                raceTotal = pgIO.getAllData("select count(*) from jingwen.comorbid_updated where (race='"+race+"')" #TOTAL NO. PEOPLE IN RACE
                                             ,dbName = dbName).pop()[0] 
                 print((race + " done: ").ljust(12) + str(raceTotal)) #DEBUG
                 for column in dsm: #REMOVE FLAG

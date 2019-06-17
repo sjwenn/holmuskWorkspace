@@ -53,6 +53,7 @@ def fetchTable1MD(logger, df):
     ageList = df['age'].unique().compute()
     sexList = df['sex'].unique().compute()
 
+    raceCounts = df['race'].value_counts().compute().to_frame().transpose()
 
     try: #COLUMN 'ALL'
         valAge = pd.DataFrame(columns=ageList, index=raceList) # FOR USE IN CHI2
@@ -102,7 +103,6 @@ def fetchTable1MD(logger, df):
     except Exception as e:
         logger.error(f'Issue with Table 1 (Sex): " {e}')
 
-
     try: #Table 1 Output String
         tableString += "### Age \n" \
                     + tabulate(tableAge, tablefmt="pipe", headers="keys") \
@@ -112,8 +112,13 @@ def fetchTable1MD(logger, df):
         tableString = tableString.replace("1-11", "**1-11**").replace("12-17", "**12-17**") \
                                  .replace("18-34", "**18-34**").replace("35-49", "**35-49**") \
                                  .replace("50+", "**50+**") \
+                                 .replace("MR", "MR ("+str(raceCounts['MR'][0])+")") \
+                                 .replace("AA", "AA ("+str(raceCounts['AA'][0])+")") \
+                                 .replace("NHPI", "NHPI ("+str(raceCounts['NHPI'][0])+")")\
                                  .replace("M", "**M**").replace("F", "**F**").replace("Others", "**Others**")\
                                  .replace("age", "Age").replace("sex", "Sex").replace("race", "Race")
+
+
 
     except Exception as e:
         logger.error(f'Issue with Table 1 output string: " {e}')

@@ -2,7 +2,7 @@
     {
         "moduleName" : "table1",
         "path"       : "modules/table1/table1.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
@@ -14,7 +14,7 @@
     }, {
         "moduleName" : "readmeGenerator",
         "path"       : "modules/readmeGenerator/readmeGenerator.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     },{

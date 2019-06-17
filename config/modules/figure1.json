@@ -9,7 +9,7 @@
         "saveFigPath": "../results/figure1.png"
     },
     "params"  : {
-        "useCacheFlag": 1,
-        "showGraphFlag" : 1
+        "useCacheFlag": 0,
+        "showGraphFlag" : 0
     }
 }

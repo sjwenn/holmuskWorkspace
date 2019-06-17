@@ -20,7 +20,7 @@ import pandas as pd
 from lib.databaseIO import pgIO
 
 config = jsonref.load(open('../config/config.json'))
-module1_config = jsonref.load(open('../config/modules/table1.json'))
+jsonConfig = jsonref.load(open('../config/modules/table1.json'))
 logBase = config['logging']['logBase'] + '.modules.table1.table1'
 
 
@@ -42,7 +42,6 @@ def fetchTable1MD(logger, df):
 
         for item in ['race','age','sex','visit_type']: 
             out = df[item].value_counts().compute().to_dict().items()
-            #for label, value in out:
 
     except Exception as e:
         logger.error(f'Issue with printing column "All": " {e}')
@@ -98,11 +97,11 @@ def main(logger, resultsDict):
         overwriting command line arguments as needed.
     '''
 
-    if module1_config["params"]["useCacheFlag"] == 0: #check if redownload requested THIS IS NOT PEP8 BUT JSON NO WORK WITH PYTHON BOOL
+    if jsonConfig["params"]["useCacheFlag"] == 0: #check if redownload requested THIS IS NOT PEP8 BUT JSON NO WORK WITH PYTHON BOOL
 
         try: # SET UP QUERY
-            maxNumSamples = str(module1_config["inputs"]["maxNumSamples"]) 
-            dbName = module1_config["inputs"]["dbName"]
+            maxNumSamples = str(jsonConfig["inputs"]["maxNumSamples"]) 
+            dbName = jsonConfig["inputs"]["dbName"]
             genRetrieve = pgIO.getDataIterator("select * from jingwen.comorbid \
                                                 limit " + maxNumSamples + ";",\
                                                 dbName = dbName, chunks = 100)
@@ -118,7 +117,7 @@ def main(logger, resultsDict):
 
 
         try: #SAVE THE PICKLE
-            fileObjectSave = open(module1_config["outputs"]["intermediatePath"]+"allergicReactions.pickle",'wb') 
+            fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"allergicReactions.pickle",'wb') 
             pickle.dump(rawData, fileObjectSave)   
             fileObjectSave.close()
 
@@ -127,7 +126,7 @@ def main(logger, resultsDict):
 
     else:
         try: #LOAD THE PICKLE
-            fileObjectLoad = open(module1_config["inputs"]["intermediatePath"]+"allergicReactions.pickle",'rb') 
+            fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"allergicReactions.pickle",'rb') 
             rawData = pickle.load(fileObjectLoad)   
             fileObjectLoad.close()
 
@@ -143,7 +142,7 @@ def main(logger, resultsDict):
             logger.error(f'Issue with frequency count: " {e}')
 
     try: #SAVE THE PICKLE OF TABLE1STRING
-        fileObjectSave = open(module1_config["outputs"]["intermediatePath"]+"table1String.pickle",'wb') 
+        fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"table1String.pickle",'wb') 
         pickle.dump(fetchTable1MD(df), fileObjectSave)   
         fileObjectSave.close()
 

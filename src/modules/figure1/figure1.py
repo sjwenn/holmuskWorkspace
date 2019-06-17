@@ -18,10 +18,12 @@ import dask.array as da
 import dask.dataframe as dd
 import pandas as pd
 
+import time
+
 from lib.databaseIO import pgIO
 
 config = jsonref.load(open('../config/config.json'))
-module1_config = jsonref.load(open('../config/modules/figure1.json'))
+jsonConfig = jsonref.load(open('../config/modules/figure1.json'))
 logBase = config['logging']['logBase'] + '.modules.figure1.figure1'
 
 
@@ -50,8 +52,8 @@ def main(logger, resultsDict):
         command line arguments. These can be used for
         overwriting command line arguments as needed.
     '''
-    dbName = module1_config["inputs"]["dbName"]
-    if module1_config["params"]["useCacheFlag"] == 0: #check if redownload requested THIS IS NOT PEP8 BUT JSON NO WORK WITH PYTHON BOOL
+    dbName = jsonConfig["inputs"]["dbName"]
+    if jsonConfig["params"]["useCacheFlag"] == 0: #check if redownload requested THIS IS NOT PEP8 BUT JSON NO WORK WITH PYTHON BOOL
 
         try: # SET UP QUERY
             genRetrieve = pgIO.getDataIterator("select * from jingwen.diagnoses" + ";",\
@@ -68,7 +70,7 @@ def main(logger, resultsDict):
 
 
         try: #SAVE THE PICKLE FOR DIAGNOSES
-            fileSaveDiagnosisRaw = open(module1_config["outputs"]["intermediatePath"]+"diagnosisRaw.pickle",'wb') 
+            fileSaveDiagnosisRaw = open(jsonConfig["outputs"]["intermediatePath"]+"diagnosisRaw.pickle",'wb') 
             pickle.dump(rawData, fileSaveDiagnosisRaw)   
             fileSaveDiagnosisRaw.close()
 
@@ -77,7 +79,7 @@ def main(logger, resultsDict):
 
     else:
         try: #LOAD THE PICKLE FOR DIAGNOSES
-            fileLoadDiagnosisRaw = open(module1_config["inputs"]["intermediatePath"]+"diagnosisRaw.pickle",'rb') 
+            fileLoadDiagnosisRaw = open(jsonConfig["inputs"]["intermediatePath"]+"diagnosisRaw.pickle",'rb') 
             rawData = pickle.load(fileLoadDiagnosisRaw)   
             fileLoadDiagnosisRaw.close()
 
@@ -91,32 +93,32 @@ def main(logger, resultsDict):
     except Exception as e:
         logger.error(f'Issue in convert dask array to dataframe: " {e}')
 
-    dsm = pd.read_csv(module1_config["inputs"]["dsmPath"])
+    dsm = pd.read_csv(jsonConfig["inputs"]["dsmPath"])
 
-    if module1_config["params"]["useCacheFlag"] == 0: #check if redownload requested
-        try: #USE SQL TO COUNT HOW MANY DIAGNOSES PER TYPE PER RACE 
+    if jsonConfig["params"]["useCacheFlag"] == 0: #check if redownload requested
+        try: #FORM SQL QUERY
             diagnosesBuf = [] #GET QUERY PER RACE
             for race in ['AA', 'NHPI', 'MR']:
                 raceTotal = pgIO.getAllData("select count(*) from jingwen.comorbid where (race='"+race+"')" #TOTAL NO. PEOPLE IN RACE
                                             ,dbName = dbName).pop()[0] 
-                print((race + " done: ").ljust(12) + str(raceTotal))
+                print((race + " done: ").ljust(12) + str(raceTotal)) #DEBUG
                 for column in dsm: #REMOVE FLAG
                     queryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"')and(" #BASE QUERY
                     for row in dsm[column]:
                         if row==row: #TEST IF NOT NAN
                             queryString = queryString + "(dsmno='"+row+"')or" #ADD TO QUERY
 
-                    queryString = queryString[:-2] + ")"
+                    queryString = queryString[:-2] + ")" #REMOVE LAST "OR"
                     valRetrieve = pgIO.getAllData(queryString,dbName = dbName).pop()[0]
                     diagnosesBuf.append([valRetrieve/raceTotal*100, re.sub(r'\([^)]*\)', #REGEX TO REMOVE TEXT IN BRACKETS (CHILDHOOD-ONSET)
                                                                            '', column), race])
-            diagnoses = pd.DataFrame(diagnosesBuf, columns=['%', 'Diagnosis', 'Race']) 
+            diagnoses = pd.DataFrame(diagnosesBuf, columns=['%', 'Diagnosis', 'Race'])
 
         except Exception as e:
             logger.error(f'Issue with frequency count " {e}')
 
         try: #SAVE THE PICKLE FOR DIAGNOSES
-            fileSaveDiagnosisCount = open(module1_config["outputs"]["intermediatePath"]+"diagnosisCount.pickle",'wb') 
+            fileSaveDiagnosisCount = open(jsonConfig["outputs"]["intermediatePath"]+"diagnosisCount.pickle",'wb') 
             pickle.dump(diagnoses, fileSaveDiagnosisCount)   
             fileSaveDiagnosisCount.close()
 
@@ -125,15 +127,25 @@ def main(logger, resultsDict):
 
     else:
         try: #LOAD THE PICKLE FOR DIAGNOSES
-            fileLoadDiagnosisCount = open(module1_config["inputs"]["intermediatePath"]+"diagnosisCount.pickle",'rb') 
+            fileLoadDiagnosisCount = open(jsonConfig["inputs"]["intermediatePath"]+"diagnosisCount.pickle",'rb') 
             diagnoses = pickle.load(fileLoadDiagnosisCount)   
             fileLoadDiagnosisCount.close()
 
         except Exception as e:
             logger.error(f'Issue loading from pickle: " {e}')
 
+    try: #FILTER OUT FREQUENCY < 3% DIAGNOSES
+    # TODO: MORE CONCISE CODE
+        for diagnosis in diagnoses['Diagnosis'].unique():
+            diagnosesBuf = diagnoses[diagnoses['Diagnosis']==diagnosis]
+            if (diagnosesBuf['%'] < 3).all():
+                diagnoses = diagnoses.drop(diagnosesBuf.index)
+
+    except Exception as e:
+        logger.error(f'Issue filtering out low freq data: " {e}')
 
 
+    
     try: #PLOT BARCHART
         plt.figure(figsize=(15,8)) 
         ax = sns.barplot(x="Diagnosis", y="%", hue="Race", data=diagnoses)
@@ -147,8 +159,10 @@ def main(logger, resultsDict):
                     ha="center") 
 
 
-        plt.savefig(module1_config["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
-        plt.show()
+        plt.savefig(jsonConfig["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
+
+        if jsonConfig["params"]["showGraphFlag"] == 1:
+            plt.show()
         
     except Exception as e:
         logger.error(f'Issue drawing barchart: " {e}')

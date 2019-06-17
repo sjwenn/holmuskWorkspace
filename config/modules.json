@@ -8,13 +8,13 @@
     }, {
         "moduleName" : "figure1",
         "path"       : "modules/figure1/figure1.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
         "moduleName" : "readmeGenerator",
         "path"       : "modules/readmeGenerator/readmeGenerator.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     },{

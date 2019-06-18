@@ -34,15 +34,38 @@ def main(logger, resultsDict):
     tableNameDiagnoses = jsonConfig["inputs"]["tableNameDiagnoses"]
 
     fetchQuery = "select * from " + tableNameDiagnoses + ";"
-    genRetrieve = pgIO.getDataIterator( fetchQuery, dbName = dbName, chunks = 400)
+    genRetrieve = pgIO.getDataIterator( fetchQuery, dbName = dbName, chunks = 1000)
     tempArray = []
     for idx, data in enumerate(genRetrieve):
     	tempArray.append(data)
     	print("Chunk: "+str(idx))
 
+    dsmSUD          = pd.read_csv(jsonConfig["inputs"]["dsmSUDPath"])
+    dsmDiagnoses    = pd.read_csv(jsonConfig["inputs"]["dsmDiagnosesPath"])
+
+    SUDList         = dsmSUD.columns.tolist()
+    DiagnosesList   = dsmSUD.columns.tolist()
+
     cols = ['id','siteid','race','sex','age_numeric','visit_type','age', 'dsm', 'diagnosis']
+
     df = pd.DataFrame(data = tempArray[0], columns = cols)
-    print(df.head(10))
+
+    # for item in SUDList:
+    #     df[item]=0
+    # for item in DiagnosesList:
+    #     df[item]=0
+
+    # for column in dsmSUD:
+    #     for row in dsmSUD[column]:
+    #         df.replace(row, column, inplace=True)
+
+    # for column in dsmDiagnoses:
+    #     for row in dsmDiagnoses[column]:
+    #         df.replace(row, column, inplace=True)
+
+    
+
+    print(df.head(100))
 
     return
 

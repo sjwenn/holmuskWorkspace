@@ -25,7 +25,8 @@ DSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islander
 ## Table 2: Substance use disorder (SUD)
 DSM-IV substance use disorder (SUD) diagnoses among patients aged 12 or older, by age group.
 
-MR
+#### MR
+
 | SUD                     |   Total |   12-17 |   18-34 |   35-49 |   50+ |
 |:------------------------|--------:|--------:|--------:|--------:|------:|
 | Any SUD                 |    19.9 |     4.4 |    26.8 |    38.2 |  37.1 |
@@ -42,7 +43,8 @@ MR
 | Polysubstance           |     0   |     0   |     0   |     0   |   0   |
 | Sedatives/tranquilizers |     0.5 |     0   |     0.9 |     1   |   0.7 |
 
-NHPI
+#### NHPI
+
 | SUD                     |   Total |   12-17 |   18-34 |   35-49 |   50+ |
 |:------------------------|--------:|--------:|--------:|--------:|------:|
 | Any SUD                 |    13.9 |     2.9 |    21.9 |    22.7 |  19.8 |
@@ -59,7 +61,8 @@ NHPI
 | Polysubstance           |     0   |     0   |     0   |     0   |   0   |
 | Sedatives/tranquilizers |     0.6 |     0   |     0   |     2.1 |   1   |
 
-AA
+#### AA
+
 | SUD                     |   Total |   12-17 |   18-34 |   35-49 |   50+ |
 |:------------------------|--------:|--------:|--------:|--------:|------:|
 | Any SUD                 |    13.6 |     9.5 |    22.4 |    13.7 |   6.9 |

@@ -181,7 +181,7 @@ def main(logger, resultsDict):
             tableSudCount=tableSudCount.reindex(tableSudCountIndices)
 
 
-            tableString += race + "\n"
+            tableString += "#### " + race + "\n\n"
             tableString += tabulate(tableSudCount , tablefmt="pipe", headers="keys")
             tableString += "\n\n"
 

@@ -13,6 +13,7 @@ from scipy.stats import chi2_contingency
 import pickle
 import math
 import re
+from tabulate import tabulate
 
 import dask.array as da
 import dask.dataframe as dd
@@ -60,7 +61,7 @@ def main(logger, resultsDict):
             genRetrieve = pgIO.getDataIterator("select * from jingwen.diagnoses" + ";",\
                                                 dbName = dbName, chunks = 100)
 
-            tempArray = [] #RUN THE QUERY
+            tempArray = [] #BUFFER TO SAVE QUERY RESULT CHUNK
             for idx, data in enumerate(genRetrieve): 
                 tempArray.append(da.from_array(data, chunks=(100,100)))
                 print("Chunk: "+str(idx))
@@ -70,7 +71,7 @@ def main(logger, resultsDict):
             logger.error(f'Issue with SQL query: " {e}')
 
 
-        try: #SAVE THE PICKLE FOR DIAGNOSES
+        try: #SAVE THE PICKLE FOR sudCount
             fileSaveDiagnosisRaw = open(jsonConfig["outputs"]["intermediatePath"]+"sudRaw.pickle",'wb') 
             pickle.dump(rawData, fileSaveDiagnosisRaw)   
             fileSaveDiagnosisRaw.close()
@@ -79,7 +80,7 @@ def main(logger, resultsDict):
             logger.error(f'Issue saving to pickle: " {e}')
 
     else:
-        try: #LOAD THE PICKLE FOR DIAGNOSES
+        try: #LOAD THE PICKLE FOR sudCount
             fileLoadDiagnosisRaw = open(jsonConfig["inputs"]["intermediatePath"]+"sudRaw.pickle",'rb') 
             rawData = pickle.load(fileLoadDiagnosisRaw)   
             fileLoadDiagnosisRaw.close()
@@ -102,66 +103,73 @@ def main(logger, resultsDict):
 
     if jsonConfig["params"]["useCacheFlag"] == 0: #check if redownload requested
         try: #FORM SQL QUERY
-            diagnosesBuf = [] #GET QUERY PER RACE
+            sudCountBuf = [] #GET QUERY PER RACE
             for race in raceList:
-                for age in ageList:
-                    raceAgeTotal = pgIO.getAllData("select count(*) from jingwen.comorbid_updated where (race='"+race+"') and (age_categorical='"+age+"')" #TOTAL NO. PEOPLE IN RACE AND AGE
-                            ,dbName = dbName).pop()[0] 
-                    print((race + age + " done: ").ljust(12) + str(raceAgeTotal)) #DEBUG
+                for age in np.append('Total', ageList):
+                    if age != 'Total':
+                        raceAgeTotalQueryString = "select count(*) from jingwen.comorbid_updated where (race='"+race+"') and (age_categorical='"+age+"')"
+                        templateQueryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"') and (age_categorical='"+age+"') and (" #BASE QUERY
+                    else:
+                        raceAgeTotalQueryString = "select count(*) from jingwen.comorbid_updated where (race='"+race+"') " #TOTAL NO. PEOPLE IN RACE AND AGE
+                        templateQueryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"') and (" #BASE QUERY
+
+                    raceAgeTotal = pgIO.getAllData( raceAgeTotalQueryString, dbName = dbName).pop()[0] 
+
                     for column in dsm: #REMOVE FLAG
-                        queryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"') and (age_categorical='"+age+"') and (" #BASE QUERY
+                        queryString = templateQueryString
                         for row in dsm[column]:
                             if row==row: #TEST IF NOT NAN
                                 queryString = queryString + "(dsmno='"+str(row)+"')or" #ADD TO QUERY
 
                         queryString = queryString[:-2] + ")" #REMOVE LAST "OR"
                         valRetrieve = pgIO.getAllData(queryString,dbName = dbName).pop()[0]
-                        diagnosesBuf.append([valRetrieve/raceAgeTotal*100, re.sub(r'\([^)]*\)', #REGEX TO REMOVE TEXT IN BRACKETS (CHILDHOOD-ONSET)
-                                                                               '', column), race, age])
-            diagnoses = pd.DataFrame(diagnosesBuf, columns=['%', 'Diagnosis', 'Race', 'Age'])
+                        sudCountBuf.append([round(valRetrieve/raceAgeTotal*100,1), re.sub(r'\([^)]*\)','', column), #REGEX TO REMOVE TEXT IN BRACKETS (CHILDHOOD-ONSET)
+                                                                                                                    race, age])
+                    print((race + age + " done: ").ljust(12) + str(raceAgeTotal)) #DEBUG
+
+            sudCount = pd.DataFrame(sudCountBuf, columns=['%', 'SUD', 'Race', 'Age'])
 
         except Exception as e:
             logger.error(f'Issue with frequency count " {e}')
 
-        try: #SAVE THE PICKLE FOR DIAGNOSES
+        try: #SAVE THE PICKLE FOR sudCount
             fileSaveDiagnosisCount = open(jsonConfig["outputs"]["intermediatePath"]+"sudCount.pickle",'wb') 
-            pickle.dump(diagnoses, fileSaveDiagnosisCount)   
+            pickle.dump(sudCount, fileSaveDiagnosisCount)   
             fileSaveDiagnosisCount.close()
 
         except Exception as e:
             logger.error(f'Issue saving to pickle: " {e}')
 
     else:
-        try: #LOAD THE PICKLE FOR DIAGNOSES
+        try: #LOAD THE PICKLE FOR sudCount
             fileLoadDiagnosisCount = open(jsonConfig["inputs"]["intermediatePath"]+"sudCount.pickle",'rb') 
-            diagnoses = pickle.load(fileLoadDiagnosisCount)   
+            sudCount = pickle.load(fileLoadDiagnosisCount)   
             fileLoadDiagnosisCount.close()
 
         except Exception as e:
             logger.error(f'Issue loading from pickle: " {e}')
-
-    print(diagnoses[diagnoses['Race']=='AA'])
     
-    try: #PLOT BARCHART
-        plt.figure(figsize=(15,8)) 
-        ax = sns.barplot(x="Diagnosis", y="%", hue="Race", data=diagnoses)
-        plt.xticks(rotation=45)
+    try:
+        tableString = ""
+        sudCount = sudCount[sudCount['Age']!='1-11']
+        
+        for race in raceList:
+            tableSudCount = sudCount[sudCount['Race']==race].pivot(index='SUD', columns='Age')['%']
 
-        for p in ax.patches: #PUT NUMERICAL LABELS ABOVE BARS IN BAR CHART
-            height = p.get_height()
-            ax.text(p.get_x()+p.get_width()/2.,
-                    height + 0.5,
-                    '{:1.2f}'.format(height),
-                    ha="center") 
+            #MOVE TOTAL COLUMN TO FRONT
+            cols = tableSudCount.columns.tolist()
+            cols = cols[-1:] + cols[:-1]
+            tableSudCount = tableSudCount[cols]
 
 
-        plt.savefig(jsonConfig["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
+            tableString += race + "\n"
+            tableString += tabulate(tableSudCount , tablefmt="pipe", headers="keys")
+            tableString += "\n\n"
 
-        if jsonConfig["params"]["showGraphFlag"] == 1:
-            plt.show()
+        print(tableString)
         
     except Exception as e:
-        logger.error(f'Issue drawing barchart: " {e}')
+        logger.error(f'Issue drawing table 2: " {e}')
 
     return
 

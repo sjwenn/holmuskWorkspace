@@ -11,7 +11,7 @@
         "saveFigPath": "../docs/figure2.png"
     },
     "params"  : {
-        "useCacheFlag": 0,
+        "useCacheFlag": 1,
         "showGraphFlag" : 0
     }
 }

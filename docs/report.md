@@ -22,8 +22,9 @@ Selected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders,
 DSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people.
 ![image](figure1.png)
 
-## Table 1: Selected Characteristics
-Selected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people.
+## Table 2: Substance use disorder (SUD)
+DSM-IV substance use disorder (SUD) diagnoses among patients aged 12 or older, by age group.
+
 MR
 | SUD                     |   Total |   12-17 |   18-34 |   35-49 |   50+ |
 |:------------------------|--------:|--------:|--------:|--------:|------:|

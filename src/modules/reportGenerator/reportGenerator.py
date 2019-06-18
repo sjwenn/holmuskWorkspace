@@ -64,15 +64,15 @@ def main(logger, resultsDict):
 
     try: #TABLE 2 
         fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"table2String.pickle",'rb') 
-        table1String = pickle.load(fileObjectLoad)   
+        table2String = pickle.load(fileObjectLoad)   
         fileObjectLoad.close()
 
-        outputString += "\n## Table 1: Selected Characteristics"
-        outputString += "\nSelected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people."
-        outputString += "\n" + table1String
+        outputString += "\n## Table 2: Substance use disorder (SUD)"
+        outputString += "\nDSM-IV substance use disorder (SUD) diagnoses among patients aged 12 or older, by age group."
+        outputString += "\n\n" + table2String
 
     except Exception as e:
-        logger.error(f'Issue with Table 1: " {e}')
+        logger.error(f'Issue with Table 2: " {e}')
 
 
 

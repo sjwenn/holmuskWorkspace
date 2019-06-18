@@ -2,18 +2,16 @@
     "inputs"  : {
     	"dbName": "mindlincnew",
         "rawPath": "../data/intermediate/",
-        "intermediatePath": "../data/intermediate/",
-        "dsmPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
+    	"intermediatePath": "../data/intermediate/",
+        "dsmPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
         "tableNameComorbid": "jingwen.comorbid_updated",
         "tableNameDiagnoses": "jingwen.diagnoses"
     }, 
     "outputs" : {
         "rawPath": "../data/intermediate/",
-        "intermediatePath": "../data/intermediate/",
-        "saveFigPath": "../docs/figure1.png"
+    	"intermediatePath": "../data/intermediate/"
     },
     "params"  : {
-        "useCacheFlag": 1,
-        "showGraphFlag" : 0
+        "useCacheFlag": 1
     }
 }

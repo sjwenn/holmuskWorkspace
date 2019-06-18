@@ -2,11 +2,13 @@
     "inputs"  : {
     	"maxNumSamples": 10000,
     	"dbName": "mindlincnew",
-    	"intermediatePath": "../data/intermediate/",
+        "rawPath": "../data/intermediate/",
+        "intermediatePath": "../data/intermediate/",
         "tableNameComorbid": "jingwen.comorbid_updated"
     }, 
     "outputs" : {
-    	"intermediatePath": "../data/intermediate/"
+        "rawPath": "../data/intermediate/",
+        "intermediatePath": "../data/intermediate/"
     },
     "params"  : {
         "useCacheFlag": 1

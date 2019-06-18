@@ -111,7 +111,7 @@ def fetchTable1MD(logger, df):
             for (label, value) in out:
                 valSex.at[race,label] = value
                 tableSex.at[race,label] = str(round(value/n*100,1)) + " (" + str(round((value/n+CI(value/n, n, 0.95))*100,1)) + "-" \
-                                                                                    + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
+                                                                           + str(round((value/n-CI(value/n, n, 0.95))*100,1)) + ")" 
             
         tableSex = tableSex.fillna(value="0.0 (0.0-0.0)").transpose()
         tableSex.insert(loc=0, column='All', value = df['sex'].value_counts().compute().to_frame())

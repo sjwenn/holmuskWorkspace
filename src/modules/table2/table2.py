@@ -54,11 +54,13 @@ def main(logger, resultsDict):
         overwriting command line arguments as needed.
     '''
     dbName = jsonConfig["inputs"]["dbName"]
+    tableNameComorbid = jsonConfig["inputs"]["tableNameComorbid"]
+    tableNameDiagnoses = jsonConfig["inputs"]["tableNameDiagnoses"]
 
     if jsonConfig["params"]["useCacheFlag"] == 0: #check if redownload requested THIS IS NOT PEP8 BUT JSON NO WORK WITH PYTHON BOOL
 
         try: # SET UP QUERY
-            genRetrieve = pgIO.getDataIterator("select * from jingwen.diagnoses" + ";",\
+            genRetrieve = pgIO.getDataIterator("select * from "+tableNameDiagnoses+"" + ";",\
                                                 dbName = dbName, chunks = 100)
 
             tempArray = [] #BUFFER TO SAVE QUERY RESULT CHUNK
@@ -72,7 +74,7 @@ def main(logger, resultsDict):
 
 
         try: #SAVE THE PICKLE FOR sudCount
-            fileSaveDiagnosisRaw = open(jsonConfig["outputs"]["intermediatePath"]+"sudRaw.pickle",'wb') 
+            fileSaveDiagnosisRaw = open(jsonConfig["outputs"]["rawPath"]+"sudRaw.pickle",'wb') 
             pickle.dump(rawData, fileSaveDiagnosisRaw)   
             fileSaveDiagnosisRaw.close()
 
@@ -81,7 +83,7 @@ def main(logger, resultsDict):
 
     else:
         try: #LOAD THE PICKLE FOR sudCount
-            fileLoadDiagnosisRaw = open(jsonConfig["inputs"]["intermediatePath"]+"sudRaw.pickle",'rb') 
+            fileLoadDiagnosisRaw = open(jsonConfig["inputs"]["rawPath"]+"sudRaw.pickle",'rb') 
             rawData = pickle.load(fileLoadDiagnosisRaw)   
             fileLoadDiagnosisRaw.close()
 
@@ -107,13 +109,13 @@ def main(logger, resultsDict):
             for race in raceList:
                 for age in np.append('Total', ageList):
                     if age != 'Total':
-                        raceAgeTotalQueryString = "select count(*) from jingwen.comorbid_updated where (race='"+race+"') and (age_categorical='"+age+"')"
-                        templateQueryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"') and (age_categorical='"+age+"') and (" #BASE QUERY
-                        moreThan2QueryString = "select count(*)from( select id, siteid from jingwen.diagnoses where (race='"+race+"') and (age_categorical='"+age+"') and ("
+                        raceAgeTotalQueryString = "select count(*) from "+tableNameComorbid+" where (race='"+race+"') and (age_categorical='"+age+"')"
+                        templateQueryString = "select count(distinct id) from "+tableNameDiagnoses+" where (race='"+race+"') and (age_categorical='"+age+"') and (" #BASE QUERY
+                        moreThan2QueryString = "select count(*)from( select id, siteid from "+tableNameDiagnoses+" where (race='"+race+"') and (age_categorical='"+age+"') and ("
                     else:
-                        raceAgeTotalQueryString = "select count(*) from jingwen.comorbid_updated where (race='"+race+"') " #TOTAL NO. PEOPLE IN RACE AND AGE
-                        templateQueryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"') and (" #BASE QUERY
-                        moreThan2QueryString = "select count(*)from( select id, siteid from jingwen.diagnoses where (race='"+race+"') and ("
+                        raceAgeTotalQueryString = "select count(*) from "+tableNameComorbid+" where (race='"+race+"') " #TOTAL NO. PEOPLE IN RACE AND AGE
+                        templateQueryString = "select count(distinct id) from "+tableNameDiagnoses+" where (race='"+race+"') and (" #BASE QUERY
+                        moreThan2QueryString = "select count(*)from( select id, siteid from "+tableNameDiagnoses+" where (race='"+race+"') and ("
 
                     raceAgeTotal = pgIO.getAllData( raceAgeTotalQueryString, dbName = dbName).pop()[0] 
 

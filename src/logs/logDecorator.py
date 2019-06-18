@@ -121,7 +121,7 @@ class logInit(object):
             # Generate a file handler if necessary
             if ('logstash' in self.specs) and self.specs['logstash']['todo']:
 
-                tags = [ 'workspace' , now]
+                tags = [ '{{cookiecutter.project}}' , now]
 
                 if 'tags' in self.specs['logstash']:
                     tags += self.specs['logstash']['tags']
@@ -146,4 +146,3 @@ class logInit(object):
             return result
 
         return wrappedF
-        

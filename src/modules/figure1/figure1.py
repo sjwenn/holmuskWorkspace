@@ -70,7 +70,7 @@ def main(logger, resultsDict):
 
 
         try: #SAVE THE PICKLE FOR DIAGNOSES
-            fileSaveDiagnosisRaw = open(jsonConfig["outputs"]["intermediatePath"]+"diagnosisRaw.pickle",'wb') 
+            fileSaveDiagnosisRaw = open(jsonConfig["outputs"]["rawPath"]+"diagnosisRaw.pickle",'wb') 
             pickle.dump(rawData, fileSaveDiagnosisRaw)   
             fileSaveDiagnosisRaw.close()
 
@@ -79,7 +79,7 @@ def main(logger, resultsDict):
 
     else:
         try: #LOAD THE PICKLE FOR DIAGNOSES
-            fileLoadDiagnosisRaw = open(jsonConfig["inputs"]["intermediatePath"]+"diagnosisRaw.pickle",'rb') 
+            fileLoadDiagnosisRaw = open(jsonConfig["inputs"]["rawPath"]+"diagnosisRaw.pickle",'rb') 
             rawData = pickle.load(fileLoadDiagnosisRaw)   
             fileLoadDiagnosisRaw.close()
 

@@ -109,22 +109,35 @@ def main(logger, resultsDict):
                     if age != 'Total':
                         raceAgeTotalQueryString = "select count(*) from jingwen.comorbid_updated where (race='"+race+"') and (age_categorical='"+age+"')"
                         templateQueryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"') and (age_categorical='"+age+"') and (" #BASE QUERY
+                        moreThan2QueryString = "select count(*)from( select id, siteid from jingwen.diagnoses where (race='"+race+"') and (age_categorical='"+age+"') and ("
                     else:
                         raceAgeTotalQueryString = "select count(*) from jingwen.comorbid_updated where (race='"+race+"') " #TOTAL NO. PEOPLE IN RACE AND AGE
                         templateQueryString = "select count(distinct id) from jingwen.diagnoses where (race='"+race+"') and (" #BASE QUERY
+                        moreThan2QueryString = "select count(*)from( select id, siteid from jingwen.diagnoses where (race='"+race+"') and ("
 
                     raceAgeTotal = pgIO.getAllData( raceAgeTotalQueryString, dbName = dbName).pop()[0] 
 
+                    fullQueryString = templateQueryString
                     for column in dsm: #REMOVE FLAG
                         queryString = templateQueryString
                         for row in dsm[column]:
                             if row==row: #TEST IF NOT NAN
-                                queryString = queryString + "(dsmno='"+str(row)+"')or" #ADD TO QUERY
+                                queryString += "(dsmno='"+str(row)+"')or" #ADD TO QUERY
+                                fullQueryString += "(dsmno='"+str(row)+"')or"
+                                moreThan2QueryString  += "(dsmno='"+str(row)+"')or"
 
                         queryString = queryString[:-2] + ")" #REMOVE LAST "OR"
                         valRetrieve = pgIO.getAllData(queryString,dbName = dbName).pop()[0]
-                        sudCountBuf.append([round(valRetrieve/raceAgeTotal*100,1), re.sub(r'\([^)]*\)','', column), #REGEX TO REMOVE TEXT IN BRACKETS (CHILDHOOD-ONSET)
-                                                                                                                    race, age])
+                        sudCountBuf.append([round(valRetrieve/raceAgeTotal*100,1), column, race, age])
+
+                    fullQueryString = fullQueryString[:-2] + ")"
+                    valRetrieve = pgIO.getAllData(fullQueryString,dbName = dbName).pop()[0]
+                    sudCountBuf.append([round(valRetrieve/raceAgeTotal*100,1), 'Any SUD', race, age])
+
+                    moreThan2QueryString = moreThan2QueryString[:-2] + ")" + " group by id, siteid having count(*) > 1) as tmp" # POTENTIAL ISSUE: PRESENTING WITH SAME SUD MULTIPLE TIMES
+                    valRetrieve = pgIO.getAllData(moreThan2QueryString,dbName = dbName).pop()[0]
+                    sudCountBuf.append([round(valRetrieve/raceAgeTotal*100,1), '>= 2 SUDs', race, age])
+
                     print((race + age + " done: ").ljust(12) + str(raceAgeTotal)) #DEBUG
 
             sudCount = pd.DataFrame(sudCountBuf, columns=['%', 'SUD', 'Race', 'Age'])
@@ -161,6 +174,12 @@ def main(logger, resultsDict):
             cols = cols[-1:] + cols[:-1]
             tableSudCount = tableSudCount[cols]
 
+            # MAKE 'ANY SUD' FIRST INDEX
+            tableSudCountIndices = tableSudCount.index.tolist()
+            tableSudCountIndices.remove('Any SUD')
+            tableSudCountIndices.insert(0, 'Any SUD')
+            tableSudCount=tableSudCount.reindex(tableSudCountIndices)
+
 
             tableString += race + "\n"
             tableString += tabulate(tableSudCount , tablefmt="pipe", headers="keys")
@@ -169,7 +188,16 @@ def main(logger, resultsDict):
         print(tableString)
         
     except Exception as e:
-        logger.error(f'Issue drawing table 2: " {e}')
+        logger.error(f'Issue generating table 2: " {e}')
+
+
+    try: #SAVE THE PICKLE OF TABLE1STRING
+        fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"table2String.pickle",'wb') 
+        pickle.dump(tableString, fileObjectSave)   
+        fileObjectSave.close()
+
+    except Exception as e:
+        logger.error(f'Issue saving to pickle: " {e}')
 
     return
 

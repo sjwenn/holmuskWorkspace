@@ -62,6 +62,19 @@ def main(logger, resultsDict):
     except Exception as e:
         logger.error(f'Issue with Figure 1: " {e}')
 
+    try: #TABLE 2 
+        fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"table2String.pickle",'rb') 
+        table1String = pickle.load(fileObjectLoad)   
+        fileObjectLoad.close()
+
+        outputString += "\n## Table 1: Selected Characteristics"
+        outputString += "\nSelected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people."
+        outputString += "\n" + table1String
+
+    except Exception as e:
+        logger.error(f'Issue with Table 1: " {e}')
+
+
 
     try: #FINAL OUTPUT
         with open(jsonConfig["outputs"]["reportPath"] + 'report.md', 'w') as f:

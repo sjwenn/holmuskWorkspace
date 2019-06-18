@@ -18,9 +18,9 @@
         "description": "",
         "owner"      : ""
     }, {
-        "moduleName" : "readmeGenerator",
+        "moduleName" : "reportGenerator",
         "path"       : "modules/reportGenerator/reportGenerator.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     },{

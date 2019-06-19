@@ -26,16 +26,18 @@ dbName     = jsonConfig["inputs"]["dbName"]
 @lD.log(logBase + '.filterRace')
 def filterRace(logger):
 
+    # Prepare filter sring
     raceFilter = pd.read_csv(jsonConfig["inputs"]["raceFilterPath"])
     filterRaceQueryString = '''
                             select id, siteid, race, sex from raw_data.background 
                             where (ethnicity not ilike 'hisp%') and (
                             '''
 
-    # Pick out relavant races
+    # Create filter string
     for idx, (race, category) in raceFilter.iterrows():
         if category == category: #not NAN
             filterRaceQueryString += "(race='" + race + "')or"
+
     # Remove last 'or'
     filterRaceQueryString = filterRaceQueryString[:-2] + ")"
 
@@ -46,49 +48,72 @@ def filterRace(logger):
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
 
-    typePatientJoinQueryString      =   '''
-                                        select background.id, background.siteid, background.race, background.sex, 
-                                        raw_data.typepatient.age, raw_data.typepatient.visit_type, raw_data.typepatient.created
-                                        from
-                                        (
-                                        ''' + filterRace() + '''
-                                        ) as background
-                                        inner join raw_data.typepatient 
-                                        on raw_data.typepatient.backgroundid = background.id and raw_data.typepatient.siteid = background.siteid
-                                        '''
+    typePatientJoinQueryString          =   '''
+                                            create table jingwen.temp1 as(
+                                            select background.id, background.siteid, background.race, background.sex, 
+                                            raw_data.typepatient.age, raw_data.typepatient.visit_type, raw_data.typepatient.created
+                                            from
+                                            (
+                                            ''' + filterRace() + '''
+                                            ) as background
+                                            inner join raw_data.typepatient 
+                                            on raw_data.typepatient.backgroundid = background.id and raw_data.typepatient.siteid = background.siteid
+                                            );
+                                            '''
 
-    cteQueryString                  =   '''
-                                        ;with cteRemoveDuplicate AS
-                                        (
-                                        select *,
-                                        ROW_NUMBER() OVER (PARTITION BY id, siteid ORDER BY created DESC) AS rn
-                                        from (
-                                             ''' + typePatientJoinQueryString + '''
-                                        ) as temp1
-                                        )
-                                        '''
+    removeDuplicateVisitsQueryString    =   '''
+                                            create table jingwen.temp2 as(
+                                            with cte as
+                                            (
+                                            select *,
+                                            ROW_NUMBER() OVER (PARTITION BY id, siteid ORDER BY created DESC) AS rn
+                                            from jingwen.temp1
+                                            )
+                                            select id, siteid, race, sex, age, visit_type
+                                            from cte
+                                            where rn = 1
+                                            );
+                                            '''     
 
-    removeDuplicateVisitsQueryString =  '''
-                                        select id, siteid, race, sex, age, visit_type
-                                        from cteRemoveDuplicate
-                                        where rn = 1
-                                        '''
+    pdiagnoseJoinQueryString            =   '''
+                                            create table jingwen.temp3 as(
+                                            select distinct on (jingwen.temp2.id, jingwen.temp2.siteid, raw_data.pdiagnose.dsmno)
+                                            jingwen.temp2.*, raw_data.pdiagnose.dsmno, raw_data.pdiagnose.diagnosis
+                                            from jingwen.temp2
+                                            inner join raw_data.pdiagnose 
+                                            on raw_data.pdiagnose.backgroundid = jingwen.temp2.id and raw_data.pdiagnose.siteid = jingwen.temp2.siteid
+                                            );
+                                            '''
 
-    pdiagnoseJoinQueryString         =  '''
-                                        select temp2.*, raw_data.pdiagnose.dsmno, raw_data.pdiagnose.diagnosis
-                                        from
-                                        (
-                                        ''' + removeDuplicateVisitsQueryString + '''
-                                        ) as temp2
-                                        inner join raw_data.pdiagnose 
-                                        on raw_data.pdiagnose.backgroundid = temp2.id and raw_data.pdiagnose.siteid = temp2.siteid
-                                        '''    
-                                                                        
-    finalQueryString = cteQueryString + pdiagnoseJoinQueryString  
-                                    
-    print('[preProcessDB] Running query. This might take a while ...')
-    #val = pgIO.getAllData( finalQueryString , dbName = dbName)
-    print(finalQueryString)
+
+    print('[preProcessDB] Running queries. This might take a while ...')
+
+    print('Filter race and join with typepatient ... ', end = " ")
+    if pgIO.commitData(typePatientJoinQueryString , dbName = dbName):
+        print('done')
+
+    print('Remove duplicate visits ... ', end = " ")
+    if pgIO.commitData(removeDuplicateVisitsQueryString , dbName = dbName):
+        print('done')
+
+    print('Join with pdiagnose ... ', end = " ")
+    if pgIO.commitData(pdiagnoseJoinQueryString , dbName = dbName):
+        print('done')
+
+
+
+
+    #pgIO.getDataIterator( removeDuplicateVisitsQueryString , dbName = dbName, chunks = 1000)
+
+    # tempArray = []
+    # for idx, data in enumerate(genRetrieve):
+    #     tempArray.append(data)
+    #     print("Chunk: " + str(idx))
+
+    #cols = ['id','siteid','race','sex','age_numeric','visit_type','age', 'dsm', 'diagnosis']
+    #df = pd.DataFrame(data = tempArray[0], columns = cols)
+
+    #print(df.head(100))
 
     return
 

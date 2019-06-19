@@ -2,19 +2,19 @@
     {
         "moduleName" : "table1",
         "path"       : "modules/table1/table1.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
         "moduleName" : "figure1",
         "path"       : "modules/figure1/figure1.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
         "moduleName" : "table2",
         "path"       : "modules/table2/table2.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {        
@@ -26,7 +26,7 @@
     }, {
         "moduleName" : "reportGenerator",
         "path"       : "modules/reportGenerator/reportGenerator.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     },{

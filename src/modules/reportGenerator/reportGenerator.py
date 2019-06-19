@@ -26,63 +26,7 @@ logBase = config['logging']['logBase'] + '.modules.reportGenerator.reportGenerat
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
-    '''main function for module1
     
-    This function reads data from a SQL server, saves
-    into a pickle and loads it before finally doing a
-    length integrity check between the two. Just some 
-    practice; not very useful at all.
-    
-    Parameters
-    ----------
-    logger : {logging.Logger}
-        The logger used for logging error information
-    '''
-    outputString = ""
-
-    try: #TABLE 1  
-        fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"table1String.pickle",'rb') 
-        table1String = pickle.load(fileObjectLoad)   
-        fileObjectLoad.close()
-
-        outputString += "\n## Table 1: Selected Characteristics"
-        outputString += "\nSelected characteristics of Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people."
-        outputString += "\n" + table1String
-
-    except Exception as e:
-        logger.error(f'Issue with Table 1: " {e}')
-
-
-    try: #FIGURE 1
-        outputString += "\n## Figure 1: DSM-IV"
-        outputString += "\nDSM-IV mental diagnoses among Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people."
-        outputString += "\n![image](figure1.png)"
-        outputString += "\n"
-
-    except Exception as e:
-        logger.error(f'Issue with Figure 1: " {e}')
-
-    try: #TABLE 2 
-        fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"table2String.pickle",'rb') 
-        table2String = pickle.load(fileObjectLoad)   
-        fileObjectLoad.close()
-
-        outputString += "\n## Table 2: Substance use disorder (SUD)"
-        outputString += "\nDSM-IV substance use disorder (SUD) diagnoses among patients aged 12 or older, by age group."
-        outputString += "\n\n" + table2String
-
-    except Exception as e:
-        logger.error(f'Issue with Table 2: " {e}')
-
-
-
-    try: #FINAL OUTPUT
-        with open(jsonConfig["outputs"]["reportPath"] + 'report.md', 'w') as f:
-            f.write( outputString )
-
-    except Exception as e:
-        logger.error(f'Issue with final output: " {e}')
-
 
     return
 

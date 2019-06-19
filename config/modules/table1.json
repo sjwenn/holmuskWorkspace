@@ -1,16 +1,20 @@
 {
     "inputs"  : {
-    	"maxNumSamples": 10000,
-    	"dbName": "mindlincnew",
+        "dbName": "mindlincnew",
+
         "rawPath": "../data/intermediate/",
         "intermediatePath": "../data/intermediate/",
-        "tableNameComorbid": "jingwen.comorbid_updated"
+
+        "dsmSUDPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
+        "dsmDiagnosesPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
+        
+        "tableNameComorbid": "jingwen.comorbid",
     }, 
     "outputs" : {
         "rawPath": "../data/intermediate/",
         "intermediatePath": "../data/intermediate/"
     },
     "params"  : {
-        "useCacheFlag": 1
+        "useCacheFlag": 0
     }
 }

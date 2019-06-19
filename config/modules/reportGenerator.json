@@ -1,6 +1,8 @@
 {
     "inputs"  : {
     	"dbName": "mindlincnew",
+        
+        "rawPath": "../data/intermediate/",
     	"intermediatePath": "../data/intermediate/"
     }, 
     "outputs" : {

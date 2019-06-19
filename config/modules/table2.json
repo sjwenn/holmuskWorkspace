@@ -1,11 +1,14 @@
 {
     "inputs"  : {
-    	"dbName": "mindlincnew",
+        "dbName": "mindlincnew",
+
         "rawPath": "../data/intermediate/",
         "intermediatePath": "../data/intermediate/",
-        "dsmPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
-        "tableNameComorbid": "jingwen.comorbid_updated",
-        "tableNameDiagnoses": "jingwen.diagnoses"
+
+        "dsmSUDPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
+        "dsmDiagnosesPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
+        
+        "tableNameComorbid": "jingwen.comorbid",
     }, 
     "outputs" : {
         "rawPath": "../data/intermediate/",

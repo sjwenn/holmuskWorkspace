@@ -5,6 +5,7 @@
         "rawPath": "../data/intermediate/",
     	"intermediatePath": "../data/intermediate/",
 
+        "raceFilterPath": "/home/jingwen/Downloads/Race_Filter.csv",
         "dsmSUDPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
         "dsmDiagnosesPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
         

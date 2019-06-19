@@ -8,7 +8,7 @@
         "dsmSUDPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
         "dsmDiagnosesPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
         
-        "tableNameComorbid": "jingwen.comorbid",
+        "tableNameComorbid": "jingwen.comorbid"
     }, 
     "outputs" : {
         "rawPath": "../data/intermediate/",

@@ -28,6 +28,12 @@ logBase = config['logging']['logBase'] + '.modules.table3.table3'
 def main(logger, resultsDict):
     dbName = jsonConfig["inputs"]["dbName"]
 
+    fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"db.pickle",'rb') 
+    rawData = pickle.load(fileObjectLoad)   
+    fileObjectLoad.close()
+
+    print(rawData.head(10))
+
     return
 
 

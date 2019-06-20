@@ -23,6 +23,16 @@ jsonConfig = jsonref.load(open('../config/modules/preProcessDB.json'))
 logBase    = config['logging']['logBase'] + '.modules.preProcessDB.preProcessDB'
 dbName     = jsonConfig["inputs"]["dbName"]
 
+@lD.log(logBase + '.headerParse')
+def headerParse(logger, headers):
+
+    headers = category.replace('/', '_').replace(' ', '_').replace('-', '_').replace(',', '_')
+    headers = re.sub(r'\([^)]*\)','', headers)
+
+    return headers
+
+
+    
 @lD.log(logBase + '.filterRace')
 def filterRace(logger):
 
@@ -61,9 +71,8 @@ def oneHotDiagnoses(logger):
             for dsmno in filterType[category]:
                 if dsmno == dsmno:
                     dsmQueryString += " dsmno='" + str(dsmno) + "' or "
+                    headerParse(category)
 
-            category = category.replace('/', '_').replace(' ', '_').replace('-', '_').replace(',', '_')
-            category = re.sub(r'\([^)]*\)','', category)
             dsmQueryString = dsmQueryString[:-3] + " then 1 end) as " + category
 
     dsmQueryString +=  '''
@@ -293,7 +302,7 @@ def main(logger, resultsDict):
         rawData['Any SUD']      = np.nan
         rawData['>= 2 SUDs']    = np.nan
 
-        rawData.apply(lambda x: x.isnull().sum(), axis='columns')
+        rawData[Any SUD] = rawData.apply(lambda x: x.isnull().sum(), axis='columns')
 
         print(rawData)
 

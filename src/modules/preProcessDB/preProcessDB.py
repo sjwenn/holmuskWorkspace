@@ -43,6 +43,8 @@ def filterRace(logger):
 
     return filterRaceQueryString
 
+
+
 @lD.log(logBase + '.oneHotDiagnoses')
 def oneHotDiagnoses(logger):
 
@@ -70,6 +72,14 @@ def oneHotDiagnoses(logger):
                                 '''
 
     return dsmQueryString
+
+
+
+# @lD.log(logBase + '.clearTemporaryTables')
+# def clearTemporaryTables(logger):
+#     return
+
+
 
 @lD.log(logBase + '.relabelComorbid')
 def relabelComorbid(logger):
@@ -156,6 +166,8 @@ def relabelComorbid(logger):
 
     return relabelComorbidQueryStringList
 
+
+
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
 
@@ -187,18 +199,21 @@ def main(logger, resultsDict):
                                             '''     
 
     pdiagnoseJoinQueryString            =   '''
+                                            create table jingwen.temp2_1 as(
+                                            select jingwen.temp2.*, raw_data.pdiagnose.dsmno, raw_data.pdiagnose.diagnosis
+                                            from jingwen.temp2
+                                            inner join raw_data.pdiagnose 
+                                            on raw_data.pdiagnose.backgroundid = jingwen.temp2.id and raw_data.pdiagnose.siteid = jingwen.temp2.siteid
+                                            );
+                                            '''
+
+    pdiagnoseJoinQueryString2           =   '''
                                             create table jingwen.temp3 as(
                                             with cte as
                                             (
                                             select *,
                                             ROW_NUMBER() OVER (PARTITION BY id, dsmno, siteid) AS rn 
-                                            from
-                                            (
-                                            select jingwen.temp2.*, raw_data.pdiagnose.dsmno, raw_data.pdiagnose.diagnosis
-                                            from jingwen.temp2
-                                            inner join raw_data.pdiagnose 
-                                            on raw_data.pdiagnose.backgroundid = jingwen.temp2.id and raw_data.pdiagnose.siteid = jingwen.temp2.siteid
-                                            )as diagnosis
+                                            from jingwen.temp2_1
                                             )
                                             select *
                                             from cte
@@ -223,7 +238,7 @@ def main(logger, resultsDict):
                                             );
                                             '''
     addAgeCategoricalQueryString        =   '''
-                                            ALTER TABLE jingwen.comorbidtmp
+                                            ALTER TABLE jingwen.comorbid
                                             ADD age_categorical text NULL;
                                             '''
 
@@ -245,6 +260,10 @@ def main(logger, resultsDict):
         if pgIO.commitData(pdiagnoseJoinQueryString , dbName = dbName):
             print('done\n')
 
+        print('Join with pdiagnose ... ', end = " ")
+        if pgIO.commitData(pdiagnoseJoinQueryString2 , dbName = dbName):
+            print('done\n')
+
         print('One hot diagnoses and SUD ... ', end = " ")
         if pgIO.commitData(oneHotDiagnosesQueryString , dbName = dbName):
             print('done\n')
@@ -253,28 +272,44 @@ def main(logger, resultsDict):
         if pgIO.commitData(joinEverythingQueryString , dbName = dbName):
             print('done\n')
 
-        for relabelQuery in relabelComorbid():
-            pgIO.commitData(relabelQuery , dbName = dbName)
+        # print('Relabelling')
+        # for relabelQuery in relabelComorbid():
+        #     pgIO.commitData(relabelQuery , dbName = dbName)
+
+        genRetrieve = pgIO.getDataIterator("select * from jingwen.comorbid", dbName = dbName, chunks = 100)
+        dbColumnQueryString =       '''
+                                    SELECT column_name
+                                    FROM information_schema.columns
+                                    WHERE table_schema = 'jingwen'
+                                    AND table_name   = 'comorbid'
+                                '''
+        dbColumns = pgIO.getAllData(dbColumnQueryString, dbName = dbName)
+        dbColumns = [item[0] for item in dbColumns]
+        tempArray = [] #RUN THE QUERY
+        for idx, data in enumerate(genRetrieve):
+            tempArray.append(data)
+            print("Chunk: "+str(idx))
+        rawData = pd.DataFrame(data = tempArray[0], columns = dbColumns)
+        rawData['Any SUD']      = np.nan
+        rawData['>= 2 SUDs']    = np.nan
+
+        rawData.apply(lambda x: x.isnull().sum(), axis='columns')
+
+        print(rawData)
+
+        try: #SAVE THE PICKLE
+            fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"db.pickle",'wb') 
+            pickle.dump(rawData, fileObjectSave)   
+            fileObjectSave.close()
+
+        except Exception as e:
+            logger.error(f'Issue saving to pickle: " {e}')
 
     except Exception as e:
         #   This probably won't print. Error is pgIO side, and I dont wanna modify
         #   it or write my own psycopg2 wrapper just to suppress error message.
         logger.error('Issue in query run. {}'.format(e))
         pass
-
-    #print(oneHotDiagnoses())
-
-    #pgIO.getDataIterator( removeDuplicateVisitsQueryString , dbName = dbName, chunks = 1000)
-
-    # tempArray = []
-    # for idx, data in enumerate(genRetrieve):
-    #     tempArray.append(data)
-    #     print("Chunk: " + str(idx))
-
-    #cols = ['id','siteid','race','sex','age_numeric','visit_type','age', 'dsm', 'diagnosis']
-    #df = pd.DataFrame(data = tempArray[0], columns = cols)
-
-    #print(df.head(100))
 
     return
 

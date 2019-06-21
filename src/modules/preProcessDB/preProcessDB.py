@@ -181,12 +181,15 @@ def relabelComorbid(logger):
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
 
-    raceList      = pd.read_csv(jsonConfig["inputs"]["raceFilterPath"])['category'].unique()
-    SUDList       = pd.read_csv(jsonConfig["inputs"]["dsmSUDPath"]).columns.tolist()
-    diagnosesList = pd.read_csv(jsonConfig["inputs"]["dsmDiagnosesPath"]).columns.tolist()
+    raceList         = pd.read_csv(jsonConfig["inputs"]["raceFilterPath"])['category'].unique()
+    SUDList          = pd.read_csv(jsonConfig["inputs"]["dsmSUDPath"]).columns.tolist()
+    diagnosesList    = pd.read_csv(jsonConfig["inputs"]["dsmDiagnosesPath"]).columns.tolist()
 
-    SUDList       = [headerParse(item) for item in SUDList]
-    diagnosesList = [headerParse(item) for item in diagnosesList]
+    rawSUDList       = SUDList
+    rawDiagnosesList = diagnosesList
+
+    SUDList          = [headerParse(item) for item in SUDList]
+    diagnosesList    = [headerParse(item) for item in diagnosesList]
 
     typePatientJoinQueryString          =   '''
                                             create table jingwen.temp1 as(
@@ -310,7 +313,8 @@ def main(logger, resultsDict):
 
         try: #SAVE THE PICKLE
             fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"db.pickle",'wb') 
-            pickle.dump((SUDList, diagnosesList, rawData), fileObjectSave)   
+            miscData = [SUDList, diagnosesList, rawSUDList, rawDiagnosesList]
+            pickle.dump((miscData, rawData), fileObjectSave)   
             fileObjectSave.close()
 
         except Exception as e:

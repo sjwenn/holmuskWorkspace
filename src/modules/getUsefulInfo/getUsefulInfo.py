@@ -29,7 +29,11 @@ def main(logger, resultsDict):
     dbName = jsonConfig["inputs"]["dbName"]
 
     fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"db.pickle",'rb') 
-    (SUDList, diagnosesList, rawData) = pickle.load(fileObjectLoad)   
+    (miscData, rawData) = pickle.load(fileObjectLoad)  
+    SUDList          = miscData[0]
+    diagnosesList    = miscData[1]
+    rawSUDList       = miscData[2]
+    rawdiagnosesList = miscData[3]
     fileObjectLoad.close()
 
     rawData = rawData[rawData['age']!='0']
@@ -64,6 +68,9 @@ def main(logger, resultsDict):
     data["list sex"]       = sexList
     data["list SUD"]       = SUDList
     data["list diagnoses"] = diagnosesList
+    
+    data["list raw SUD"]       = rawSUDList
+    data["list raw diagnoses"] = rawDiagnosesList
 
     fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"data.pickle",'wb') 
     pickle.dump(data, fileObjectSave)   

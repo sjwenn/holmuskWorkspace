@@ -26,8 +26,9 @@ dbName     = jsonConfig["inputs"]["dbName"]
 @lD.log(logBase + '.headerParse')
 def headerParse(logger, headers):
 
-    headers = category.replace('/', '_').replace(' ', '_').replace('-', '_').replace(',', '_')
+    headers = headers.replace('/', '_').replace(' ', '_').replace('-', '_').replace(',', '_')
     headers = re.sub(r'\([^)]*\)','', headers)
+    headers = headers.lower()
 
     return headers
 
@@ -60,10 +61,10 @@ def oneHotDiagnoses(logger):
 
     # Prepare filter sring
     dsmDiagnosesFilter = pd.read_csv(jsonConfig["inputs"]["dsmDiagnosesPath"])
-    dsmSUDFilter = pd.read_csv(jsonConfig["inputs"]["dsmSUDPath"])
-    dsmQueryString = '''
-                            select id, siteid
-                            '''
+    dsmSUDFilter       = pd.read_csv(jsonConfig["inputs"]["dsmSUDPath"])
+    dsmQueryString     = '''
+                         select id, siteid
+                         '''
     # Create filter string
     for filterType in [dsmDiagnosesFilter, dsmSUDFilter]:
         for category in filterType: #REMOVE FLAG
@@ -71,7 +72,7 @@ def oneHotDiagnoses(logger):
             for dsmno in filterType[category]:
                 if dsmno == dsmno:
                     dsmQueryString += " dsmno='" + str(dsmno) + "' or "
-                    headerParse(category)
+                    category = headerParse(category)
 
             dsmQueryString = dsmQueryString[:-3] + " then 1 end) as " + category
 
@@ -180,6 +181,13 @@ def relabelComorbid(logger):
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
 
+    raceList      = pd.read_csv(jsonConfig["inputs"]["raceFilterPath"])['category'].unique()
+    SUDList       = pd.read_csv(jsonConfig["inputs"]["dsmSUDPath"]).columns.tolist()
+    diagnosesList = pd.read_csv(jsonConfig["inputs"]["dsmDiagnosesPath"]).columns.tolist()
+
+    SUDList       = [headerParse(item) for item in SUDList]
+    diagnosesList = [headerParse(item) for item in diagnosesList]
+
     typePatientJoinQueryString          =   '''
                                             create table jingwen.temp1 as(
                                             select background.id, background.siteid, background.race, background.sex, 
@@ -255,31 +263,30 @@ def main(logger, resultsDict):
 
     print('[preProcessDB] Running queries. This might take a while ...')
 
-
     try:
-        print('Filter race and join with typepatient ... ', end = " ")
-        if pgIO.commitData(typePatientJoinQueryString , dbName = dbName):
-            print('done\n')
+        # print('Filter race and join with typepatient ... ', end = " ")
+        # if pgIO.commitData(typePatientJoinQueryString , dbName = dbName):
+        #     print('done\n')
 
-        print('Remove duplicate visits ... ', end = " ")
-        if pgIO.commitData(removeDuplicateVisitsQueryString , dbName = dbName):
-            print('done\n')
+        # print('Remove duplicate visits ... ', end = " ")
+        # if pgIO.commitData(removeDuplicateVisitsQueryString , dbName = dbName):
+        #     print('done\n')
 
-        print('Join with pdiagnose ... ', end = " ")
-        if pgIO.commitData(pdiagnoseJoinQueryString , dbName = dbName):
-            print('done\n')
+        # print('Join with pdiagnose ... ', end = " ")
+        # if pgIO.commitData(pdiagnoseJoinQueryString , dbName = dbName):
+        #     print('done\n')
 
-        print('Join with pdiagnose ... ', end = " ")
-        if pgIO.commitData(pdiagnoseJoinQueryString2 , dbName = dbName):
-            print('done\n')
+        # print('Join with pdiagnose ... ', end = " ")
+        # if pgIO.commitData(pdiagnoseJoinQueryString2 , dbName = dbName):
+        #     print('done\n')
 
-        print('One hot diagnoses and SUD ... ', end = " ")
-        if pgIO.commitData(oneHotDiagnosesQueryString , dbName = dbName):
-            print('done\n')
+        # print('One hot diagnoses and SUD ... ', end = " ")
+        # if pgIO.commitData(oneHotDiagnosesQueryString , dbName = dbName):
+        #     print('done\n')
 
-        print('Join everything ... ', end = " ")
-        if pgIO.commitData(joinEverythingQueryString , dbName = dbName):
-            print('done\n')
+        # print('Join everything ... ', end = " ")
+        # if pgIO.commitData(joinEverythingQueryString , dbName = dbName):
+        #     print('done\n')
 
         # print('Relabelling')
         # for relabelQuery in relabelComorbid():
@@ -296,19 +303,14 @@ def main(logger, resultsDict):
         dbColumns = [item[0] for item in dbColumns]
         tempArray = [] #RUN THE QUERY
         for idx, data in enumerate(genRetrieve):
-            tempArray.append(data)
+            tempArray += data
             print("Chunk: "+str(idx))
-        rawData = pd.DataFrame(data = tempArray[0], columns = dbColumns)
-        rawData['Any SUD']      = np.nan
-        rawData['>= 2 SUDs']    = np.nan
-
-        rawData[Any SUD] = rawData.apply(lambda x: x.isnull().sum(), axis='columns')
-
-        print(rawData)
+        
+        rawData = pd.DataFrame(data = tempArray, columns = dbColumns)
 
         try: #SAVE THE PICKLE
             fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"db.pickle",'wb') 
-            pickle.dump(rawData, fileObjectSave)   
+            pickle.dump((SUDList, diagnosesList, rawData), fileObjectSave)   
             fileObjectSave.close()
 
         except Exception as e:

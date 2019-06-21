@@ -2,6 +2,12 @@
     {
         "moduleName" : "preProcessDB",
         "path"       : "modules/preProcessDB/preProcessDB.py",
+        "execute"    : false,
+        "description": "",
+        "owner"      : ""
+    }, {
+        "moduleName" : "getUsefulInfo",
+        "path"       : "modules/getUsefulInfo/getUsefulInfo.py",
         "execute"    : true,
         "description": "",
         "owner"      : ""

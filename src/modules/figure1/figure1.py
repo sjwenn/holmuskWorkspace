@@ -21,12 +21,52 @@ import time
 from lib.databaseIO import pgIO
 
 config = jsonref.load(open('../config/config.json'))
-jsonConfig = jsonref.load(open('../config/modules/table3.json'))
-logBase = config['logging']['logBase'] + '.modules.table3.table3'
+jsonConfig = jsonref.load(open('../config/modules/figure1.json'))
+logBase = config['logging']['logBase'] + '.modules.figure1.figure1'
+dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
-    dbName = jsonConfig["inputs"]["dbName"]
+
+    fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
+    data = pickle.load(fileObjectLoad)   
+    fileObjectLoad.close()
+
+    df = data['df']
+
+    dfFigure1Buffer = []
+
+    for race in data["list race"]:
+        inrace = df[df['race']==race]
+        raceCount = data['count '+race]
+        for diagnosis in data["list diagnoses"]:
+            percentage = len(inrace[inrace[diagnosis]==1])/raceCount*100
+            dfFigure1Buffer.append([ percentage, diagnosis, race] )
+
+    dfFigure1 = pd.DataFrame(dfFigure1Buffer, columns=['%', 'Diagnosis', 'Race'])
+
+    # Remove fields less than 3
+    for diagnosis in data["list diagnoses"]:
+        morethan3Buffer = dfFigure1[dfFigure1['Diagnosis']==diagnosis]
+        if (morethan3Buffer['%'] < 3).all():
+            dfFigure1 = dfFigure1.drop(morethan3Buffer.index)
+
+    plt.figure(figsize=(15,8)) 
+    ax = sns.barplot(x="Diagnosis", y="%", hue="Race", data=dfFigure1, hue_order=['AA', 'NHPI', 'MR'])
+    plt.xticks(rotation=45)
+
+    #Put numerical labels above every bar
+    for p in ax.patches: 
+        height = p.get_height()
+        ax.text(p.get_x()+p.get_width()/2.,
+                height + 0.5,
+                '{:1.0f}'.format(height),
+                ha="center") 
+
+    plt.savefig(jsonConfig["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
+    plt.show()
+
+
 
     return
 

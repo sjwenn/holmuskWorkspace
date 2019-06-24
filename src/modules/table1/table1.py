@@ -18,15 +18,41 @@ import dask.array as da
 import dask.dataframe as dd
 import pandas as pd
 import time
-from lib.databaseIO import pgIO
+#from lib.databaseIO import pgIO
 
 config = jsonref.load(open('../config/config.json'))
-jsonConfig = jsonref.load(open('../config/modules/table3.json'))
-logBase = config['logging']['logBase'] + '.modules.table3.table3'
+jsonConfig = jsonref.load(open('../config/modules/table1.json'))
+logBase = config['logging']['logBase'] + '.modules.table1.table1'
+dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
-    dbName = jsonConfig["inputs"]["dbName"]
+
+    fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
+    data = pickle.load(fileObjectLoad)   
+    fileObjectLoad.close()
+
+    print('='*40 + "\n" + "Table 1")
+
+    for race in np.append('', data['list race']):
+    # '' represents 'Total'.
+        print('='*40)
+
+        if race == '':
+            print("Total", end="")
+        print(race, end="")
+
+        print(" (" + str(data['count '+race]) + ")")
+
+        print("\nAge in years")
+        for age in data['list age']:
+            print(age.ljust(9) + ": " + str(data['count '+race+age]))
+
+        print("\nSex")
+        for sex in data['list sex']:
+            print(sex.ljust(9) + ": " + str(data['count '+race+sex]))   
+
+    print('='*40)
 
     return
 

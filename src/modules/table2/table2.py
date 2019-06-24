@@ -19,14 +19,54 @@ import dask.dataframe as dd
 import pandas as pd
 import time
 from lib.databaseIO import pgIO
+import statsmodels.formula.api as sm
 
 config = jsonref.load(open('../config/config.json'))
-jsonConfig = jsonref.load(open('../config/modules/table3.json'))
-logBase = config['logging']['logBase'] + '.modules.table3.table3'
+jsonConfig = jsonref.load(open('../config/modules/table2.json'))
+logBase = config['logging']['logBase'] + '.modules.table2.table2'
+dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
-    dbName = jsonConfig["inputs"]["dbName"]
+    
+    fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
+    data = pickle.load(fileObjectLoad)   
+    fileObjectLoad.close()
+
+    df = data['df']
+    print("Table 2")
+
+    for race in data['list race']:
+
+        print('='*40)
+
+        inRace = df[df['race']==race]
+
+        for age in np.append('', data['list age']):
+            if age != '1-11':
+                print('')
+                if age == '':
+                    print( (race + " Total").ljust(26) + " (", end="")
+                    inRaceAge = inRace
+                else:
+                    print( (race + " " + age).ljust(26) + " (", end="")
+                    inRaceAge = inRace[inRace['age_categorical']==age]
+
+                countRaceAge = data['count '+race+age]
+
+                print( str(countRaceAge) + ")")
+
+                countRaceAgeSUD = len(inRaceAge[inRaceAge['SUD Count'] >= 1])/countRaceAge
+                print("Any SUD".ljust(28) + str(  round( countRaceAgeSUD*100 ,1 )   ))
+
+                countRaceAgeSUD = len(inRaceAge[inRaceAge['SUD Count'] >= 2])/countRaceAge
+                print(">=2 SUDs".ljust(28) + str(  round( countRaceAgeSUD*100 ,1 )   ))
+
+                for SUD in data['list SUD']:
+                    countRaceAgeSUD = len(inRaceAge[inRaceAge[SUD] == 1])/countRaceAge
+                    print(SUD.ljust(28) + str(  round( countRaceAgeSUD*100 ,1 )   ))
+
+
 
     return
 

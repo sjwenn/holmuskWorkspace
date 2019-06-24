@@ -20,16 +20,81 @@ import pandas as pd
 import time
 from lib.databaseIO import pgIO
 
+import statsmodels.api as sm
+
 config = jsonref.load(open('../config/config.json'))
 jsonConfig = jsonref.load(open('../config/modules/table3.json'))
 logBase = config['logging']['logBase'] + '.modules.table3.table3'
+dbName = jsonConfig["inputs"]["dbName"]
+
+@lD.log(logBase + '.logisticRegression')
+def logisticRegression(logger, df):
+
+    return
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
-    dbName = jsonConfig["inputs"]["dbName"]
+
+    fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
+    data = pickle.load(fileObjectLoad)   
+    fileObjectLoad.close()
+
+    df = data['df']
+    print("Table 3")
+
+    dfModified = df[df['sex']!='Others']
+    dfModified = dfModified[dfModified['sex']!='M']
+
+    parameters = ['sex']
+
+    endog = dfModified['Any SUD']
+    exog = pd.get_dummies(dfModified[parameters])
+
+    result = sm.Logit(endog, exog).fit()
+    print(result.summary())
+
+    config = result.conf_int()
+    
+    print(np.exp(config))
 
     return
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# train_cols = df.columns[1:]
+# logit = sm.Logit(df['sud'], df[train_cols])
+# result = logit.fit()
+
+# params = result.params
+# config = result.conf_int()
+# conf['OR'] = params
+
+# conf.columns = ['2.5%', '97.5%', 'OR']
+# CI_OR_df = np.exp(conf)
+# resultsDF = CI_OR_df[['OR']].join(CI_OR_df.ix[:,:'97.5%'])
 
 

@@ -18,7 +18,7 @@ import dask.array as da
 import dask.dataframe as dd
 import pandas as pd
 import time
-from lib.databaseIO import pgIO
+
 
 config = jsonref.load(open('../config/config.json'))
 jsonConfig = jsonref.load(open('../config/modules/figure1.json'))
@@ -63,10 +63,8 @@ def main(logger, resultsDict):
                 '{:1.0f}'.format(height),
                 ha="center") 
 
-    plt.savefig(jsonConfig["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
-    plt.show()
-
-
+    #plt.savefig(jsonConfig["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
+    #plt.show()
 
     return
 

@@ -40,6 +40,9 @@ def main(logger, resultsDict):
     fileObjectLoad.close()
 
     df = data['df']
+
+    df.to_csv('test.csv')
+
     print("Table 3")
 
     dfModified = df[df['sex']!='Others']

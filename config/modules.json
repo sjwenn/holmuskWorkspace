@@ -2,7 +2,7 @@
     {
         "moduleName" : "preProcessDB",
         "path"       : "modules/preProcessDB/preProcessDB.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
@@ -32,7 +32,7 @@
     }, {        
         "moduleName" : "table3",
         "path"       : "modules/table3/table3.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }, {

@@ -71,12 +71,11 @@ def main(logger, resultsDict):
     config = result.conf_int()
     print(np.exp(result.params))
 
-    parameters = ['race']
-
     for race in data['list race']:
         inRace = dfModified[dfModified['race']==race]
         endog = inRace['Any SUD']
-        exog = inRace[data['list SUD']]
+        exog = inRace[data['list diagnoses']]
+        #exog.drop('substance_use', axis=1, inplace=True)
         result = sm.Logit(endog, exog).fit()
         print(result.summary())
         config = result.conf_int()

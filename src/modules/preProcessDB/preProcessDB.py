@@ -331,3 +331,70 @@ def main(logger, resultsDict):
 
 
 
+# explain
+# select jingwen.temp2.*, raw_data.pdiagnose.dsmno, raw_data.pdiagnose.diagnosis
+# from jingwen.temp2
+# inner join raw_data.pdiagnose 
+# on raw_data.pdiagnose.backgroundid = jingwen.temp2.id and raw_data.pdiagnose.siteid = jingwen.temp2.siteid
+# limit 100
+
+# EXPLAIN (ANALYZE, COSTS, VERBOSE, BUFFERS)
+
+# EXPLAIN (COSTS, VERBOSE)
+# create table jingwen.temp2_1 as(
+# select jingwen.temp2.*, raw_data.pdiagnose.dsmno, raw_data.pdiagnose.diagnosis
+# from jingwen.temp2
+# inner join raw_data.pdiagnose 
+# on raw_data.pdiagnose.backgroundid = jingwen.temp2.id and raw_data.pdiagnose.siteid = jingwen.temp2.siteid
+# );
+
+# select jingwen.temp2.*, raw_data.pdiagnose.dsmno, raw_data.pdiagnose.diagnosis
+# from jingwen.temp2
+# inner join raw_data.pdiagnose 
+# on raw_data.pdiagnose.backgroundid = jingwen.temp2.id and raw_data.pdiagnose.siteid = jingwen.temp2.siteid
+
+# explain
+# WITH cte AS
+#   (SELECT backgroundid
+#    FROM raw_data.pdiagnose)
+# SELECT jingwen.temp2.id
+# FROM jingwen.temp2
+# WHERE jingwen.temp2.id IN
+#     (SELECT backgroundid
+# FROM cte);
+
+# explain
+
+# WITH cte AS
+#   (SELECT id
+#    FROM jingwen.temp2)
+# SELECT raw_data.pdiagnose.dsmno, raw_data.pdiagnose.diagnosis
+# FROM raw_data.pdiagnose
+# WHERE backgroundid 
+# IN
+#     (SELECT id
+# FROM cte);
+
+# SELECT "purchase"."id"
+# FROM "purchase"
+# INNER JOIN "user" ON ("purchase"."user_id" = "user"."id")
+# WHERE "user"."account_id" IN
+# (SELECT generate_series(1,1000));
+
+# WITH user_ids AS
+#   (SELECT id
+#    FROM user
+#    WHERE account_id IN
+#        (SELECT generate_series(1,1000)))
+# SELECT purchase.id
+# FROM purchase
+# WHERE user_id IN
+#     (SELECT id
+# FROM user_ids);
+
+
+
+
+
+
+

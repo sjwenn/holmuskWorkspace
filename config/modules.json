@@ -8,7 +8,7 @@
     }, {
         "moduleName" : "getUsefulInfo",
         "path"       : "modules/getUsefulInfo/getUsefulInfo.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }, {
@@ -38,13 +38,13 @@
     }, {
         "moduleName" : "table4",
         "path"       : "modules/table4/table4.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }, {
         "moduleName" : "reportGenerator",
         "path"       : "modules/reportGenerator/reportGenerator.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     },{

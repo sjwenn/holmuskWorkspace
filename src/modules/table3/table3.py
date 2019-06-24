@@ -46,19 +46,41 @@ def main(logger, resultsDict):
     print("Table 3")
 
     dfModified = df[df['sex']!='Others']
-    dfModified = dfModified[dfModified['sex']!='M']
 
-    parameters = ['sex']
+    dfModified['intercept'] = 1
+
+    parameters = ['race', 'age_categorical', 'sex']
 
     endog = dfModified['Any SUD']
     exog = pd.get_dummies(dfModified[parameters])
-
+    exog.drop('race_AA', axis=1, inplace=True)
+    exog.drop('sex_M', axis=1, inplace=True)
+    exog.drop('age_categorical_50+', axis=1, inplace=True)
     result = sm.Logit(endog, exog).fit()
     print(result.summary())
-
     config = result.conf_int()
-    
-    print(np.exp(config))
+    print(np.exp(result.params))
+
+    endog = dfModified['>=2 SUDs']
+    exog = pd.get_dummies(dfModified[parameters])
+    exog.drop('race_AA', axis=1, inplace=True)
+    exog.drop('sex_M', axis=1, inplace=True)
+    exog.drop('age_categorical_50+', axis=1, inplace=True)
+    result = sm.Logit(endog, exog).fit()
+    print(result.summary())
+    config = result.conf_int()
+    print(np.exp(result.params))
+
+    parameters = ['race']
+
+    for race in data['list race']:
+        inRace = dfModified[dfModified['race']==race]
+        endog = inRace['Any SUD']
+        exog = inRace[data['list SUD']]
+        result = sm.Logit(endog, exog).fit()
+        print(result.summary())
+        config = result.conf_int()
+        print(np.exp(result.params))
 
     return
 

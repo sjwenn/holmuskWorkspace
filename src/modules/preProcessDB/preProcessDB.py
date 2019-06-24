@@ -41,7 +41,7 @@ def filterRace(logger):
     raceFilter = pd.read_csv(jsonConfig["inputs"]["raceFilterPath"])
     filterRaceQueryString = '''
                             select id, siteid, race, sex from raw_data.background 
-                            where (ethnicity not ilike 'hisp%') and (
+                            where (
                             '''
 
     # Create filter string
@@ -267,33 +267,33 @@ def main(logger, resultsDict):
     print('[preProcessDB] Running queries. This might take a while ...')
 
     try:
-        # print('Filter race and join with typepatient ... ', end = " ")
-        # if pgIO.commitData(typePatientJoinQueryString , dbName = dbName):
-        #     print('done\n')
+        print('Filter race and join with typepatient ... ', end = " ")
+        if pgIO.commitData(typePatientJoinQueryString , dbName = dbName):
+            print('done\n')
 
-        # print('Remove duplicate visits ... ', end = " ")
-        # if pgIO.commitData(removeDuplicateVisitsQueryString , dbName = dbName):
-        #     print('done\n')
+        print('Remove duplicate visits ... ', end = " ")
+        if pgIO.commitData(removeDuplicateVisitsQueryString , dbName = dbName):
+            print('done\n')
 
-        # print('Join with pdiagnose ... ', end = " ")
-        # if pgIO.commitData(pdiagnoseJoinQueryString , dbName = dbName):
-        #     print('done\n')
+        print('Join with pdiagnose [1/2] ... ', end = " ")
+        if pgIO.commitData(pdiagnoseJoinQueryString , dbName = dbName):
+            print('done\n')
 
-        # print('Join with pdiagnose ... ', end = " ")
-        # if pgIO.commitData(pdiagnoseJoinQueryString2 , dbName = dbName):
-        #     print('done\n')
+        print('Join with pdiagnose [2/2] ... ', end = " ")
+        if pgIO.commitData(pdiagnoseJoinQueryString2 , dbName = dbName):
+            print('done\n')
 
-        # print('One hot diagnoses and SUD ... ', end = " ")
-        # if pgIO.commitData(oneHotDiagnosesQueryString , dbName = dbName):
-        #     print('done\n')
+        print('One hot diagnoses and SUD ... ', end = " ")
+        if pgIO.commitData(oneHotDiagnosesQueryString , dbName = dbName):
+            print('done\n')
 
-        # print('Join everything ... ', end = " ")
-        # if pgIO.commitData(joinEverythingQueryString , dbName = dbName):
-        #     print('done\n')
+        print('Join everything ... ', end = " ")
+        if pgIO.commitData(joinEverythingQueryString , dbName = dbName):
+            print('done\n')
 
-        # print('Relabelling')
-        # for relabelQuery in relabelComorbid():
-        #     pgIO.commitData(relabelQuery , dbName = dbName)
+        print('Relabelling')
+        for relabelQuery in relabelComorbid():
+            pgIO.commitData(relabelQuery , dbName = dbName)
 
         genRetrieve = pgIO.getDataIterator("select * from jingwen.comorbid", dbName = dbName, chunks = 100)
         dbColumnQueryString =       '''

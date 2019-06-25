@@ -12,7 +12,7 @@
         "dsmDiagnosesPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
         
         "schemaName": "jingwen",
-        "tableName": "comorbid_nohisp"
+        "tableName": "comorbid"
     }, 
     "outputs" : {
         "rawPath": "../data/intermediate/",

@@ -59,7 +59,7 @@ def main(logger, resultsDict):
                 bufferDict = {}
                 bufferDict['.Sample Size'] = str(countRaceAge)
 
-
+                # Percentage of any SUD / >=2 SUDs / respective SUD for each race and age
                 countRaceAgeSUD = len(inRaceAge[inRaceAge['SUD Count'] >= 1])/countRaceAge
                 bufferDict['Any SUD'] = str(round( countRaceAgeSUD*100 ,1 ))
 
@@ -72,8 +72,8 @@ def main(logger, resultsDict):
 
                 outputDict[ageLabel] = bufferDict
 
-        a = pd.DataFrame.from_dict(outputDict, orient='columns')
-        print(a)
+        output = pd.DataFrame.from_dict(outputDict, orient='columns')
+        print(output)
 
 
     return

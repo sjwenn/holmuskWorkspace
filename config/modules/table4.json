@@ -15,6 +15,7 @@
     	"intermediatePath": "../data/intermediate/"
     },
     "params"  : {
-        "useCacheFlag": 0
+        "smallSampleSizeThreshold": 30,
+        "toDropExog": ["substance_use"]
     }
 }

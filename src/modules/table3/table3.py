@@ -40,11 +40,9 @@ def main(logger, resultsDict):
 
     dfModified = df
 
-    for [subject, operator, value] in jsonConfig["params"]["toExclude"]:
-        if operator == '!=':
-            dfModified = dfModified[dfModified[subject]!=value]
-        else:
-            dfModified = dfModified[dfModified[subject]==value]
+    for [subject, value] in jsonConfig["params"]["toExclude"]:
+        dfModified = dfModified[dfModified[subject]!=value]
+
 
     for race in np.append('', data['list race']):
 
@@ -66,7 +64,6 @@ def main(logger, resultsDict):
         exog['intercept'] = 1
 
         for toDrop in jsonConfig["params"]["toDropExog"]:
-
             exog.drop(toDrop, axis=1, inplace=True)
 
         for item in ['Any SUD', '>=2 SUDs']:

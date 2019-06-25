@@ -11,7 +11,8 @@
         "dsmSUDPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
         "dsmDiagnosesPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
         
-        "tableName": "jingwen.comorbid_nohisp"
+        "schemaName": "jingwen",
+        "tableName": "comorbid_nohisp"
     }, 
     "outputs" : {
         "rawPath": "../data/intermediate/",

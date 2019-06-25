@@ -54,11 +54,13 @@ def main(logger, resultsDict):
         exog = inRace[diagnoses]
 
         for diagnosis in diagnoses:
-            if data["count " + race + diagnosis] < 30:
+            if data["count " + race + diagnosis] <= jsonConfig["params"]["smallSampleSizeThreshold"]:
                 exog.drop(diagnosis, axis=1, inplace=True)
 
         exog['intercept'] = 1
-        exog.drop('substance_use', axis=1, inplace=True)
+
+        for toDrop in jsonConfig["params"]["toDropExog"]:
+            exog.drop(toDrop, axis=1, inplace=True)
 
         result = sm.Logit(endog, exog).fit(disp=0)
 

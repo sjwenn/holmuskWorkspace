@@ -119,7 +119,7 @@ def relabelComorbid(logger):
     #                 relabelComorbidQueryString += "(race='" + str(race) + "')or"
     #         relabelComorbidQueryStringList.append(relabelComorbidQueryString[:-2])
 
-    tableName = jsonConfig["inputs"]["tableName"]
+    fullTableName = jsonConfig["inputs"]["schemaName"] + "." + jsonConfig["inputs"]["tableName"]
 
     relabelComorbidQueryStringList = []
     relabelComorbidQueryStringList += relabelSQL('race', jsonConfig["inputs"]["raceFilterPath"] )
@@ -128,67 +128,67 @@ def relabelComorbid(logger):
                                             UPDATE {}
                                             SET sex='F'
                                             WHERE (sex ilike 'F%');
-                                            '''.format(tableName))
+                                            '''.format(fullTableName))
 
     relabelComorbidQueryStringList.append('''
                                             UPDATE {}
                                             SET sex='M'
                                             WHERE (sex ilike 'M%');
-                                            '''.format(tableName))
+                                            '''.format(fullTableName))
 
     relabelComorbidQueryStringList.append('''
                                             UPDATE {}
                                             SET sex='Others'
                                             WHERE sex <> 'F' and sex <> 'M'
-                                            '''.format(tableName))
+                                            '''.format(fullTableName))
 
 
     relabelComorbidQueryStringList.append('''
     ALTER TABLE {}
     ADD age_categorical text NULL;                                         
-                                            '''.format(tableName))
+                                            '''.format(fullTableName))
 
 
     relabelComorbidQueryStringList.append('''
     UPDATE {}
     SET age_categorical='1-11'
     WHERE CAST ({}.age AS INTEGER) <= 11 and CAST ({}.age AS INTEGER) >= 1
-                                            '''.format(tableName, tableName, tableName))
+                                            '''.format(fullTableName, fullTableName, fullTableName))
 
 
     relabelComorbidQueryStringList.append('''
     UPDATE {}
     SET age_categorical='12-17'
     WHERE CAST ({}.age AS INTEGER) <= 17 and CAST ({}.age AS INTEGER) >= 12
-                                            '''.format(tableName, tableName, tableName))
+                                            '''.format(fullTableName, fullTableName, fullTableName))
 
 
     relabelComorbidQueryStringList.append('''
     UPDATE {}
     SET age_categorical='18-34'
     WHERE CAST ({}.age AS INTEGER) <= 34 and CAST ({}.age AS INTEGER) >= 18
-                                            '''.format(tableName, tableName, tableName))
+                                            '''.format(fullTableName, fullTableName, fullTableName))
 
 
     relabelComorbidQueryStringList.append('''
     UPDATE {}
     SET age_categorical='35-49'
     WHERE CAST ({}.age AS INTEGER) <= 49 and CAST ({}.age AS INTEGER) >= 35
-                                            '''.format(tableName, tableName, tableName))
+                                            '''.format(fullTableName, fullTableName, fullTableName))
 
 
     relabelComorbidQueryStringList.append('''
     UPDATE {}
     SET age_categorical='50+'
     WHERE CAST ({}.age AS INTEGER) >= 50
-                                            '''.format(tableName, tableName))
+                                            '''.format(fullTableName, fullTableName))
 
 
     relabelComorbidQueryStringList.append('''
     UPDATE {}
     SET age_categorical='0'
     WHERE CAST ({}.age AS INTEGER) = 0
-                                            '''.format(tableName, tableName))
+                                            '''.format(fullTableName, fullTableName))
 
     return relabelComorbidQueryStringList
 
@@ -320,8 +320,9 @@ def main(logger, resultsDict):
     #     logger.error('Issue in query run. {}'.format(e))
     #     pass
 
-    schemaName = 'jingwen'
-    tableName  = 'comorbid_nohisp'
+    schemaName = jsonConfig["inputs"]["schemaName"]
+    tableName  = jsonConfig["inputs"]["tableName"]
+    
     genRetrieve = pgIO.getDataIterator("select * from " + schemaName + "." + tableName, 
                                         dbName = dbName, 
                                         chunks = 100)

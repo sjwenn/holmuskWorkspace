@@ -19,7 +19,6 @@ import dask.dataframe as dd
 import pandas as pd
 pd.options.mode.chained_assignment = None
 import time
-
 import statsmodels.api as sm
 
 
@@ -29,6 +28,7 @@ logBase = config['logging']['logBase'] + '.modules.table4.table4'
 dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
+@profile
 def main(logger, resultsDict):
 
     fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
@@ -45,7 +45,7 @@ def main(logger, resultsDict):
     dfModified['intercept'] = 1
 
     for race in data['list race']:
-        
+
         print('='*40 + "\n" + race)
 
         inRace    = dfModified[dfModified['race']==race]
@@ -61,7 +61,7 @@ def main(logger, resultsDict):
         exog['intercept'] = 1
         exog.drop('substance_use', axis=1, inplace=True)
 
-        result = sm.Logit(endog, exog).fit()
+        result = sm.Logit(endog, exog).fit(disp=0)
 
         relavantResults         = result.conf_int(alpha=0.05)
         relavantResults['OR']   = result.params

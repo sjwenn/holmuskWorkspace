@@ -214,7 +214,7 @@ def main(logger, resultsDict):
                                             )
                                             select id, siteid, race, sex, age, visit_type
                                             from cte
-                                            where rn = 1
+                                            where rn = 1    
                                             );
                                             '''     
 
@@ -295,36 +295,40 @@ def main(logger, resultsDict):
         for relabelQuery in relabelComorbid():
             pgIO.commitData(relabelQuery , dbName = dbName)
 
-        genRetrieve = pgIO.getDataIterator("select * from jingwen.comorbid", dbName = dbName, chunks = 100)
-        dbColumnQueryString =       '''
-                                    SELECT column_name
-                                    FROM information_schema.columns
-                                    WHERE table_schema = 'jingwen'
-                                    AND table_name   = 'comorbid'
-                                '''
-        dbColumns = pgIO.getAllData(dbColumnQueryString, dbName = dbName)
-        dbColumns = [item[0] for item in dbColumns]
-        tempArray = [] #RUN THE QUERY
-        for idx, data in enumerate(genRetrieve):
-            tempArray += data
-            print("Chunk: "+str(idx))
-        
-        rawData = pd.DataFrame(data = tempArray, columns = dbColumns)
-
-        try: #SAVE THE PICKLE
-            fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"db.pickle",'wb') 
-            miscData = [SUDList, diagnosesList, rawSUDList, rawDiagnosesList]
-            pickle.dump((miscData, rawData), fileObjectSave)   
-            fileObjectSave.close()
-
-        except Exception as e:
-            logger.error(f'Issue saving to pickle: " {e}')
-
     except Exception as e:
-        #   This probably won't print. Error is pgIO side, and I dont wanna modify
-        #   it or write my own psycopg2 wrapper just to suppress error message.
         logger.error('Issue in query run. {}'.format(e))
         pass
+
+    schemaName = 'jingwen'
+    tableName  = 'comorbid_nohisp'
+    genRetrieve = pgIO.getDataIterator("select * from " + schemaName + "." + tableName, 
+                                        dbName = dbName, 
+                                        chunks = 100)
+
+    dbColumnQueryString =       '''
+                                SELECT column_name
+                                FROM information_schema.columns
+                                WHERE table_schema = '{}'
+                                AND table_name = '{}'
+                                '''.format(schemaName, tableName)
+
+    dbColumns = pgIO.getAllData(dbColumnQueryString, dbName = dbName)
+    dbColumns = [item[0] for item in dbColumns]
+    tempArray = [] #RUN THE QUERY
+    for idx, data in enumerate(genRetrieve):
+        tempArray += data
+        print("Chunk: "+str(idx))
+    
+    rawData = pd.DataFrame(data = tempArray, columns = dbColumns)
+
+    try: #Save pickle to be sent to 'getUsefulInfo.py'
+        fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"db.pickle",'wb') 
+        miscData = [SUDList, diagnosesList, rawSUDList, rawDiagnosesList]
+        pickle.dump((miscData, rawData), fileObjectSave)   
+        fileObjectSave.close()
+
+    except Exception as e:
+        logger.error(f'Issue saving to pickle: " {e}')
 
     return
 

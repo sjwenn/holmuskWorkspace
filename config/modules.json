@@ -14,7 +14,7 @@
     }, {
         "moduleName" : "table1",
         "path"       : "modules/table1/table1.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }, {
@@ -26,19 +26,19 @@
     }, {
         "moduleName" : "table2",
         "path"       : "modules/table2/table2.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }, {        
         "moduleName" : "table3",
         "path"       : "modules/table3/table3.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }, {
         "moduleName" : "table4",
         "path"       : "modules/table4/table4.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }, {

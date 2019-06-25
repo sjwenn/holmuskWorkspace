@@ -18,16 +18,26 @@ import dask.array as da
 import dask.dataframe as dd
 import pandas as pd
 import time
-#from lib.databaseIO import pgIO
 
 config = jsonref.load(open('../config/config.json'))
 jsonConfig = jsonref.load(open('../config/modules/table1.json'))
 logBase = config['logging']['logBase'] + '.modules.table1.table1'
 dbName = jsonConfig["inputs"]["dbName"]
 
+@lD.log(logBase + '.CI')
+def CI(logger, p, n, CL):
+
+    SE = math.sqrt(p*(1-p)/n)  
+    z_star = stats.norm.ppf((1-CL)/2)
+    ME = z_star * SE
+
+    return ME
+
 @lD.log(logBase + '.main')
+@profile
 def main(logger, resultsDict):
 
+    # Load dictionary from pickle
     fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
     data = pickle.load(fileObjectLoad)   
     fileObjectLoad.close()
@@ -35,23 +45,49 @@ def main(logger, resultsDict):
     print('='*40)
     print("Table 1")
 
-    for race in np.append('', data['list race']):
-    # '' represents 'Total'.
+    for race in np.append('', data['list race']): # '' represents all
+    
         print('='*40)
 
+        raceCount = data['count '+race]
+
+        # If accounting for total population. Note type of data collected is different from contrary i.e. (N,%) vs (%,CI)
         if race == '':
-            print("Total", end="")
-        print(race, end="")
+            print("Total (N = {})".format(raceCount), end='')
 
-        print(" (" + str(data['count '+race]) + ")")
+            print("\nAge in years")
 
-        print("\nAge in years")
-        for age in data['list age']:
-            print(age.ljust(9) + ": " + str(data['count '+race+age]))
+            for age in data['list age']:
+                count = data['count '+race+age]
+                proportion = count / raceCount
+                print( "{}: {} ({})".format(age.ljust(9), str(count).ljust(8), round(proportion*100,1) ))
 
-        print("\nSex")
-        for sex in data['list sex']:
-            print(sex.ljust(9) + ": " + str(data['count '+race+sex]))   
+            print("\nSex")
+
+            for sex in data['list sex']:
+                proportion = data['count '+race+sex] / raceCount
+                print( "{}: {} ({})".format(sex.ljust(9), str(count).ljust(8), round(proportion*100,1) ))
+
+        else:
+            print("{} (N = {})".format(race, raceCount))
+
+            print("\nAge in years")
+
+            for age in data['list age']:
+                proportion = data['count '+race+age] / raceCount
+                confidenceInterval = CI(proportion, raceCount, 0.95)
+                lowerBound = (proportion + confidenceInterval) * 100
+                upperBound = (proportion - confidenceInterval) * 100
+                print( "{}: {} ({}-{})".format(age.ljust(9), str(round(proportion*100,1)).ljust(8), round(lowerBound,1), round(upperBound,1) ))
+
+            print("\nSex")
+
+            for sex in data['list sex']:
+                proportion = data['count '+race+sex] / raceCount
+                confidenceInterval = CI(proportion, raceCount, 0.95)
+                lowerBound = (proportion + confidenceInterval) * 100
+                upperBound = (proportion - confidenceInterval) * 100
+                print( "{}: {} ({}-{})".format(sex.ljust(9), str(round(proportion*100,1)).ljust(8), round(lowerBound,1), round(upperBound,1) ))
 
     return
 

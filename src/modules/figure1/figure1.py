@@ -5,8 +5,12 @@ matplotlib.use('Qt5Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+#sns.set_palette(sns.diverging_palette(240, 120, l=60, n=3, center="dark"))
 sns.set(style="dark")
-sns.set_palette(sns.diverging_palette(240, 120, l=60, n=3, center="dark"))
+sns.set(rc={'axes.facecolor':'#e0e4ed'}) # Blueberry Paste
+HolmuskColors = sns.color_palette(["#1649bf", "#a2d729", "#192d5b"]) 
+                         # Essentially Navy  Violent Lime  Sapphire
+sns.set_palette(HolmuskColors)
 from scipy import stats
 from scipy.stats import chi2
 from scipy.stats import chi2_contingency
@@ -33,6 +37,10 @@ def main(logger, resultsDict):
     fileObjectLoad.close()
 
     df = data['df']
+
+    print('='*40)
+    print("Figure 1")
+    print('='*40)
 
     dfFigure1Buffer = []
 
@@ -65,6 +73,8 @@ def main(logger, resultsDict):
 
     plt.savefig(jsonConfig["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
     #plt.show()
+
+    print("Saved to " + jsonConfig["outputs"]["saveFigPath"])
 
     return
 

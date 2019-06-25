@@ -19,7 +19,6 @@ import dask.dataframe as dd
 import pandas as pd
 pd.options.mode.chained_assignment = None
 import time
-
 import statsmodels.api as sm
 
 config = jsonref.load(open('../config/config.json'))
@@ -28,6 +27,7 @@ logBase = config['logging']['logBase'] + '.modules.table3.table3'
 dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
+@profile
 def main(logger, resultsDict):
 
     fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
@@ -43,9 +43,9 @@ def main(logger, resultsDict):
     dfModified = dfModified[dfModified['sex']!='Others']
     dfModified = dfModified[dfModified['age_categorical']!='1-11']
 
-
-
     for race in np.append('', data['list race']):
+
+        print('='*40)
 
         if race != '':
             inRace                    = dfModified[dfModified['race']==race]
@@ -66,11 +66,11 @@ def main(logger, resultsDict):
 
         for item in ['Any SUD', '>=2 SUDs']:
 
-            print('='*40 + "\n" + item + " " + raceLabel)
+            print( "\n" + item + " " + raceLabel)
 
             endog = inRace[item]
 
-            result = sm.Logit(endog, exog).fit()
+            result = sm.Logit(endog, exog).fit(disp=0)
 
             relavantResults         = result.conf_int(alpha=0.05)
             relavantResults['OR']   = result.params

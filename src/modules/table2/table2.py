@@ -34,6 +34,8 @@ def main(logger, resultsDict):
     fileObjectLoad.close()
 
     df = data['df']
+
+    print('='*40)
     print("Table 2")
 
     for race in data['list race']:

@@ -63,7 +63,7 @@ def main(logger, resultsDict):
                 '{:1.0f}'.format(height),
                 ha="center") 
 
-    #plt.savefig(jsonConfig["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
+    plt.savefig(jsonConfig["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
     #plt.show()
 
     return

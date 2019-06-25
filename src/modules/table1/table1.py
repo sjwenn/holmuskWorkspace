@@ -32,7 +32,8 @@ def main(logger, resultsDict):
     data = pickle.load(fileObjectLoad)   
     fileObjectLoad.close()
 
-    print('='*40 + "\n" + "Table 1")
+    print('='*40)
+    print("Table 1")
 
     for race in np.append('', data['list race']):
     # '' represents 'Total'.
@@ -51,8 +52,6 @@ def main(logger, resultsDict):
         print("\nSex")
         for sex in data['list sex']:
             print(sex.ljust(9) + ": " + str(data['count '+race+sex]))   
-
-    print('='*40)
 
     return
 

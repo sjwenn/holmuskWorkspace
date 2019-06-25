@@ -17,16 +17,60 @@ from tabulate import tabulate
 import dask.array as da
 import dask.dataframe as dd
 import pandas as pd
+pd.options.mode.chained_assignment = None
 import time
-from lib.databaseIO import pgIO
+
+import statsmodels.api as sm
+
 
 config = jsonref.load(open('../config/config.json'))
 jsonConfig = jsonref.load(open('../config/modules/table4.json'))
 logBase = config['logging']['logBase'] + '.modules.table4.table4'
+dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
-    dbName = jsonConfig["inputs"]["dbName"]
+
+    fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
+    data = pickle.load(fileObjectLoad)   
+    fileObjectLoad.close()
+
+    df = data['df']
+
+    print('='*40)
+    print("Table 4")
+
+    dfModified = df[df['sex']!='Others']
+
+    dfModified['intercept'] = 1
+
+    for race in data['list race']:
+        
+        print('='*40 + "\n" + race)
+
+        inRace    = dfModified[dfModified['race']==race]
+        endog     = inRace['Any SUD']
+        diagnoses = data['list diagnoses']
+
+        exog = inRace[diagnoses]
+
+        for diagnosis in diagnoses:
+            if data["count " + race + diagnosis] < 30:
+                exog.drop(diagnosis, axis=1, inplace=True)
+
+        exog['intercept'] = 1
+        exog.drop('substance_use', axis=1, inplace=True)
+
+        result = sm.Logit(endog, exog).fit()
+
+        relavantResults         = result.conf_int(alpha=0.05)
+        relavantResults['OR']   = result.params
+        relavantResults.columns = ['5%', '95%', 'OR']
+        relavantResults         = relavantResults[['OR', '5%', '95%']]
+
+        oddsRatio = np.exp(relavantResults)
+
+        print(oddsRatio)
 
     return
 

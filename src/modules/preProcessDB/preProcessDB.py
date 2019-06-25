@@ -83,100 +83,125 @@ def oneHotDiagnoses(logger):
 
     return dsmQueryString
 
+@lD.log(logBase + '.relabelSQL')
+def relabelSQL(logger, column, filterJSON):
+    # Prepare filter sring
+    filter = pd.read_csv(filterJSON)
+    valueList = filter['category'].unique()
+    relabelQueryStringList = []             
 
+    tableName = jsonConfig["inputs"]["tableName"]
 
-# @lD.log(logBase + '.clearTemporaryTables')
-# def clearTemporaryTables(logger):
-#     return
-
+    for desiredCategory in valueList:
+        if desiredCategory == desiredCategory:
+            relabelQueryString = "UPDATE {} set {} = '{}' where ".format(tableName, column, desiredCategory)
+            for idx, (value, category) in filter.iterrows():
+                if category == desiredCategory: #not NAN
+                    relabelQueryString += "(" + column + "='" + str(value) + "')or"
+            relabelQueryStringList.append(relabelQueryString[:-2])
+    return relabelQueryStringList
 
 
 @lD.log(logBase + '.relabelComorbid')
 def relabelComorbid(logger):
 
-    # Prepare filter sring
-    raceFilter = pd.read_csv(jsonConfig["inputs"]["raceFilterPath"])
-    raceList = raceFilter['category'].unique()
-    relabelComorbidQueryStringList = []             
+    # # Prepare filter sring
+    # raceFilter = pd.read_csv(jsonConfig["inputs"]["raceFilterPath"])
+    # raceList = raceFilter['category'].unique()
+    # relabelComorbidQueryStringList = []             
       
-    # can be more efficient instead of running for every race
-    for desiredCategory in raceList:
-        if desiredCategory == desiredCategory:
-            relabelComorbidQueryString = "UPDATE jingwen.comorbid set race='" + desiredCategory + "' where "
-            for idx, (race, category) in raceFilter.iterrows():
-                if category == desiredCategory: #not NAN
-                    relabelComorbidQueryString += "(race='" + str(race) + "')or"
-            relabelComorbidQueryStringList.append(relabelComorbidQueryString[:-2])
+    # # can be more efficient instead of running for every race
+    # for desiredCategory in raceList:
+    #     if desiredCategory == desiredCategory:
+    #         relabelComorbidQueryString = "UPDATE jingwen.comorbid set race='" + desiredCategory + "' where "
+    #         for idx, (race, category) in raceFilter.iterrows():
+    #             if category == desiredCategory: #not NAN
+    #                 relabelComorbidQueryString += "(race='" + str(race) + "')or"
+    #         relabelComorbidQueryStringList.append(relabelComorbidQueryString[:-2])
+
+    tableName = jsonConfig["inputs"]["tableName"]
+
+    relabelComorbidQueryStringList = []
+    relabelComorbidQueryStringList += relabelSQL('race', jsonConfig["inputs"]["raceFilterPath"] )
 
     relabelComorbidQueryStringList.append('''
-                                            UPDATE jingwen.comorbid
+                                            UPDATE {}
                                             SET sex='F'
                                             WHERE (sex ilike 'F%');
-                                            ''')
+                                            '''.format(tableName))
 
     relabelComorbidQueryStringList.append('''
-                                            UPDATE jingwen.comorbid
+                                            UPDATE {}
                                             SET sex='M'
                                             WHERE (sex ilike 'M%');
-                                            ''')
+                                            '''.format(tableName))
 
     relabelComorbidQueryStringList.append('''
-                                            UPDATE jingwen.comorbid
+                                            UPDATE {}
                                             SET sex='Others'
                                             WHERE sex <> 'F' and sex <> 'M'
-                                            ''')
+                                            '''.format(tableName))
 
 
     relabelComorbidQueryStringList.append('''
-    ALTER TABLE jingwen.comorbid
+    ALTER TABLE {}
     ADD age_categorical text NULL;                                         
-                                            ''')
+                                            '''.format(tableName))
 
 
     relabelComorbidQueryStringList.append('''
-    UPDATE jingwen.comorbid
+    UPDATE {}
     SET age_categorical='1-11'
-    WHERE CAST (jingwen.comorbid.age AS INTEGER) <= 11 and CAST (jingwen.comorbid.age AS INTEGER) >= 1
-                                            ''')
+    WHERE CAST ({}.age AS INTEGER) <= 11 and CAST ({}.age AS INTEGER) >= 1
+                                            '''.format(tableName, tableName, tableName))
 
 
     relabelComorbidQueryStringList.append('''
-    UPDATE jingwen.comorbid
+    UPDATE {}
     SET age_categorical='12-17'
-    WHERE CAST (jingwen.comorbid.age AS INTEGER) <= 17 and CAST (jingwen.comorbid.age AS INTEGER) >= 12
-                                            ''')
+    WHERE CAST ({}.age AS INTEGER) <= 17 and CAST ({}.age AS INTEGER) >= 12
+                                            '''.format(tableName, tableName, tableName))
 
 
     relabelComorbidQueryStringList.append('''
-    UPDATE jingwen.comorbid
+    UPDATE {}
     SET age_categorical='18-34'
-    WHERE CAST (jingwen.comorbid.age AS INTEGER) <= 34 and CAST (jingwen.comorbid.age AS INTEGER) >= 18
-                                            ''')
+    WHERE CAST ({}.age AS INTEGER) <= 34 and CAST ({}.age AS INTEGER) >= 18
+                                            '''.format(tableName, tableName, tableName))
 
 
     relabelComorbidQueryStringList.append('''
-    UPDATE jingwen.comorbid
+    UPDATE {}
     SET age_categorical='35-49'
-    WHERE CAST (jingwen.comorbid.age AS INTEGER) <= 49 and CAST (jingwen.comorbid.age AS INTEGER) >= 35
-                                            ''')
+    WHERE CAST ({}.age AS INTEGER) <= 49 and CAST ({}.age AS INTEGER) >= 35
+                                            '''.format(tableName, tableName, tableName))
 
 
     relabelComorbidQueryStringList.append('''
-    UPDATE jingwen.comorbid
+    UPDATE {}
     SET age_categorical='50+'
-    WHERE CAST (jingwen.comorbid.age AS INTEGER) >= 50
-                                            ''')
+    WHERE CAST ({}.age AS INTEGER) >= 50
+                                            '''.format(tableName, tableName))
 
 
     relabelComorbidQueryStringList.append('''
-    UPDATE jingwen.comorbid
+    UPDATE {}
     SET age_categorical='0'
-    WHERE CAST (jingwen.comorbid.age AS INTEGER) = 0
-                                            ''')
+    WHERE CAST ({}.age AS INTEGER) = 0
+                                            '''.format(tableName, tableName))
 
     return relabelComorbidQueryStringList
 
+@lD.log(logBase + '.relabelSQL')
+def relabel(logger, df, column, filterJSON):
 
+    filter = pd.read_csv(filterJSON)         
+
+    for idx, (value, category) in filter.iterrows():
+        if category == category and value == value:
+            df[column] = df[column].replace(value, category)
+
+    return df
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
@@ -257,47 +282,43 @@ def main(logger, resultsDict):
                                             and jingwen.temp2.age != NULL
                                             );
                                             '''
-    addAgeCategoricalQueryString        =   '''
-                                            ALTER TABLE jingwen.comorbid
-                                            ADD age_categorical text NULL;
-                                            '''
 
 
 
     print('[preProcessDB] Running queries. This might take a while ...')
 
-    try:
-        print('Filter race and join with typepatient ... ', end = " ")
-        if pgIO.commitData(typePatientJoinQueryString , dbName = dbName):
-            print('done\n')
+    # try:
+        # print('Filter race and join with typepatient ... ', end = " ")
+        # if pgIO.commitData(typePatientJoinQueryString , dbName = dbName):
+        #     print('done\n')
 
-        print('Remove duplicate visits ... ', end = " ")
-        if pgIO.commitData(removeDuplicateVisitsQueryString , dbName = dbName):
-            print('done\n')
+        # print('Remove duplicate visits ... ', end = " ")
+        # if pgIO.commitData(removeDuplicateVisitsQueryString , dbName = dbName):
+        #     print('done\n')
 
-        print('Join with pdiagnose [1/2] ... ', end = " ")
-        if pgIO.commitData(pdiagnoseJoinQueryString , dbName = dbName):
-            print('done\n')
+        # print('Join with pdiagnose [1/2] ... ', end = " ")
+        # if pgIO.commitData(pdiagnoseJoinQueryString , dbName = dbName):
+        #     print('done\n')
 
-        print('Join with pdiagnose [2/2] ... ', end = " ")
-        if pgIO.commitData(pdiagnoseJoinQueryString2 , dbName = dbName):
-            print('done\n')
+        # print('Join with pdiagnose [2/2] ... ', end = " ")
+        # if pgIO.commitData(pdiagnoseJoinQueryString2 , dbName = dbName):
+        #     print('done\n')
 
-        print('One hot diagnoses and SUD ... ', end = " ")
-        if pgIO.commitData(oneHotDiagnosesQueryString , dbName = dbName):
-            print('done\n')
+        # print('One hot diagnoses and SUD ... ', end = " ")
+        # if pgIO.commitData(oneHotDiagnosesQueryString , dbName = dbName):
+        #     print('done\n')
 
-        print('Join everything ... ', end = " ")
-        if pgIO.commitData(joinEverythingQueryString , dbName = dbName):
-            print('done\n')
+        # print('Join everything ... ', end = " ")
+        # if pgIO.commitData(joinEverythingQueryString , dbName = dbName):
+        #     print('done\n')
 
-        print('Relabelling')
-        for relabelQuery in relabelComorbid():
-            pgIO.commitData(relabelQuery , dbName = dbName)
+        # print('Relabelling')
+        # for relabelQuery in relabelComorbid():
+        #     pgIO.commitData(relabelQuery , dbName = dbName)
 
-    except Exception as e:
-        logger.error('Issue in query run. {}'.format(e))
-        pass
+    # except Exception as e:
+    #     logger.error('Issue in query run. {}'.format(e))
+    #     pass
 
     schemaName = 'jingwen'
     tableName  = 'comorbid_nohisp'
@@ -313,13 +334,18 @@ def main(logger, resultsDict):
                                 '''.format(schemaName, tableName)
 
     dbColumns = pgIO.getAllData(dbColumnQueryString, dbName = dbName)
+
     dbColumns = [item[0] for item in dbColumns]
-    tempArray = [] #RUN THE QUERY
+
+    tempArray = []
     for idx, data in enumerate(genRetrieve):
         tempArray += data
         print("Chunk: "+str(idx))
     
     rawData = pd.DataFrame(data = tempArray, columns = dbColumns)
+
+    rawData = relabel(rawData, 'race', jsonConfig["inputs"]["raceFilterPath"])
+    rawData = relabel(rawData, 'visit_type', jsonConfig["inputs"]["settingFilterPath"])
 
     try: #Save pickle to be sent to 'getUsefulInfo.py'
         fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"db.pickle",'wb') 

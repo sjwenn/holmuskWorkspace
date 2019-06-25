@@ -27,7 +27,6 @@ logBase = config['logging']['logBase'] + '.modules.table3.table3'
 dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
-@profile
 def main(logger, resultsDict):
 
     fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
@@ -50,19 +49,21 @@ def main(logger, resultsDict):
         if race != '':
             inRace                    = dfModified[dfModified['race']==race]
             raceLabel                 = race
-            parameters                = ['age_categorical', 'sex']
+            parameters                = jsonConfig["params"]["logitParameters"]
             exog                      = pd.get_dummies(inRace[parameters])
 
         else:
             inRace                    = dfModified
             raceLabel                 = "Total"
-            parameters                = ['race', 'age_categorical', 'sex']
+            parameters                = ['race'] + jsonConfig["params"]["logitParameters"]
             exog                      = pd.get_dummies(inRace[parameters])
             exog.drop('race_AA', axis = 1, inplace=True)
 
         exog['intercept'] = 1
-        exog.drop('sex_F', axis=1, inplace=True)
-        exog.drop('age_categorical_50+', axis=1, inplace=True)
+
+        for toDrop in jsonConfig["params"]["toDrop"]:
+            
+            exog.drop(toDrop, axis=1, inplace=True)
 
         for item in ['Any SUD', '>=2 SUDs']:
 
@@ -78,6 +79,8 @@ def main(logger, resultsDict):
             relavantResults         = relavantResults[['OR', '5%', '95%']]
 
             oddsRatio = np.exp(relavantResults)
+
+            oddsRatio = np.round(oddsRatio, 2)
 
             print(oddsRatio)
 

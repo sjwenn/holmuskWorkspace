@@ -27,7 +27,6 @@ logBase = config['logging']['logBase'] + '.modules.table2.table2'
 dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
-@profile
 def main(logger, resultsDict):
     
     fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 

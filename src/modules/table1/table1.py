@@ -26,7 +26,22 @@ dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.CI')
 def CI(logger, p, n, CL):
+    '''Confidence Interval
+    
+    Calculates confidence interval amplitude.
 
+    How to use?
+    Lower bound: Probability + CI()
+    Upper bound: Probability - CI()
+    
+    Arguments:
+        p {[float]} -- Probability
+        n {[int]} -- Population size
+        CL {[float]} -- Confidence level
+    
+    Returns:
+        [float] -- Use it to do the thing
+    '''
     SE = math.sqrt(p*(1-p)/n)  
     z_star = stats.norm.ppf((1-CL)/2)
     ME = z_star * SE
@@ -34,7 +49,6 @@ def CI(logger, p, n, CL):
     return ME
 
 @lD.log(logBase + '.main')
-@profile
 def main(logger, resultsDict):
 
     # Load dictionary from pickle

@@ -6,10 +6,12 @@
         "intermediatePath": "../data/intermediate/",
 
         "raceFilterPath": "/home/jingwen/Downloads/Race_Filter.csv",
+        "settingFilterPath": "/home/jingwen/Downloads/Setting_Filter.csv",
+
         "dsmSUDPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
         "dsmDiagnosesPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
         
-        "tableNameComorbid": "jingwen.comorbid"
+        "tableName": "jingwen.comorbid_nohisp"
     }, 
     "outputs" : {
         "rawPath": "../data/intermediate/",

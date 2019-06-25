@@ -28,7 +28,6 @@ logBase = config['logging']['logBase'] + '.modules.table4.table4'
 dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
-@profile
 def main(logger, resultsDict):
 
     fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
@@ -69,6 +68,8 @@ def main(logger, resultsDict):
         relavantResults         = relavantResults[['OR', '5%', '95%']]
 
         oddsRatio = np.exp(relavantResults)
+
+        oddsRatio = np.round(oddsRatio, 2)
 
         print(oddsRatio)
 

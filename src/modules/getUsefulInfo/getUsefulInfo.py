@@ -7,7 +7,6 @@ import numpy as np
 import seaborn as sns
 sns.set(style="dark")
 sns.set_palette(sns.diverging_palette(240, 120, l=60, n=3, center="dark"))
-
 from scipy import stats
 from scipy.stats import chi2
 from scipy.stats import chi2_contingency
@@ -27,7 +26,6 @@ logBase = config['logging']['logBase'] + '.modules.getUsefulInfo.getUsefulInfo'
 dbName = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
-@profile
 def main(logger, resultsDict):
     
     # Retrieve data from pickle
@@ -115,6 +113,8 @@ def main(logger, resultsDict):
     fileObjectSave = open(jsonConfig["outputs"]["intermediatePath"]+"data.pickle",'wb') 
     pickle.dump(data, fileObjectSave, protocol=pickle.HIGHEST_PROTOCOL)   
     fileObjectSave.close()
+
+    rawData.to_csv('test.csv')
 
     return
 

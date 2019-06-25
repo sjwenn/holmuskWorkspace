@@ -2,19 +2,19 @@
     {
         "moduleName" : "preProcessDB",
         "path"       : "modules/preProcessDB/preProcessDB.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
         "moduleName" : "getUsefulInfo",
         "path"       : "modules/getUsefulInfo/getUsefulInfo.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
         "moduleName" : "table1",
         "path"       : "modules/table1/table1.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
@@ -26,25 +26,25 @@
     }, {
         "moduleName" : "table2",
         "path"       : "modules/table2/table2.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {        
         "moduleName" : "table3",
         "path"       : "modules/table3/table3.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
         "moduleName" : "table4",
         "path"       : "modules/table4/table4.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
         "moduleName" : "reportGenerator",
         "path"       : "modules/reportGenerator/reportGenerator.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     },{

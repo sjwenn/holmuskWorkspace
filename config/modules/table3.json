@@ -15,6 +15,7 @@
     	"intermediatePath": "../data/intermediate/"
     },
     "params"  : {
-        "useCacheFlag": 0
+        "logitParameters": ["age_categorical", "sex", "visit_type"],
+        "toDrop": ["visit_type_Mental health center", "sex_F", "age_categorical_50+"]
     }
 }

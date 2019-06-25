@@ -85,10 +85,11 @@ def relabelSQL(logger, column, filterJSON):
     relabelQueryStringList = []             
 
     tableName = jsonConfig["inputs"]["tableName"]
+    schemaName = jsonConfig["inputs"]["schemaName"]
 
     for desiredCategory in valueList:
         if desiredCategory == desiredCategory:
-            relabelQueryString = "UPDATE {} set {} = '{}' where ".format(tableName, column, desiredCategory)
+            relabelQueryString = "UPDATE {} set {} = '{}' where ".format(schemaName + "." + tableName, column, desiredCategory)
             for idx, (value, category) in filter.iterrows():
                 if category == desiredCategory: #not NAN
                     relabelQueryString += "(" + column + "='" + str(value) + "')or"
@@ -116,7 +117,7 @@ def relabelComorbid(logger):
     fullTableName = jsonConfig["inputs"]["schemaName"] + "." + jsonConfig["inputs"]["tableName"]
 
     relabelComorbidQueryStringList = []
-    relabelComorbidQueryStringList += relabelSQL('race', jsonConfig["inputs"]["raceFilterPath"] )
+    relabelComorbidQueryStringList += ( relabelSQL('race', jsonConfig["inputs"]["raceFilterPath"] ) )
 
     relabelComorbidQueryStringList.append('''
                                             UPDATE {}
@@ -186,7 +187,7 @@ def relabelComorbid(logger):
 
     return relabelComorbidQueryStringList
 
-@lD.log(logBase + '.relabelSQL')
+@lD.log(logBase + '.relabel')
 def relabel(logger, df, column, filterJSON):
 
     filter = pd.read_csv(filterJSON)         
@@ -278,11 +279,14 @@ def main(logger, resultsDict):
 
     joinEverythingQueryString           =   '''
                                             create table jingwen.comorbid as(
+                                            select * from(
                                             select jingwen.temp2.race, jingwen.temp2.sex, jingwen.temp2.age, jingwen.temp2.visit_type, jingwen.temp4.*
                                             from jingwen.temp4
                                             inner join jingwen.temp2
-                                            on jingwen.temp4.id = jingwen.temp2.id and jingwen.temp4.siteid = jingwen.temp2.siteid
-                                            and jingwen.temp2.age != NULL
+                                            on jingwen.temp4.id = jingwen.temp2.id and jingwen.temp4.siteid = jingwen.temp2.siteid 
+                                            ) as x
+                                            where CAST (age AS INTEGER) > 0
+                                            and (visit_type ilike ('inpatient') or visit_type ilike ('outpatient'))
                                             );
                                             '''
 

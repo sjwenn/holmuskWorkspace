@@ -53,12 +53,14 @@ def main(logger, resultsDict):
 
         exog = inRace[diagnoses]
 
+        # Drop values with too small sample size. Specified in JSON.
         for diagnosis in diagnoses:
             if data["count " + race + diagnosis] <= jsonConfig["params"]["smallSampleSizeThreshold"]:
                 exog.drop(diagnosis, axis=1, inplace=True)
 
         exog['intercept'] = 1
 
+        # Drop specified values. Specified in JSON.
         for toDrop in jsonConfig["params"]["toDropExog"]:
             exog.drop(toDrop, axis=1, inplace=True)
 

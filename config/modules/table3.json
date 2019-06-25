@@ -20,6 +20,7 @@
                             ["sex","Others"], 
                             ["age_categorical","1-11"]
                         ],
-        "toDropExog": ["visit_type_Mental health center", "sex_F", "age_categorical_50+"]
+        "toDropExog": ["visit_type_Mental health center", "sex_F", "age_categorical_50+"],
+        "targetVariables": ["Any SUD", ">=2 SUDs"]
     }
 }

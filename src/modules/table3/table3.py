@@ -40,6 +40,7 @@ def main(logger, resultsDict):
 
     dfModified = df
 
+    # Exclude specified values. This does not go into the logit. Specified in JSON.
     for [subject, value] in jsonConfig["params"]["toExclude"]:
         dfModified = dfModified[dfModified[subject]!=value]
 
@@ -63,10 +64,12 @@ def main(logger, resultsDict):
 
         exog['intercept'] = 1
 
+        # Drop specified values. Specified in JSON.
         for toDrop in jsonConfig["params"]["toDropExog"]:
             exog.drop(toDrop, axis=1, inplace=True)
 
-        for item in ['Any SUD', '>=2 SUDs']:
+        # Multiple sets of regressions can be run. Specified in JSON.
+        for item in jsonConfig["params"]["targetVariables"]:
 
             print( "\n" + item + " " + raceLabel)
 
@@ -74,11 +77,13 @@ def main(logger, resultsDict):
 
             result = sm.Logit(endog, exog).fit(disp=0)
 
+            # Get confidence interval and order data
             relavantResults         = result.conf_int(alpha=0.05)
             relavantResults['OR']   = result.params
             relavantResults.columns = ['5%', '95%', 'OR']
             relavantResults         = relavantResults[['OR', '5%', '95%']]
 
+            # Get odds ratio from logistic regression coefficients
             oddsRatio = np.exp(relavantResults)
 
             oddsRatio = np.round(oddsRatio, 2)

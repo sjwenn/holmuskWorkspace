@@ -203,6 +203,13 @@ def relabel(logger, df, column, filterJSON):
 
     return df
 
+@lD.log(logBase + '.pdiagnoseJoin ')
+def pdiagnoseJoin(logger):
+    queryString = 'select id, siteid from jingwen.temp2'
+    pgIO.getAllData(queryString, dbName = dbName)
+
+    return
+
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
 
@@ -322,7 +329,7 @@ def main(logger, resultsDict):
 
     schemaName = jsonConfig["inputs"]["schemaName"]
     tableName  = jsonConfig["inputs"]["tableName"]
-    
+
     genRetrieve = pgIO.getDataIterator("select * from " + schemaName + "." + tableName, 
                                         dbName = dbName, 
                                         chunks = 100)

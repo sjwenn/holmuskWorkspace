@@ -16,6 +16,10 @@
     },
     "params"  : {
         "logitParameters": ["age_categorical", "sex", "visit_type"],
-        "toDrop": ["visit_type_Mental health center", "sex_F", "age_categorical_50+"]
+        "toExclude" :   [
+                                        ["sex","!=","Others"], 
+                            ["age_categorical","!=","1-11"]
+                        ],
+        "toDropExog": ["visit_type_Mental health center", "sex_F", "age_categorical_50+"]
     }
 }

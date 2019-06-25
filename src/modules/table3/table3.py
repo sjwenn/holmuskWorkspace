@@ -39,8 +39,12 @@ def main(logger, resultsDict):
     print("Table 3")
 
     dfModified = df
-    dfModified = dfModified[dfModified['sex']!='Others']
-    dfModified = dfModified[dfModified['age_categorical']!='1-11']
+
+    for [subject, operator, value] in jsonConfig["params"]["toExclude"]:
+        if operator == '!=':
+            dfModified = dfModified[dfModified[subject]!=value]
+        else:
+            dfModified = dfModified[dfModified[subject]==value]
 
     for race in np.append('', data['list race']):
 
@@ -61,8 +65,8 @@ def main(logger, resultsDict):
 
         exog['intercept'] = 1
 
-        for toDrop in jsonConfig["params"]["toDrop"]:
-            
+        for toDrop in jsonConfig["params"]["toDropExog"]:
+
             exog.drop(toDrop, axis=1, inplace=True)
 
         for item in ['Any SUD', '>=2 SUDs']:

@@ -48,6 +48,12 @@ def main(logger, resultsDict):
     rawData[diagnosesList] = rawData[diagnosesList].mask(rawData[diagnosesList]>0, 1)
     rawData['SUD Count']   = rawData[SUDList].apply(lambda x: x.sum(), axis=1)
 
+    # TEMPORARY: DO THIS IN SQL
+    rawData['Diagnoses Count']   = rawData[diagnosesList].apply(lambda x: x.sum(), axis=1)
+    rawData = rawData[rawData['Diagnoses Count'] > 0]
+
+    rawData = rawData[rawData['sex']!='Others']
+
     # Creates 'Any SUD' and '>=2 SUDs' columns
     rawData['Any SUD'] = 0
     rawData.loc[rawData['SUD Count'] >= 1, 'Any SUD'] = 1

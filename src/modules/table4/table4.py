@@ -45,11 +45,13 @@ def main(logger, resultsDict):
 
     for race in data['list race']:
 
-        print('='*40 + "\n" + race)
+        print('='*40)
 
         inRace    = dfModified[dfModified['race']==race]
         endog     = inRace['Any SUD']
         diagnoses = data['list diagnoses']
+
+        print("{} ({})".format(race, len(inRace)))
 
         exog = inRace[diagnoses]
 

@@ -62,6 +62,8 @@ def main(logger, resultsDict):
             exog                      = pd.get_dummies(inRace[parameters])
             exog.drop('race_AA', axis = 1, inplace=True)
 
+        print("{} ({})".format(raceLabel, len(inRace)))
+
         exog['intercept'] = 1
 
         # Drop specified values. Specified in JSON.
@@ -71,7 +73,7 @@ def main(logger, resultsDict):
         # Multiple sets of regressions can be run. Specified in JSON.
         for item in jsonConfig["params"]["targetVariables"]:
 
-            print( "\n" + item + " " + raceLabel)
+            print( "\n" + item )
 
             endog = inRace[item]
 

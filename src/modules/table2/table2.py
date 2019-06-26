@@ -40,7 +40,7 @@ def main(logger, resultsDict):
 
     for race in data['list race']:
 
-        print('='*40)
+        print('='*40+ "\n" + race)
 
         inRace = df[df['race']==race]
         outputDict = {}

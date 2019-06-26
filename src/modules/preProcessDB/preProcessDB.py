@@ -160,25 +160,25 @@ def subroutineJoinTypepatient(logger):
                                 ROW_NUMBER() OVER (PARTITION BY id, siteid ORDER BY age asc) AS rn
                                 from 
                                 (
-                                select background.id, background.siteid, background.race, background.sex, 
-                                typepatient.age, typepatient.visit_type
-                                from
-                                (
-                                select id, siteid, race, sex from raw_data.background 
-                                where CAST (id as INTEGER) >= {} and CAST (id as INTEGER) < {}
-                                and
-                                '''.format(lowerBound, upperBound) + getFilterString('race', jsonConfig["inputs"]["raceFilterPath"]) + '''
-                                and
-                                ''' + getFilterString('sex', jsonConfig["inputs"]["sexFilterPath"]) + '''
-                                ) as background
-                                inner join 
-                                (
-                                select backgroundid, siteid, age, visit_type, created from raw_data.typepatient
-                                where 
-                                ''' + getFilterString('visit_type', jsonConfig["inputs"]["settingFilterPath"]) + '''
-                                and (age IS NOT NULL )
-                                ) as typepatient
-                                on typepatient.backgroundid = background.id and typepatient.siteid = background.siteid
+                                    select background.id, background.siteid, background.race, background.sex, 
+                                    typepatient.age, typepatient.visit_type
+                                    from
+                                    (
+                                        select id, siteid, race, sex from raw_data.background 
+                                        where CAST (id as INTEGER) >= {} and CAST (id as INTEGER) < {}
+                                        and
+                                        '''.format(lowerBound, upperBound) + getFilterString('race', jsonConfig["inputs"]["raceFilterPath"]) + '''
+                                        and
+                                        ''' + getFilterString('sex', jsonConfig["inputs"]["sexFilterPath"]) + '''
+                                    ) as background
+                                    inner join 
+                                    (
+                                        select backgroundid, siteid, age, visit_type, created from raw_data.typepatient
+                                        where 
+                                        ''' + getFilterString('visit_type', jsonConfig["inputs"]["settingFilterPath"]) + '''
+                                        and (age IS NOT NULL )
+                                    ) as typepatient
+                                    on typepatient.backgroundid = background.id and typepatient.siteid = background.siteid
                                 )as x
                                 )
                                 select id, siteid, race, sex, age, visit_type
@@ -204,7 +204,7 @@ def subroutineJoinTypepatient(logger):
                             race text NULL,
                             sex text NULL,
                             age text NULL,
-                            visit_type text NULL,
+                            visit_type text NULL
                             );
                             '''
     if createTable(schemaName, 'temp2', createTemp2String):
@@ -340,43 +340,7 @@ def main(logger, resultsDict):
 
     SUDList          = [headerParse(item) for item in SUDList]
     diagnosesList    = [headerParse(item) for item in diagnosesList]
-
-    typePatientJoinQueryString          =   '''
-                                            create table jingwen.temp1 as(
-                                            select background.id, background.siteid, background.race, background.sex, 
-                                            typepatient.age, typepatient.visit_type, typepatient.created
-                                            from
-                                            (
-                                            select id, siteid, race, sex from raw_data.background 
-                                            where
-                                            ''' + getFilterString('race', jsonConfig["inputs"]["raceFilterPath"]) + '''
-                                            and
-                                            ''' + getFilterString('sex', jsonConfig["inputs"]["sexFilterPath"]) + '''
-                                            ) as background
-                                            inner join 
-                                            (
-                                            select backgroundid, siteid, age, visit_type, created from raw_data.typepatient
-                                            where 
-                                            ''' + getFilterString('visit_type', jsonConfig["inputs"]["settingFilterPath"]) + '''
-                                            and (age IS NOT NULL )
-                                            ) as typepatient
-                                            on typepatient.backgroundid = background.id and typepatient.siteid = background.siteid
-                                            );
-                                            '''
-
-    removeDuplicateVisitsQueryString    =   '''
-                                            create table jingwen.temp2 as(
-                                            with cte as
-                                            (
-                                            select *,
-                                            ROW_NUMBER() OVER (PARTITION BY id, siteid ORDER BY created DESC) AS rn
-                                            from jingwen.temp1
-                                            )
-                                            select id, siteid, race, sex, age, visit_type
-                                            from cte
-                                            where rn = 1    
-                                            );
-                                            '''     
+ 
 
     oneHotDiagnosesQueryString          =   '''
                                             create table jingwen.temp4 as(
@@ -406,50 +370,43 @@ def main(logger, resultsDict):
     fullTableName = schemaName + "." + tableName
 
 
-    subroutineJoinTypepatient()
+    
 
 
-    # if not checkTableExistence(schemaName, tableName):
+    if not checkTableExistence(schemaName, tableName):
 
-    #     print('[preProcessDB] {}.{} not found. Generating now.'.format(schemaName, tableName))
+        print('[preProcessDB] {}.{} not found. Generating now.'.format(schemaName, tableName))
 
-    #     print('[preProcessDB] Running queries. This might take a while ...')
+        print('[preProcessDB] Running queries. This might take a while ...')
 
-    #     print('Filter race and join with typepatient ... ', end = " ")
-    #     if pgIO.commitData(typePatientJoinQueryString , dbName = dbName):
-    #         print('done\n')
-    #     else:
-    #         print('fail\n')
+        print('Filter race and join with typepatient ... ', end = " ")
+        subroutineJoinTypepatient()
+        print('done\n')
 
-    #     print('Remove duplicate visits ... ', end = " ")
-    #     if pgIO.commitData(removeDuplicateVisitsQueryString , dbName = dbName):
-    #         print('done\n')
-    #     else:
-    #         print('fail\n')
 
-    #     print('Join with pdiagnose ... ', end = " ")
-    #     subroutineJoinDiagnoses()
-    #     print('done\n')
+        print('Join with pdiagnose ... ', end = " ")
+        subroutineJoinDiagnoses()
+        print('done\n')
 
-    #     print('One hot diagnoses and SUD ... ', end = " ")
-    #     if pgIO.commitData(oneHotDiagnosesQueryString , dbName = dbName):
-    #         print('done\n')
-    #     else:
-    #         print('fail\n')
+        print('One hot diagnoses and SUD ... ', end = " ")
+        if pgIO.commitData(oneHotDiagnosesQueryString , dbName = dbName):
+            print('done\n')
+        else:
+            print('fail\n')
 
-    #     print('Join everything ... ', end = " ")
-    #     if pgIO.commitData(joinEverythingQueryString , dbName = dbName):
-    #         print('done\n')
-    #     else:
-    #         print('fail\n')
+        print('Join everything ... ', end = " ")
+        if pgIO.commitData(joinEverythingQueryString , dbName = dbName):
+            print('done\n')
+        else:
+            print('fail\n')
 
-    #     print('Relabelling ...', end = " ")
-    #     subroutineRelabelComorbid()
-    #     print('done\n')
+        print('Relabelling ...', end = " ")
+        subroutineRelabelComorbid()
+        print('done\n')
 
-    # else:
+    else:
 
-    #     print('[preProcessDB] {}.{} found. Skipping generation'.format(schemaName, tableName))
+        print('[preProcessDB] {}.{} found. Skipping generation'.format(schemaName, tableName))
 
     genRetrieve = pgIO.getDataIterator("select * from " + fullTableName, 
                                         dbName = dbName, 

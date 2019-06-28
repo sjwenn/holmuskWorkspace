@@ -13,21 +13,20 @@ from scipy.stats import chi2_contingency
 import pickle
 import math
 import re
-
-import dask.array as da
-import dask.dataframe as dd
+from tabulate import tabulate
 import pandas as pd
-
+import time
 from lib.databaseIO import pgIO
 
 config = jsonref.load(open('../config/config.json'))
 jsonConfig = jsonref.load(open('../config/modules/reportGenerator.json'))
 logBase = config['logging']['logBase'] + '.modules.reportGenerator.reportGenerator'
+dbName     = jsonConfig["inputs"]["dbName"]
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
+    print
     
-
     return
 
 

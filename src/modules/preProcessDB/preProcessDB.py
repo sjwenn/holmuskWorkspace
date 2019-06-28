@@ -77,7 +77,6 @@ def oneHotDiagnoses(logger):
                      from jingwen.temp3
                      group by patientid
                      '''
-
     return queryString
 
 @lD.log(logBase + '.relabelSQL')
@@ -190,23 +189,18 @@ def subroutineJoinTypepatient(logger):
                                 from cte
                                 where rn = 1    
                                                   
-                                '''
+                                '''.format(lowerBound, upperBound)
         
             isSuccesfulFlag = pgIO.commitData(queryString , dbName = dbName)
-
-            if not isSuccesfulFlag:
-                if ttl > 0 or recursionChunkSize > 1:
-                    recursiveQuery(upperBound,   recursionChunkSize = recursionChunkSize*scalingFactor, \
-                                                 scalingFactor = scalingFactor, \
-                                                 ttl = ttl-1, \
-                                                 offset = lowerBound )
-                else:
-                    return False
-
-
             print("ID {} to {}: {}".format(lowerBound, upperBound, isSuccesfulFlag))
 
-        return True
+            if not isSuccesfulFlag:
+                if ttl > 0 and recursionChunkSize*scalingFactor >= 1:    
+                    recursiveQuery(upperBound,   recursionChunkSize = round(recursionChunkSize*scalingFactor), \
+                                                 scalingFactor = scalingFactor, \
+                                                 ttl = ttl-1, \
+                                                 offset = lowerBound )  
+        return
 
 
     schemaName = jsonConfig["inputs"]["schemaName"]
@@ -240,9 +234,9 @@ def subroutineJoinTypepatient(logger):
 @lD.log(logBase + '.subroutineJoinDiagnoses')
 def subroutineJoinDiagnoses(logger):
 
-    def recursiveQuery(totalRows, recursionChunkSize = 1000, scalingFactor = 0.1, ttl = 5 ):
+    def recursiveQuery(totalRows, recursionChunkSize = 1000, scalingFactor = 0.1, ttl = 5, offset = 0 ):
 
-        for idx in range(0, totalRows, recursionChunkSize):
+        for idx in range(offset, offset + totalRows, recursionChunkSize):
             lowerBound = idx
             upperBound = idx + recursionChunkSize
 
@@ -273,15 +267,13 @@ def subroutineJoinDiagnoses(logger):
             print("ID {} to {}: {}".format(lowerBound, upperBound, isSuccesfulFlag))
 
             if not isSuccesfulFlag:
-                if ttl > 0 or recursionChunkSize > 1:
-                    recursiveQuery(upperBound,   recursionChunkSize = recursionChunkSize*scalingFactor, \
+                if ttl > 0 and recursionChunkSize*scalingFactor >= 1:    
+                    recursiveQuery(upperBound,   recursionChunkSize = round(recursionChunkSize*scalingFactor), \
                                                  scalingFactor = scalingFactor, \
                                                  ttl = ttl-1, \
-                                                 offset = lowerBound )
-                else:
-                    return False
+                                                 offset = lowerBound )  
 
-        return True
+        return
 
 
     schemaName = jsonConfig["inputs"]["schemaName"]
@@ -335,17 +327,17 @@ def subroutineRelabelComorbid(logger):
         WHERE CAST ({}.age AS INTEGER) <= {} and CAST ({}.age AS INTEGER) >= {}
         '''.format( fullTableName, item[0], item[1],  fullTableName, item[1], fullTableName, item[0]))
 
-    queryStringList.append('''
-    UPDATE {}
-    SET age_categorical='50+'
-    WHERE CAST ({}.age AS INTEGER) >= 50
-                                            '''.format(fullTableName, fullTableName))
+    queryStringList.append( '''
+                            UPDATE {}
+                            SET age_categorical='50+'
+                            WHERE CAST ({}.age AS INTEGER) >= 50
+                            '''.format(fullTableName, fullTableName))
 
-    queryStringList.append('''
-    UPDATE {}
-    SET age_categorical='0'
-    WHERE CAST ({}.age AS INTEGER) = 0
-                                            '''.format(fullTableName, fullTableName))
+    queryStringList.append( '''
+                            UPDATE {}
+                            SET age_categorical='0'
+                            WHERE CAST ({}.age AS INTEGER) = 0
+                            '''.format(fullTableName, fullTableName))
     for relabelQuery in queryStringList:
         pgIO.commitData(relabelQuery , dbName = dbName)
 
@@ -353,8 +345,6 @@ def subroutineRelabelComorbid(logger):
 
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
-
-    print(getFilterString('sex', jsonConfig["inputs"]["sexFilterPath"], typeCategory = 'TEXT'))
 
     raceList         = pd.read_csv(jsonConfig["inputs"]["raceFilterPath"])['category'].unique()
     SUDList          = pd.read_csv(jsonConfig["inputs"]["dsmSUDPath"]).columns.tolist()

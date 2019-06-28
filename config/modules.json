@@ -2,7 +2,7 @@
     {
         "moduleName" : "preProcessDB",
         "path"       : "modules/preProcessDB/preProcessDB.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     }, {
@@ -44,7 +44,7 @@
     }, {
         "moduleName" : "reportGenerator",
         "path"       : "modules/reportGenerator/reportGenerator.py",
-        "execute"    : false,
+        "execute"    : true,
         "description": "",
         "owner"      : ""
     },{

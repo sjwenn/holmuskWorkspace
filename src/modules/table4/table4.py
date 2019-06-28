@@ -21,7 +21,6 @@ pd.options.mode.chained_assignment = None
 import time
 import statsmodels.api as sm
 
-
 config = jsonref.load(open('../config/config.json'))
 jsonConfig = jsonref.load(open('../config/modules/table4.json'))
 logBase = config['logging']['logBase'] + '.modules.table4.table4'

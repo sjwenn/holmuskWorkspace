@@ -44,6 +44,7 @@ def main(logger, resultsDict):
 
     dfFigure1Buffer = []
 
+    # Generate table data
     for race in data["list race"]:
         inrace = df[df['race']==race]
         raceCount = data['count '+race]
@@ -63,14 +64,15 @@ def main(logger, resultsDict):
     ax = sns.barplot(x="Diagnosis", y="%", hue="Race", data=dfFigure1, hue_order=['AA', 'NHPI', 'MR'])
     plt.xticks(rotation=45)
 
-    #Put numerical labels above every bar
+    # Put numerical labels above every bar
     for p in ax.patches: 
         height = p.get_height()
         ax.text(p.get_x()+p.get_width()/2.,
                 height + 0.5,
-                '{:1.0f}'.format(height),
+                '{:1.1f}'.format(height),
                 ha="center") 
 
+    # Save and/or show plot
     plt.savefig(jsonConfig["outputs"]["saveFigPath"], dpi=600, bbox_inches = "tight")
     #plt.show()
 

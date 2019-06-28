@@ -1,4 +1,4 @@
-'''[one line description of the module]
+'''Its pretty good.
 
 [this is a 
 multiline description of what the module does.] 

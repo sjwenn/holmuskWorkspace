@@ -1,0 +1,22 @@
+modules.table4 package
+======================
+
+Submodules
+----------
+
+modules.table4.table4 module
+----------------------------
+
+.. automodule:: modules.table4.table4
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: modules.table4
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,22 @@
+modules.table3 package
+======================
+
+Submodules
+----------
+
+modules.table3.table3 module
+----------------------------
+
+.. automodule:: modules.table3.table3
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: modules.table3
+   :members:
+   :undoc-members:
+   :show-inheritance:

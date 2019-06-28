@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>modules.module1 package &mdash; src  documentation</title>
+  <title>modules.getUsefulInfo package &mdash; src  documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="workspace module" href="workspace.html" />
-    <link rel="prev" title="modules.celeryCheck package" href="modules.celeryCheck.html" /> 
+    <link rel="next" title="modules.preProcessDB package" href="modules.preProcessDB.html" />
+    <link rel="prev" title="modules.figure1 package" href="modules.figure1.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,16 +83,22 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="lib.html">lib package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="logs.html">logs package</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">modules package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="modules.celeryCheck.html">modules.celeryCheck package</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">modules.module1 package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="modules.figure1.html">modules.figure1 package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">modules.getUsefulInfo package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-modules.module1.module1">modules.module1.module1 module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-modules.module1">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.getUsefulInfo.getUsefulInfo">modules.getUsefulInfo.getUsefulInfo module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-modules.getUsefulInfo">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="modules.preProcessDB.html">modules.preProcessDB package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.reportGenerator.html">modules.reportGenerator package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.table1.html">modules.table1 package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.table2.html">modules.table2 package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.table3.html">modules.table3 package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="modules.table4.html">modules.table4 package</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-modules">Module contents</a></li>
@@ -146,13 +152,13 @@
         
           <li><a href="modules.html">modules package</a> &raquo;</li>
         
-      <li>modules.module1 package</li>
+      <li>modules.getUsefulInfo package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/modules.module1.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/modules.getUsefulInfo.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -165,57 +171,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="modules-module1-package">
-<h1>modules.module1 package<a class="headerlink" href="#modules-module1-package" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="modules-getusefulinfo-package">
+<h1>modules.getUsefulInfo package<a class="headerlink" href="#modules-getusefulinfo-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-modules.module1.module1">
-<span id="modules-module1-module1-module"></span><h2>modules.module1.module1 module<a class="headerlink" href="#module-modules.module1.module1" title="Permalink to this headline">¶</a></h2>
-<dl class="data">
-<dt id="modules.module1.module1.config">
-<code class="sig-prename descclassname">modules.module1.module1.</code><code class="sig-name descname">config</code><em class="property"> = {'logging': {'level': 'INFO', 'logBase': 'workspace', 'specs': {'file': {'logFolder': 'logs', 'todo': True}, 'logstash': {'host': 'localhost', 'port': 5959, 'tags': [], 'todo': False, 'version': 1}, 'stdout': {'todo': False}}}}</em><a class="headerlink" href="#modules.module1.module1.config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<div class="section" id="module-modules.getUsefulInfo.getUsefulInfo">
+<span id="modules-getusefulinfo-getusefulinfo-module"></span><h2>modules.getUsefulInfo.getUsefulInfo module<a class="headerlink" href="#module-modules.getUsefulInfo.getUsefulInfo" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="modules.module1.module1.doSomething">
-<code class="sig-prename descclassname">modules.module1.module1.</code><code class="sig-name descname">doSomething</code><span class="sig-paren">(</span><em class="sig-param">logger</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/module1/module1.html#doSomething"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.module1.module1.doSomething" title="Permalink to this definition">¶</a></dt>
-<dd><p>print a line</p>
-<p>This function simply prints a single line</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>logger</strong> (<em>{logging.Logger}</em>) – The logger used for logging error information</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="data">
-<dt id="modules.module1.module1.logBase">
-<code class="sig-prename descclassname">modules.module1.module1.</code><code class="sig-name descname">logBase</code><em class="property"> = 'workspace.modules.module1.module1'</em><a class="headerlink" href="#modules.module1.module1.logBase" title="Permalink to this definition">¶</a></dt>
+<dt id="modules.getUsefulInfo.getUsefulInfo.main">
+<code class="sig-prename descclassname">modules.getUsefulInfo.getUsefulInfo.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">resultsDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/getUsefulInfo/getUsefulInfo.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.getUsefulInfo.getUsefulInfo.main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
-
-<dl class="function">
-<dt id="modules.module1.module1.main">
-<code class="sig-prename descclassname">modules.module1.module1.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">resultsDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/module1/module1.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.module1.module1.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>main function for module1</p>
-<p>This function finishes all the tasks for the
-main function. This is a way in which a
-particular module is going to be executed.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>logger</strong> (<em>{logging.Logger}</em>) – The logger used for logging error information</p></li>
-<li><p><strong>resultsDict</strong> (<em>{dict}</em>) – A dintionary containing information about the
-command line arguments. These can be used for
-overwriting command line arguments as needed.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
 
 </div>
-<div class="section" id="module-modules.module1">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-modules.module1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-modules.getUsefulInfo">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-modules.getUsefulInfo" title="Permalink to this headline">¶</a></h2>
 <p>[one line description of the module]</p>
 <p>[this is a
 multiline description of what the module does.]</p>
@@ -280,10 +250,10 @@ changed.
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="workspace.html" class="btn btn-neutral float-right" title="workspace module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="modules.preProcessDB.html" class="btn btn-neutral float-right" title="modules.preProcessDB package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="modules.celeryCheck.html" class="btn btn-neutral float-left" title="modules.celeryCheck package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="modules.figure1.html" class="btn btn-neutral float-left" title="modules.figure1 package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -1,0 +1,22 @@
+modules.reportGenerator package
+===============================
+
+Submodules
+----------
+
+modules.reportGenerator.reportGenerator module
+----------------------------------------------
+
+.. automodule:: modules.reportGenerator.reportGenerator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: modules.reportGenerator
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -7,7 +7,14 @@ Subpackages
 .. toctree::
 
    modules.celeryCheck
-   modules.module1
+   modules.figure1
+   modules.getUsefulInfo
+   modules.preProcessDB
+   modules.reportGenerator
+   modules.table1
+   modules.table2
+   modules.table3
+   modules.table4
 
 Module contents
 ---------------

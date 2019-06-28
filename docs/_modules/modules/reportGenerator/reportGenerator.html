@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>modules.module1.module1 &mdash; src  documentation</title>
+  <title>modules.reportGenerator.reportGenerator &mdash; src  documentation</title>
   
 
   
@@ -81,7 +81,6 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../lib.html">lib package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../logs.html">logs package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">modules package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../workspace.html">workspace module</a></li>
 </ul>
@@ -131,7 +130,7 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-      <li>modules.module1.module1</li>
+      <li>modules.reportGenerator.reportGenerator</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,60 +145,40 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for modules.module1.module1</h1><div class="highlight"><pre>
+  <h1>Source code for modules.reportGenerator.reportGenerator</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">logs</span> <span class="k">import</span> <span class="n">logDecorator</span> <span class="k">as</span> <span class="n">lD</span> 
 <span class="kn">import</span> <span class="nn">jsonref</span><span class="o">,</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Qt5Agg&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;dark&quot;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_palette</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">diverging_palette</span><span class="p">(</span><span class="mi">240</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="s2">&quot;dark&quot;</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">stats</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">chi2</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">chi2_contingency</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="k">import</span> <span class="n">tabulate</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">lib.databaseIO</span> <span class="k">import</span> <span class="n">pgIO</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../config/config.json&#39;</span><span class="p">))</span>
-<span class="n">logBase</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;logging&#39;</span><span class="p">][</span><span class="s1">&#39;logBase&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.modules.module1.module1&#39;</span>
+<span class="n">jsonConfig</span> <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../config/modules/reportGenerator.json&#39;</span><span class="p">))</span>
+<span class="n">logBase</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;logging&#39;</span><span class="p">][</span><span class="s1">&#39;logBase&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.modules.reportGenerator.reportGenerator&#39;</span>
+<span class="n">dbName</span>     <span class="o">=</span> <span class="n">jsonConfig</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">][</span><span class="s2">&quot;dbName&quot;</span><span class="p">]</span>
 
-
-<div class="viewcode-block" id="doSomething"><a class="viewcode-back" href="../../../modules.module1.html#modules.module1.module1.doSomething">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.doSomething&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">doSomething</span><span class="p">(</span><span class="n">logger</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;print a line</span>
-<span class="sd">    </span>
-<span class="sd">    This function simply prints a single line</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    logger : {logging.Logger}</span>
-<span class="sd">        The logger used for logging error information</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;We are in module 1&#39;</span><span class="p">)</span>
-
-    <span class="k">return</span></div>
-
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../modules.module1.html#modules.module1.module1.main">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.main&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../modules.reportGenerator.html#modules.reportGenerator.reportGenerator.main">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.main&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">resultsDict</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;main function for module1</span>
-<span class="sd">    </span>
-<span class="sd">    This function finishes all the tasks for the</span>
-<span class="sd">    main function. This is a way in which a </span>
-<span class="sd">    particular module is going to be executed. </span>
-<span class="sd">    </span>
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    logger : {logging.Logger}</span>
-<span class="sd">        The logger used for logging error information</span>
-<span class="sd">    resultsDict: {dict}</span>
-<span class="sd">        A dintionary containing information about the </span>
-<span class="sd">        command line arguments. These can be used for</span>
-<span class="sd">        overwriting command line arguments as needed.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Main function of module 1&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;We get a copy of the result dictionary over here ...&#39;</span><span class="p">)</span>
-    <span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">resultsDict</span><span class="p">)</span>
-
-    <span class="n">doSomething</span><span class="p">()</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Getting out of Module 1&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">30</span><span class="p">)</span>
-
+    <span class="nb">print</span>
+    
     <span class="k">return</span></div>
+
+
+
 
 </pre></div>
 

@@ -1,13 +1,13 @@
-modules.module1 package
+modules.figure1 package
 =======================
 
 Submodules
 ----------
 
-modules.module1.module1 module
+modules.figure1.figure1 module
 ------------------------------
 
-.. automodule:: modules.module1.module1
+.. automodule:: modules.figure1.figure1
    :members:
    :undoc-members:
    :show-inheritance:
@@ -16,7 +16,7 @@ modules.module1.module1 module
 Module contents
 ---------------
 
-.. automodule:: modules.module1
+.. automodule:: modules.figure1
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,0 +1,22 @@
+modules.getUsefulInfo package
+=============================
+
+Submodules
+----------
+
+modules.getUsefulInfo.getUsefulInfo module
+------------------------------------------
+
+.. automodule:: modules.getUsefulInfo.getUsefulInfo
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: modules.getUsefulInfo
+   :members:
+   :undoc-members:
+   :show-inheritance:

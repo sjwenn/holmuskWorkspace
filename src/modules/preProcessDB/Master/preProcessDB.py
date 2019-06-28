@@ -33,7 +33,7 @@ def headerParse(logger, headers):
     return headers
 
 @lD.log(logBase + '.getFilterString')
-def getFilterString(logger, column, filterJSON, typeCategory=''):
+def getFilterString(logger, column, filterJSON):
 
     filter = pd.read_csv(filterJSON)
 
@@ -42,10 +42,7 @@ def getFilterString(logger, column, filterJSON, typeCategory=''):
 
     for idx, (value, category) in filter.iterrows():
         if category == category: #not NAN
-            if typeCategory == '':
-                queryString += "({}='{}')or".format(column, value)
-            else:
-                queryString += "(CAST ({} AS {})='{}')or".format(column, typeCategory, value)
+            queryString += "({}='{}')or".format(column, value)
 
     # Remove last 'or'
     queryString = queryString[:-2] + ")"
@@ -60,7 +57,7 @@ def oneHotDiagnoses(logger):
     dsmDiagnosesFilter = pd.read_csv(jsonConfig["inputs"]["dsmDiagnosesPath"])
     dsmSUDFilter       = pd.read_csv(jsonConfig["inputs"]["dsmSUDPath"])
     queryString     = '''
-                         select patientid
+                         select id, siteid
                          '''
     # Create filter string
     for filterType in [dsmDiagnosesFilter, dsmSUDFilter]:
@@ -75,7 +72,7 @@ def oneHotDiagnoses(logger):
 
     queryString +=   '''
                      from jingwen.temp3
-                     group by patientid
+                     group by id, siteid
                      '''
 
     return queryString
@@ -145,13 +142,13 @@ def createTable(logger, schemaName, tableName, createTableQueryString, existsTab
 @lD.log(logBase + '.subroutineJoinDiagnoses')
 def subroutineJoinTypepatient(logger):
 
-    def recursiveQuery(totalRows, recursionChunkSize = 1000, scalingFactor = 0.1, ttl = 5, offset = 0 ):
+    def recursiveQuery(totalRows, recursionChunkSize = 1000, scalingFactor = 0.1, ttl = 5 ):
 
-        raceFilter    = getFilterString('race', jsonConfig["inputs"]["raceFilterPath"])
-        sexFilter     = getFilterString('sex', jsonConfig["inputs"]["sexFilterPath"], typeCategory = 'TEXT')
-        settingFilter = getFilterString('visit_type', jsonConfig["inputs"]["settingFilterPath"])
+        getFilterString('race', jsonConfig["inputs"]["raceFilterPath"])
+        getFilterString('sex', jsonConfig["inputs"]["sexFilterPath"])
+        getFilterString('sex', jsonConfig["inputs"]["sexFilterPath"])
 
-        for idx in range(offset, offset + totalRows, recursionChunkSize):
+        for idx in range(0, totalRows, recursionChunkSize):
             lowerBound = idx
             upperBound = idx + recursionChunkSize
 
@@ -160,50 +157,37 @@ def subroutineJoinTypepatient(logger):
                                 with cte as
                                 (
                                 select *,
-                                ROW_NUMBER() OVER (PARTITION BY patientid ORDER BY age asc) AS rn
+                                ROW_NUMBER() OVER (PARTITION BY id, siteid ORDER BY age asc) AS rn
                                 from 
                                 (
-                                    select background.patientid, background.race, background.sex, 
+                                    select background.id, background.siteid, background.race, background.sex, 
                                     typepatient.age, typepatient.visit_type
                                     from
                                     (
-                                        select patientid, race, sex from rwe_version1_1.background 
-                                        where CAST (patientid as INTEGER) >= {} and CAST (patientid as INTEGER) < {}
+                                        select id, siteid, race, sex from raw_data.background 
+                                        where CAST (id as INTEGER) >= {} and CAST (id as INTEGER) < {}
                                         and
-                                        race is not null
+                                        '''.format(lowerBound, upperBound) + getFilterString('race', jsonConfig["inputs"]["raceFilterPath"]) + '''
                                         and
-                                        '''.format(lowerBound, upperBound) + raceFilter + '''
-                                        and
-                                        ''' + sexFilter + '''
+                                        ''' + getFilterString('sex', jsonConfig["inputs"]["sexFilterPath"]) + '''
                                     ) as background
                                     inner join 
                                     (
-                                        select patientid, age, visit_type from rwe_version1_1.typepatient
+                                        select backgroundid, siteid, age, visit_type, created from raw_data.typepatient
                                         where 
-                                        ''' + settingFilter + '''
+                                        ''' + getFilterString('visit_type', jsonConfig["inputs"]["settingFilterPath"]) + '''
                                         and (age IS NOT NULL )
                                     ) as typepatient
-                                    on typepatient.patientid = background.patientid
+                                    on typepatient.backgroundid = background.id and typepatient.siteid = background.siteid
                                 )as x
                                 )
-                                select patientid, race, sex, age, visit_type
+                                select id, siteid, race, sex, age, visit_type
                                 from cte
                                 where rn = 1    
                                                   
-                                '''
+                                '''.format(lowerBound, upperBound)
         
             isSuccesfulFlag = pgIO.commitData(queryString , dbName = dbName)
-
-            if not isSuccesfulFlag:
-                if ttl > 0 or recursionChunkSize > 1:
-                    recursiveQuery(upperBound,   recursionChunkSize = recursionChunkSize*scalingFactor, \
-                                                 scalingFactor = scalingFactor, \
-                                                 ttl = ttl-1, \
-                                                 offset = lowerBound )
-                else:
-                    return False
-
-
             print("ID {} to {}: {}".format(lowerBound, upperBound, isSuccesfulFlag))
 
         return True
@@ -215,7 +199,8 @@ def subroutineJoinTypepatient(logger):
 
     createTemp2String =     '''
                             CREATE TABLE jingwen.temp2 (
-                            patientid text NULL,
+                            id text NULL,
+                            siteid text NULL,
                             race text NULL,
                             sex text NULL,
                             age text NULL,
@@ -224,7 +209,7 @@ def subroutineJoinTypepatient(logger):
                             '''
     if createTable(schemaName, 'temp2', createTemp2String):
 
-        maxID = pgIO.getAllData("select max(CAST (patientid as INTEGER)) from rwe_version1_1.background", dbName = dbName )[0][0]
+        maxID = pgIO.getAllData("select max(CAST (id as INTEGER)) from raw_data.background", dbName = dbName )[0][0]
         print(maxID)
         recursiveQuery(maxID)
 
@@ -252,34 +237,25 @@ def subroutineJoinDiagnoses(logger):
                                 from jingwen.temp2 as temp2
                                 inner join
                                 (
-                                    select  patientid, dsmno
+                                    select  id, dsmno, siteid
                                     from    
                                     (
-                                        select temp2.patientid, rwe_version1_1.pdiagnose.dsmno
+                                        select temp2.id, temp2.siteid, raw_data.pdiagnose.dsmno
                                         from
                                         (
-                                            select patientid from jingwen.temp2
-                                            where CAST  (patientid as INTEGER) >= {} and CAST (patientid as INTEGER) < {}
+                                            select id, siteid from jingwen.temp2
+                                            where CAST (id as INTEGER) >= {} and CAST (id as INTEGER) < {}
                                         ) as temp2
-                                        inner join rwe_version1_1.pdiagnose 
-                                        on CAST(rwe_version1_1.pdiagnose.patientid as TEXT) = CAST(temp2.patientid as TEXT)
+                                        inner join raw_data.pdiagnose 
+                                        on raw_data.pdiagnose.backgroundid = temp2.id and raw_data.pdiagnose.siteid = temp2.siteid
                                     ) as x
-                                    group by patientid, dsmno
+                                    group by id, dsmno, siteid
                                 ) as y
-                                on CAST(y.patientid as TEXT) = CAST(temp2.patientid as TEXT)
+                                on y.id = temp2.id and y.siteid = temp2.siteid
                                 '''.format(lowerBound, upperBound)
         
             isSuccesfulFlag = pgIO.commitData(queryString , dbName = dbName)
             print("ID {} to {}: {}".format(lowerBound, upperBound, isSuccesfulFlag))
-
-            if not isSuccesfulFlag:
-                if ttl > 0 or recursionChunkSize > 1:
-                    recursiveQuery(upperBound,   recursionChunkSize = recursionChunkSize*scalingFactor, \
-                                                 scalingFactor = scalingFactor, \
-                                                 ttl = ttl-1, \
-                                                 offset = lowerBound )
-                else:
-                    return False
 
         return True
 
@@ -290,7 +266,8 @@ def subroutineJoinDiagnoses(logger):
 
     createTemp3String =     '''
                             CREATE TABLE jingwen.temp3 (
-                            patientid text NULL,
+                            id text NULL,
+                            siteid text NULL,
                             race text NULL,
                             sex text NULL,
                             age text NULL,
@@ -300,7 +277,7 @@ def subroutineJoinDiagnoses(logger):
                             '''
     if createTable(schemaName, 'temp3', createTemp3String):
 
-        maxID = pgIO.getAllData("select max(CAST (patientid as INTEGER)) from jingwen.temp2", dbName = dbName )[0][0]
+        maxID = pgIO.getAllData("select max(CAST (id as INTEGER)) from jingwen.temp2", dbName = dbName )[0][0]
         print(maxID)
         recursiveQuery(maxID)
 
@@ -354,8 +331,6 @@ def subroutineRelabelComorbid(logger):
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
 
-    print(getFilterString('sex', jsonConfig["inputs"]["sexFilterPath"], typeCategory = 'TEXT'))
-
     raceList         = pd.read_csv(jsonConfig["inputs"]["raceFilterPath"])['category'].unique()
     SUDList          = pd.read_csv(jsonConfig["inputs"]["dsmSUDPath"]).columns.tolist()
     diagnosesList    = pd.read_csv(jsonConfig["inputs"]["dsmDiagnosesPath"]).columns.tolist()
@@ -381,7 +356,7 @@ def main(logger, resultsDict):
                                             select jingwen.temp2.race, jingwen.temp2.sex, jingwen.temp2.age, jingwen.temp2.visit_type, jingwen.temp4.*
                                             from jingwen.temp4
                                             inner join jingwen.temp2
-                                            on jingwen.temp4.patientid = jingwen.temp2.patientid
+                                            on jingwen.temp4.id = jingwen.temp2.id and jingwen.temp4.siteid = jingwen.temp2.siteid 
                                             ) as x
                                             where CAST (age AS INTEGER) > 0
                                             and (''' + getFilterString('visit_type', jsonConfig["inputs"]["settingFilterPath"]) + ''')

@@ -2,7 +2,7 @@
     {
         "moduleName" : "preProcessDB",
         "path"       : "modules/preProcessDB/preProcessDB.py",
-        "execute"    : true,
+        "execute"    : false,
         "description": "",
         "owner"      : ""
     }, {

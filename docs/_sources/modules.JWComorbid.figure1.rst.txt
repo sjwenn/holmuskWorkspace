@@ -1,0 +1,22 @@
+modules.JWComorbid.figure1 package
+==================================
+
+Submodules
+----------
+
+modules.JWComorbid.figure1.figure1 module
+-----------------------------------------
+
+.. automodule:: modules.JWComorbid.figure1.figure1
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: modules.JWComorbid.figure1
+   :members:
+   :undoc-members:
+   :show-inheritance:

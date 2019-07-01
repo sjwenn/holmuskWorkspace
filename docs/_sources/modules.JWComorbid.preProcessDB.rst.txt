@@ -1,0 +1,22 @@
+modules.JWComorbid.preProcessDB package
+=======================================
+
+Submodules
+----------
+
+modules.JWComorbid.preProcessDB.preProcessDB module
+---------------------------------------------------
+
+.. automodule:: modules.JWComorbid.preProcessDB.preProcessDB
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: modules.JWComorbid.preProcessDB
+   :members:
+   :undoc-members:
+   :show-inheritance:

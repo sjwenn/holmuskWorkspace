@@ -1,0 +1,22 @@
+modules.JWComorbid.getUsefulInfo package
+========================================
+
+Submodules
+----------
+
+modules.JWComorbid.getUsefulInfo.getUsefulInfo module
+-----------------------------------------------------
+
+.. automodule:: modules.JWComorbid.getUsefulInfo.getUsefulInfo
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: modules.JWComorbid.getUsefulInfo
+   :members:
+   :undoc-members:
+   :show-inheritance:

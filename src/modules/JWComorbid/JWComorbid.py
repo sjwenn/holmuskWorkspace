@@ -24,7 +24,8 @@ def importModules(logger, resultsDict):
     logger : {logging.Logger}
         logger module for logging information
     '''
-    modules = jsonref.load(open('../config/modules.json'))
+    modules = jsonref.load(open('../config/modules/JWComorbid/modules.json'))
+    moduleSetting = jsonref.load(open('../config/modules/JWComorbid/JWComorbid.json'))
 
     # update modules in the right order. Also get rid of the frivilous
     # modules
@@ -36,14 +37,14 @@ def importModules(logger, resultsDict):
 
         modules = tempModules
 
+     #or moduleSetting['runAll']
+
     for m in modules:
 
         if (resultsDict['modules'] is None):
 
-            # skip based upon modules.json
-            logger.info('Obtaining module information from modules.json')
             try:
-                if not m['execute']:
+                if not m['execute'] and not moduleSetting['runAll']: # I have no clue how execute=false modules are being removed. Its like magic. -jw
                     logger.info('Module {} is being skipped'.format(m['moduleName']))
                     continue
             except Exception as e:
@@ -62,7 +63,7 @@ def importModules(logger, resultsDict):
                 logger.error(f'Unable to determine whether this module should be skipped: {e}.\n Module is being skipped.')
                 continue
 
-                
+
         try:
             name, path = m['moduleName'], m['path']
             logger.info('Module {} is being executed'.format( name ))
@@ -77,6 +78,7 @@ def importModules(logger, resultsDict):
 
     return
 
+@lD.log(logBase + '.JWComorbidMain')
 def main(logger, resultsDict):
     '''main program
     
@@ -101,7 +103,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='workspace command line arguments')
     
     # Add the modules here
-    modules = jsonref.load(open('../config/modules.json'))
+    modules = jsonref.load(open('../config/modules/JWComorbid/JWComorbid.json'))
     modules = [m['moduleName'] for m in modules]
     parser.add_argument('-m', '--module', action='append',
         type = str,

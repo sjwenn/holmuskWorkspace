@@ -1,0 +1,21 @@
+{
+    "inputs"  : {
+        "dbName": "mindlincnew",
+
+        "rawPath": "../data/intermediate/",
+        "intermediatePath": "../data/intermediate/",
+
+        "dsmSUDPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
+        "dsmDiagnosesPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
+        
+        "tableNameComorbid": "jingwen.comorbid"
+    }, 
+    "outputs" : {
+        "rawPath": "../data/intermediate/",
+        "intermediatePath": "../data/intermediate/",
+        "saveFigPath": "../manuscript/JWComorbid/figure1.png"
+    },
+    "params"  : {
+        "showGraphFlag" : 0
+    }
+}

@@ -1,0 +1,24 @@
+modules.JWComorbid package
+==========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   modules.JWComorbid.figure1
+   modules.JWComorbid.getUsefulInfo
+   modules.JWComorbid.preProcessDB
+   modules.JWComorbid.reportGenerator
+   modules.JWComorbid.table1
+   modules.JWComorbid.table2
+   modules.JWComorbid.table3
+   modules.JWComorbid.table4
+
+Module contents
+---------------
+
+.. automodule:: modules.JWComorbid
+   :members:
+   :undoc-members:
+   :show-inheritance:

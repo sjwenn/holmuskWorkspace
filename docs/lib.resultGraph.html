@@ -90,7 +90,7 @@
 <li class="toctree-l3"><a class="reference internal" href="lib.databaseIO.html">lib.databaseIO package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">lib.resultGraph package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-lib.resultGraph.graphLib">lib.resultGraph.graphLib module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lib-resultgraph-graphlib-module">lib.resultGraph.graphLib module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-lib.resultGraph">Module contents</a></li>
 </ul>
 </li>
@@ -100,7 +100,6 @@
 <li class="toctree-l2"><a class="reference internal" href="lib.html#module-lib">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="logs.html">logs package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">modules package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="workspace.html">workspace module</a></li>
 </ul>
@@ -174,143 +173,8 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-lib.resultGraph.graphLib">
-<span id="lib-resultgraph-graphlib-module"></span><h2>lib.resultGraph.graphLib module<a class="headerlink" href="#module-lib.resultGraph.graphLib" title="Permalink to this headline">¶</a></h2>
-<dl class="data">
-<dt id="lib.resultGraph.graphLib.config">
-<code class="sig-prename descclassname">lib.resultGraph.graphLib.</code><code class="sig-name descname">config</code><em class="property"> = {'logging': {'level': 'INFO', 'logBase': 'workspace', 'specs': {'file': {'logFolder': 'logs', 'todo': True}, 'logstash': {'host': 'localhost', 'port': 5959, 'tags': [], 'todo': False, 'version': 1}, 'stdout': {'todo': False}}}}</em><a class="headerlink" href="#lib.resultGraph.graphLib.config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="lib.resultGraph.graphLib.generateGraph">
-<code class="sig-prename descclassname">lib.resultGraph.graphLib.</code><code class="sig-name descname">generateGraph</code><span class="sig-paren">(</span><em class="sig-param">logger</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/resultGraph/graphLib.html#generateGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.resultGraph.graphLib.generateGraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>generate a directed graph from the modules config</p>
-<p>generate a networkX.Graph object by reading the contents
-of the <code class="docutils literal notranslate"><span class="pre">config/modules/</span></code> folder.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Graph of which object is created when</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>networkX.Graph object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="lib.resultGraph.graphLib.generateSubGraph">
-<code class="sig-prename descclassname">lib.resultGraph.graphLib.</code><code class="sig-name descname">generateSubGraph</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">graph</em>, <em class="sig-param">keyNode</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/resultGraph/graphLib.html#generateSubGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.resultGraph.graphLib.generateSubGraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>generate a subgraph that contains all prior nodes</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p></li>
-<li><p><strong>graph</strong> (<em>{networkX.Graph object}</em>) – [description]</p></li>
-<li><p><strong>keyNode</strong> (<em>{str}</em>) – Name of the node whose ancestors need to be geenrated.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>graph containing the particular node and its ancistors.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>networkX.Graph object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="lib.resultGraph.graphLib.graphToSerialized">
-<code class="sig-prename descclassname">lib.resultGraph.graphLib.</code><code class="sig-name descname">graphToSerialized</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">graph</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/resultGraph/graphLib.html#graphToSerialized"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.resultGraph.graphLib.graphToSerialized" title="Permalink to this definition">¶</a></dt>
-<dd><p>serializes a graph</p>
-<p>Takes a networkX.Graph object and converts it into a serialized
-set of nodes and edges.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p></li>
-<li><p><strong>graph</strong> (<em>{networkX.Graph object}</em>) – A networkX graph object that is to be serialized</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>This is a tuple of nodes and edges in a serialized format
-that can be later directly inserted into a database.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>tuple of serialized lists</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="data">
-<dt id="lib.resultGraph.graphLib.logBase">
-<code class="sig-prename descclassname">lib.resultGraph.graphLib.</code><code class="sig-name descname">logBase</code><em class="property"> = 'workspace.lib.resultGraph.graphLib'</em><a class="headerlink" href="#lib.resultGraph.graphLib.logBase" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="lib.resultGraph.graphLib.plotGraph">
-<code class="sig-prename descclassname">lib.resultGraph.graphLib.</code><code class="sig-name descname">plotGraph</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">graph</em>, <em class="sig-param">fileName=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/resultGraph/graphLib.html#plotGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.resultGraph.graphLib.plotGraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>plot the graph</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p></li>
-<li><p><strong>graph</strong> (<em>{networkX.Graph object}</em>) – The graph that needs to be plotted</p></li>
-<li><p><strong>fileName</strong> (<em>{str}</em><em>, </em><em>optional</em>) – name of the file where to save the graph (the default is None, which
-results in no graph being generated)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="lib.resultGraph.graphLib.serializedToGraph">
-<code class="sig-prename descclassname">lib.resultGraph.graphLib.</code><code class="sig-name descname">serializedToGraph</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">nodes</em>, <em class="sig-param">edges</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/resultGraph/graphLib.html#serializedToGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.resultGraph.graphLib.serializedToGraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>deserialize a graph serialized earlier</p>
-<p>Take serialized versions of the nodes and edges which is
-produced by the function <code class="docutils literal notranslate"><span class="pre">graphToSerialized</span></code> and convert
-that into a normal <code class="docutils literal notranslate"><span class="pre">networkX</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p></li>
-<li><p><strong>nodes</strong> (<em>{list}</em>) – serialized versions of the nodes of a graph</p></li>
-<li><p><strong>edges</strong> (<em>{list}</em>) – A list of edges in a serialized form</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Takes a list of serialized nodes and edges and converts it
-into a networkX.Graph object</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>networkX.Graph object</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
-<dt id="lib.resultGraph.graphLib.uploadGraph">
-<code class="sig-prename descclassname">lib.resultGraph.graphLib.</code><code class="sig-name descname">uploadGraph</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">graph</em>, <em class="sig-param">dbName=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lib/resultGraph/graphLib.html#uploadGraph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lib.resultGraph.graphLib.uploadGraph" title="Permalink to this definition">¶</a></dt>
-<dd><p>upload the supplied graph to a database</p>
-<p>Given a graph, this function is going to upload the graph into
-a particular database. In case a database is not specified, this
-will try to upload the data into the default database.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>logger</strong> (<em>{logging.logger}</em>) – logging element</p></li>
-<li><p><strong>graph</strong> (<em>{networkX graph}</em>) – The graph that needs to be uploaded into the database</p></li>
-<li><p><strong>dbName</strong> (<em>{str}</em><em>, </em><em>optional</em>) – The name of the database in which to upload the data into. This
-is the identifier within the <code class="docutils literal notranslate"><span class="pre">db.json</span></code> configuration file. (the
-default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, which would use the default database specified
-within the same file)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
+<div class="section" id="lib-resultgraph-graphlib-module">
+<h2>lib.resultGraph.graphLib module<a class="headerlink" href="#lib-resultgraph-graphlib-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-lib.resultGraph">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-lib.resultGraph" title="Permalink to this headline">¶</a></h2>

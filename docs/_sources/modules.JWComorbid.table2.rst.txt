@@ -1,0 +1,22 @@
+modules.JWComorbid.table2 package
+=================================
+
+Submodules
+----------
+
+modules.JWComorbid.table2.table2 module
+---------------------------------------
+
+.. automodule:: modules.JWComorbid.table2.table2
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: modules.JWComorbid.table2
+   :members:
+   :undoc-members:
+   :show-inheritance:

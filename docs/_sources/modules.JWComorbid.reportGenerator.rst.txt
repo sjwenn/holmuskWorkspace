@@ -1,0 +1,22 @@
+modules.JWComorbid.reportGenerator package
+==========================================
+
+Submodules
+----------
+
+modules.JWComorbid.reportGenerator.reportGenerator module
+---------------------------------------------------------
+
+.. automodule:: modules.JWComorbid.reportGenerator.reportGenerator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: modules.JWComorbid.reportGenerator
+   :members:
+   :undoc-members:
+   :show-inheritance:

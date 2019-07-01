@@ -1,0 +1,25 @@
+{
+    "inputs"  : {
+    	"dbName": "mindlincnew",
+
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/",
+
+        "raceFilterPath"    : "/home/jingwen/Downloads/Race_Filter.csv",
+        "settingFilterPath" : "/home/jingwen/Downloads/Setting_Filter.csv",
+        "sexFilterPath"     : "/home/jingwen/Downloads/Sex_Filter.csv",
+
+        "dsmSUDPath"       : "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
+        "dsmDiagnosesPath" : "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
+        
+        "schemaName" : "jingwen",
+        "tableName"  : "comorbid"
+    }, 
+    "outputs" : {
+        "rawPath": "../data/intermediate/",
+    	"intermediatePath": "../data/intermediate/"
+    },
+    "params"  : {
+        "useCacheFlag": 0
+    }
+}

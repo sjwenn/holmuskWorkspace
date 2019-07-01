@@ -6,8 +6,8 @@ Subpackages
 
 .. toctree::
 
+   modules.JWComorbid
    modules.celeryCheck
-   modules.module1
 
 Module contents
 ---------------

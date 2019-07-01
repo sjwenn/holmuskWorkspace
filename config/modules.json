@@ -1,13 +1,13 @@
 [
     {
-        "moduleName" : "module1",
-        "path"       : "modules/module1/module1.py",
+        "moduleName" : "JWComorbid",
+        "path"       : "modules/JWComorbid/JWComorbid.py",
         "execute"    : true,
-        "description": "",
+        "description": "Collection of modules",
         "owner"      : ""
     }, {
         "moduleName" : "celeryCheck",
-        "path"       : "modules/celeryCheck/celeryCheck.py",
+        "path"       : "modules/readmeGenerator/readmeGenerator.py",
         "execute"    : false,
         "description": "",
         "owner"      : ""

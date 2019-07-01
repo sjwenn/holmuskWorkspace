@@ -1,0 +1,45 @@
+[
+    {
+        "moduleName" : "preProcessDB",
+        "path"       : "modules/JWComorbid/preProcessDB/preProcessDB.py",
+        "execute"    : false,
+        "description": "",
+        "owner"      : ""
+    }, {
+        "moduleName" : "getUsefulInfo",
+        "path"       : "modules/JWComorbid/getUsefulInfo/getUsefulInfo.py",
+        "execute"    : false,
+        "description": "",
+        "owner"      : ""
+    }, {
+        "moduleName" : "table1",
+        "path"       : "modules/JWComorbid/table1/table1.py",
+        "execute"    : false,
+        "description": "",
+        "owner"      : ""
+    }, {
+        "moduleName" : "figure1",
+        "path"       : "modules/JWComorbid/figure1/figure1.py",
+        "execute"    : false,
+        "description": "",
+        "owner"      : ""
+    }, {
+        "moduleName" : "table2",
+        "path"       : "modules/JWComorbid/table2/table2.py",
+        "execute"    : false,
+        "description": "",
+        "owner"      : ""
+    }, {        
+        "moduleName" : "table3",
+        "path"       : "modules/JWComorbid/table3/table3.py",
+        "execute"    : false,
+        "description": "",
+        "owner"      : ""
+    }, {
+        "moduleName" : "table4",
+        "path"       : "modules/JWComorbid/table4/table4.py",
+        "execute"    : true,
+        "description": "",
+        "owner"      : ""
+    }
+]

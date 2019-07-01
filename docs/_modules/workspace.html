@@ -81,7 +81,6 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../lib.html">lib package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../logs.html">logs package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">modules package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../workspace.html">workspace module</a></li>
 </ul>
@@ -241,21 +240,6 @@
     <span class="c1"># Lets just create a simple testing </span>
     <span class="c1"># for other functions to follow</span>
     <span class="c1"># -----------------------------------</span>
-
-    <span class="n">sampleValues</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-        <span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
-        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="s1">&#39;First&#39;</span><span class="p">,</span> <span class="s1">&#39;Second&#39;</span><span class="p">),</span>
-        <span class="p">(</span><span class="mi">55</span><span class="p">,)</span>
-    <span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sampleValues</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">sL</span><span class="o">.</span><span class="n">simpleTestFunction</span><span class="p">(</span><span class="o">*</span><span class="n">s</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Unable to perform addition with values [</span><span class="si">{}</span><span class="s1">]</span><span class="se">\n</span><span class="s1">:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">s</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
 
     <span class="k">return</span></div>
 

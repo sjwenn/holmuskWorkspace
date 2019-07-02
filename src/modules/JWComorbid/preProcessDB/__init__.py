@@ -1,7 +1,9 @@
 '''Runs SQL commands to work with database tables to generate a master table which has all needed information. 
 
-The table will then be fetched and saved as data/intermediate/db.pickle . 
+The table will then be fetched and saved as db.pickle . 
 This is a very heavy module and is going to be replaced after the SQL-python-pgIO-psycopg2 wrapper thing is done.
+
+The save location for db.pickle is specified in the JSON under outputs.
 
 Before you Begin
 ================

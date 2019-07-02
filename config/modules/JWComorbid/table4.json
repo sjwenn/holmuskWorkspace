@@ -2,15 +2,15 @@
     "inputs"  : {
     	"dbName": "mindlincnew",
 
-        "rawPath": "../data/intermediate/",
-    	"intermediatePath": "../data/intermediate/"
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/"
     }, 
     "outputs" : {
-        "rawPath": "../data/intermediate/",
-    	"intermediatePath": "../data/intermediate/"
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/"
     },
     "params"  : {
-        "smallSampleSizeThreshold": 30,
-        "toDropExog": ["substance_use"]
+        "smallSampleSizeThreshold" : 30,
+        "toDropExog"               : ["substance_use"]
     }
 }

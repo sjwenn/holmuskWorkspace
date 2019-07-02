@@ -31,6 +31,7 @@ dbName = jsonConfig["inputs"]["dbName"]
 @lD.log(logBase + '.main')
 def main(logger, resultsDict):
 
+    # Load data dict
     fileObjectLoad = open(jsonConfig["inputs"]["intermediatePath"]+"data.pickle",'rb') 
     data = pickle.load(fileObjectLoad)   
     fileObjectLoad.close()

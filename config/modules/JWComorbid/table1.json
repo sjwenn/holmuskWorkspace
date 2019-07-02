@@ -2,12 +2,12 @@
     "inputs"  : {
         "dbName": "mindlincnew",
 
-        "rawPath": "../data/intermediate/",
-        "intermediatePath": "../data/intermediate/"
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/"
     }, 
     "outputs" : {
-        "rawPath": "../data/intermediate/",
-        "intermediatePath": "../data/intermediate/"
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/"
     },
     "params"  : {
     }

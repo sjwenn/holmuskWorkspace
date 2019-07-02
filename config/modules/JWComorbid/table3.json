@@ -2,20 +2,20 @@
     "inputs"  : {
     	"dbName": "mindlincnew",
 
-        "rawPath": "../data/intermediate/",
-    	"intermediatePath": "../data/intermediate/"
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/"
     }, 
     "outputs" : {
-        "rawPath": "../data/intermediate/",
-    	"intermediatePath": "../data/intermediate/"
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/"
     },
     "params"  : {
-        "logitParameters": ["age_categorical", "sex", "visit_type"],
-        "toExclude" :   [
-                            ["sex","Others"], 
-                            ["age_categorical","1-11"]
-                        ],
-        "toDropExog": ["visit_type_Mental health center", "sex_F", "age_categorical_50+"],
-        "targetVariables": ["Any SUD", ">=2 SUDs"]
+        "logitParameters" : ["age_categorical", "sex", "visit_type"],
+        "toExclude"       : [
+                                ["sex","Others"], 
+                                ["age_categorical","1-11"]
+                            ],
+        "toDropExog"      : ["visit_type_Mental health center", "sex_F", "age_categorical_50+"],
+        "targetVariables" : ["Any SUD", ">=2 SUDs"]
     }
 }

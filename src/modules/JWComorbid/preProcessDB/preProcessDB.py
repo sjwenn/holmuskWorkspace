@@ -26,8 +26,45 @@ dbName     = jsonConfig["inputs"]["dbName"]
 tableName = jsonConfig["inputs"]["tableName"]
 schemaName = jsonConfig["inputs"]["schemaName"]
 
+ # This code
+ #  _ __ ___   __ _ _   _ 
+ # | '_ ` _ \ / _` | | | |
+ # | | | | | | (_| | |_| |
+ # |_| |_| |_|\__,_|\__, |
+ #                  |___/          
+ # | |__   ___ 
+ # | '_ \ / _ \
+ # | |_) |  __/
+ # |_.__/ \___|
+ #  ____  _____ ____  _        _    ____ _____ ____  
+ # |  _ \| ____|  _ \| |      / \  / ___| ____|  _ \ 
+ # | |_) |  _| | |_) | |     / _ \| |   |  _| | | | |
+ # |  _ <| |___|  __/| |___ / ___ \ |___| |___| |_| |
+ # |_| \_\_____|_|   |_____/_/   \_\____|_____|____/ 
+ #  ___  ___   ___  _ __  
+ # / __|/ _ \ / _ \| '_ \   
+ # \__ \ (_) | (_) | | | |
+ # |___/\___/ \___/|_| |_|
+
 @lD.log(logBase + '.headerParse')
 def headerParse(logger, headers):
+    '''Replaces characters  that would be a problem for pgIO by underscores.
+
+    Meant for use in database header names.
+    
+    Note: It would be better to escape these characters with unique 
+    identifiers so we can revert them losslessly but for now this will do.
+    
+    Decorators:
+        lD.log
+    
+    Arguments:
+        logger {logger} -- Logger
+        headers {str} -- Header to be modified
+    
+    Returns:
+        str -- Modified header
+    '''
 
     headers = headers.replace('/', '_').replace(' ', '_').replace('-', '_').replace(',', '_')
     headers = re.sub(r'\([^)]*\)','', headers)
@@ -36,9 +73,29 @@ def headerParse(logger, headers):
     return headers
 
 @lD.log(logBase + '.getFilterString')
-def getFilterString(logger, column, filterJSON, typeCategory=''):
+def getFilterString(logger, column, filterPath, typeCategory=''):
+    '''Generates part of a query string (the filter part) from a CSV filter.
 
-    filter = pd.read_csv(filterJSON)
+    An example sex filter can be founnd `here. <https://drive.google.com/open?id=1ZDMyZPgKf8Ty9B3GIFU-EVrjccQ3qEdQ>`_
+
+    The same format is used for other filters.
+
+    Decorators:
+        lD.log
+    
+    Arguments:
+        logger {logger} -- Logger
+        column {str} -- Name of the SQL column the filter is working on
+        filterPath {str} -- Path to the filter
+    
+    Keyword Arguments:
+        typeCategory {str} -- Set it to the type you wanht the column to cast to (default: {''})
+    
+    Returns:
+        str -- Filter query
+    '''
+
+    filter = pd.read_csv(filterPath)
 
     # Create filter string
     queryString = '('
@@ -374,9 +431,6 @@ def main(logger, resultsDict):
 
 
     fullTableName = schemaName + "." + tableName
-
-
-    print(not checkTableExistence(schemaName, tableName))
 
 
     if not checkTableExistence(schemaName, tableName):

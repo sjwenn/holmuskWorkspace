@@ -19,7 +19,7 @@ import time
 
 
 config = jsonref.load(open('../config/config.json'))
-jsonConfig = jsonref.load(open('../config/modules/getUsefulInfo.json'))
+jsonConfig = jsonref.load(open('../config/modules/JWComorbid/getUsefulInfo.json'))
 logBase = config['logging']['logBase'] + '.modules.JWComorbid.getUsefulInfo'
 dbName = jsonConfig["inputs"]["dbName"]
 

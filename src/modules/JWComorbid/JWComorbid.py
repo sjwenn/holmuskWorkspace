@@ -1,3 +1,10 @@
+'''
+This is a modified copy of /src/workspace.py, meant to service the 
+loading of modules within this collection of modules.
+
+Any required documentation can be found in /src/workspace.py.
+'''
+
 import jsonref, argparse
 
 from importlib      import util
@@ -12,18 +19,6 @@ logSpecs = config['logging']['specs']
 
 @lD.log(logBase + '.importModules')
 def importModules(logger, resultsDict):
-    '''import and execute required modules
-    
-    This function is used for importing all the 
-    modules as defined in the ../config/modules.json
-    file and executing the main function within it
-    if present. In error, it fails gracefully ...
-    
-    Parameters
-    ----------
-    logger : {logging.Logger}
-        logger module for logging information
-    '''
     modules = jsonref.load(open('../config/modules/JWComorbid/modules.json'))
     moduleSetting = jsonref.load(open('../config/modules/JWComorbid/JWComorbid.json'))
 
@@ -44,7 +39,7 @@ def importModules(logger, resultsDict):
         if (resultsDict['modules'] is None):
 
             try:
-                if not m['execute'] and not moduleSetting['runAll']: # I have no clue how execute=false modules are being removed. Its like magic. -jw
+                if not m['execute'] and not moduleSetting['runAll']: # How does execute=false modules get removed? Magic!
                     logger.info('Module {} is being skipped'.format(m['moduleName']))
                     continue
             except Exception as e:
@@ -80,11 +75,6 @@ def importModules(logger, resultsDict):
 
 @lD.log(logBase + '.JWComorbidMain')
 def main(logger, resultsDict):
-    '''main program
-    
-    This is the place where the entire program is going
-    to be generated.
-    '''
 
     # First import all the modules, and run 
     # them

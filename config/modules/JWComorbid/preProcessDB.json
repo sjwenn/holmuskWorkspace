@@ -16,8 +16,8 @@
         "tableName"  : "comorbid"
     }, 
     "outputs" : {
-        "rawPath": "../data/intermediate/",
-    	"intermediatePath": "../data/intermediate/"
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/"
     },
     "params"  : {
         "useCacheFlag": 0

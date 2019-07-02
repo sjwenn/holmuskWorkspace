@@ -31,9 +31,7 @@ def CI(logger, p, n, CL):
     Calculates confidence interval amplitude.
 
     How to use?
-
     Lower bound = Probability + CI
-
     Upper bound = Probability - CI
     
     Arguments:

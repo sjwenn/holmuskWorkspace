@@ -9,11 +9,11 @@ among treatment-seeking Asian Americans, Native Hawaiians/Pacific Islanders, and
 
 JWComorbid consists of 7 modules, structured as follows:
 
-[graph](https://drive.google.com/uc?export=view&id=1wrNcFnupN_zXXtRtYhcUNuOtu5rK5p0o)
+![graph](https://drive.google.com/uc?export=view&id=1wrNcFnupN_zXXtRtYhcUNuOtu5rK5p0o)
 
 Each module falls into one of these layers:
 
-[pyramid](https://drive.google.com/uc?export=view&id=1s75VDvlbMXj48eA2Y6jc7LdyJxhpQOeU)
+![pyramid](https://drive.google.com/uc?export=view&id=1s75VDvlbMXj48eA2Y6jc7LdyJxhpQOeU)
 
 
 ## Fetch and Preprocess Layer

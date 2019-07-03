@@ -1,11 +1,11 @@
 # JWComobid Collection of Modules
 
-> **TL;DR 
+> **TL;DR** 
 To activate me, modify `/config/modules.json` by making ```"execute": true``` in my module.
 
 >i.e.
 
-```
+>```
 "moduleName" : "JWComorbid",
 "path"       : "modules/JWComorbid/JWComorbid.py",
 "execute"    : true,

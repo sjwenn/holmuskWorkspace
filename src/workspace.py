@@ -39,7 +39,6 @@ def importModules(logger, resultsDict):
     for m in modules:
 
         if (resultsDict['modules'] is None):
-
             # skip based upon modules.json
             logger.info('Obtaining module information from modules.json')
             try:

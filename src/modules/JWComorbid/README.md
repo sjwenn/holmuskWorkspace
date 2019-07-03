@@ -1,5 +1,23 @@
 # JWComobid Collection of Modules
 
+> **TL;DR 
+To activate me, modify `/config/modules.json` by making ```"execute": true``` in my module.
+
+>i.e.
+
+```
+"moduleName" : "JWComorbid",
+"path"       : "modules/JWComorbid/JWComorbid.py",
+"execute"    : true,
+"description": "Collection of modules",
+"owner" : ""
+```
+
+>To toggle individual modules, modify `/config/modules/JWComorbid/modules.json`.
+
+>A "run all" override can be found in `/config/modules/JWComorbid/JWComorbid.json`.
+It will ignore whatever is in `/config/modules/JWComorbid/modules.json` and run everything.
+
 ### Hello! This is the JWComorbid collection of modules. 
 
 They are created to replicate a study titled 

@@ -4,9 +4,8 @@
 
 They are created to replicate a study titled 
 "Comorbid substance use disorders with other Axis I and II mental disorders
-among treatment-seeking Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people".
-
-[Here is the paper.](https://doi.org/10.1016/J.JPSYCHIRES.2013.08.022)S
+among treatment-seeking Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people". \n
+[Here is the paper.](https://doi.org/10.1016/J.JPSYCHIRES.2013.08.022)
 
 JWComorbid consists of 7 modules, structured as follows:
 

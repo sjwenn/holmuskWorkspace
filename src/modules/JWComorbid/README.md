@@ -1,6 +1,6 @@
 # JWComobid Collection of Modules
 
-Hello! This is the JWComorbid collection of modules. 
+### Hello! This is the JWComorbid collection of modules. 
 
 They are created to replicate a study titled 
 "Comorbid substance use disorders with other Axis I and II mental disorders

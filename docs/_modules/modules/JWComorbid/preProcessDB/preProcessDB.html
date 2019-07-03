@@ -167,15 +167,52 @@
 <span class="kn">from</span> <span class="nn">lib.databaseIO</span> <span class="k">import</span> <span class="n">pgIO</span>
 
 <span class="n">config</span>     <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../config/config.json&#39;</span><span class="p">))</span>
-<span class="n">jsonConfig</span> <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../config/modules/preProcessDB.json&#39;</span><span class="p">))</span>
+<span class="n">jsonConfig</span> <span class="o">=</span> <span class="n">jsonref</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;../config/modules/JWComorbid/preProcessDB.json&#39;</span><span class="p">))</span>
 <span class="n">logBase</span>    <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;logging&#39;</span><span class="p">][</span><span class="s1">&#39;logBase&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.modules.JWComorbid.preProcessDB&#39;</span>
 <span class="n">dbName</span>     <span class="o">=</span> <span class="n">jsonConfig</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">][</span><span class="s2">&quot;dbName&quot;</span><span class="p">]</span>
 
 <span class="n">tableName</span> <span class="o">=</span> <span class="n">jsonConfig</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">][</span><span class="s2">&quot;tableName&quot;</span><span class="p">]</span>
 <span class="n">schemaName</span> <span class="o">=</span> <span class="n">jsonConfig</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">][</span><span class="s2">&quot;schemaName&quot;</span><span class="p">]</span>
 
+ <span class="c1"># This code</span>
+ <span class="c1">#  _ __ ___   __ _ _   _ </span>
+ <span class="c1"># | &#39;_ ` _ \ / _` | | | |</span>
+ <span class="c1"># | | | | | | (_| | |_| |</span>
+ <span class="c1"># |_| |_| |_|\__,_|\__, |</span>
+ <span class="c1">#                  |___/          </span>
+ <span class="c1"># | |__   ___ </span>
+ <span class="c1"># | &#39;_ \ / _ \</span>
+ <span class="c1"># | |_) |  __/</span>
+ <span class="c1"># |_.__/ \___|</span>
+ <span class="c1">#  ____  _____ ____  _        _    ____ _____ ____  </span>
+ <span class="c1"># |  _ \| ____|  _ \| |      / \  / ___| ____|  _ \ </span>
+ <span class="c1"># | |_) |  _| | |_) | |     / _ \| |   |  _| | | | |</span>
+ <span class="c1"># |  _ &lt;| |___|  __/| |___ / ___ \ |___| |___| |_| |</span>
+ <span class="c1"># |_| \_\_____|_|   |_____/_/   \_\____|_____|____/ </span>
+ <span class="c1">#  ___  ___   ___  _ __  </span>
+ <span class="c1"># / __|/ _ \ / _ \| &#39;_ \   </span>
+ <span class="c1"># \__ \ (_) | (_) | | | |</span>
+ <span class="c1"># |___/\___/ \___/|_| |_|</span>
+
 <div class="viewcode-block" id="headerParse"><a class="viewcode-back" href="../../../../modules.JWComorbid.preProcessDB.html#modules.JWComorbid.preProcessDB.preProcessDB.headerParse">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.headerParse&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">headerParse</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">headers</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Replaces characters  that would be a problem for pgIO by underscores.</span>
+
+<span class="sd">    Meant for use in database header names.</span>
+<span class="sd">    </span>
+<span class="sd">    Note: It would be better to escape these characters with unique </span>
+<span class="sd">    identifiers so we can revert them losslessly but for now this will do.</span>
+<span class="sd">    </span>
+<span class="sd">    Decorators:</span>
+<span class="sd">        lD.log</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        logger {logger} -- Logger</span>
+<span class="sd">        headers {str} -- Header to be modified</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str -- Modified header</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
     <span class="n">headers</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\([^)]*\)&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="p">)</span>
@@ -184,9 +221,29 @@
     <span class="k">return</span> <span class="n">headers</span></div>
 
 <div class="viewcode-block" id="getFilterString"><a class="viewcode-back" href="../../../../modules.JWComorbid.preProcessDB.html#modules.JWComorbid.preProcessDB.preProcessDB.getFilterString">[docs]</a><span class="nd">@lD</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">logBase</span> <span class="o">+</span> <span class="s1">&#39;.getFilterString&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">getFilterString</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">filterJSON</span><span class="p">,</span> <span class="n">typeCategory</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">getFilterString</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">filterPath</span><span class="p">,</span> <span class="n">typeCategory</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Generates part of a query string (the filter part) from a CSV filter.</span>
 
-    <span class="nb">filter</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filterJSON</span><span class="p">)</span>
+<span class="sd">    An example sex filter can be founnd `here. &lt;https://drive.google.com/open?id=1ZDMyZPgKf8Ty9B3GIFU-EVrjccQ3qEdQ&gt;`_</span>
+
+<span class="sd">    The same format is used for other filters.</span>
+
+<span class="sd">    Decorators:</span>
+<span class="sd">        lD.log</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        logger {logger} -- Logger</span>
+<span class="sd">        column {str} -- Name of the SQL column the filter is working on</span>
+<span class="sd">        filterPath {str} -- Path to the filter</span>
+<span class="sd">    </span>
+<span class="sd">    Keyword Arguments:</span>
+<span class="sd">        typeCategory {str} -- Set it to the type you wanht the column to cast to (default: {&#39;&#39;})</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        str -- Filter query</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="nb">filter</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filterPath</span><span class="p">)</span>
 
     <span class="c1"># Create filter string</span>
     <span class="n">queryString</span> <span class="o">=</span> <span class="s1">&#39;(&#39;</span>
@@ -337,7 +394,7 @@
 <span class="s1">                                from cte</span>
 <span class="s1">                                where rn = 1    </span>
 <span class="s1">                                                  </span>
-<span class="s1">                                &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemaName</span><span class="p">,</span> <span class="n">lowerBound</span><span class="p">,</span> <span class="n">upperBound</span><span class="p">)</span>
+<span class="s1">                                &#39;&#39;&#39;</span>
         
             <span class="n">isSuccesfulFlag</span> <span class="o">=</span> <span class="n">pgIO</span><span class="o">.</span><span class="n">commitData</span><span class="p">(</span><span class="n">queryString</span> <span class="p">,</span> <span class="n">dbName</span> <span class="o">=</span> <span class="n">dbName</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ID </span><span class="si">{}</span><span class="s2"> to </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lowerBound</span><span class="p">,</span> <span class="n">upperBound</span><span class="p">,</span> <span class="n">isSuccesfulFlag</span><span class="p">))</span>
@@ -460,7 +517,7 @@
     <span class="n">queryStringList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">    ALTER TABLE </span><span class="si">{}</span><span class="s1"></span>
 <span class="s1">    ADD age_categorical text NULL;                                         </span>
-<span class="s1">                                            &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fullTableName</span><span class="p">))</span>
+<span class="s1">                           &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fullTableName</span><span class="p">))</span>
 
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">],</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span><span class="mi">17</span><span class="p">],</span> <span class="p">[</span><span class="mi">18</span><span class="p">,</span><span class="mi">34</span><span class="p">],</span> <span class="p">[</span><span class="mi">35</span><span class="p">,</span><span class="mi">49</span><span class="p">]]:</span>
         <span class="n">queryStringList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
@@ -501,9 +558,9 @@
 
     <span class="n">oneHotDiagnosesQueryString</span>          <span class="o">=</span>   <span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">                                            create table </span><span class="si">{}</span><span class="s1">.temp4 as(</span>
-<span class="s1">                                            &#39;&#39;&#39;</span> <span class="o">+</span> <span class="n">oneHotDiagnoses</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">                                            &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemaName</span><span class="p">)</span> <span class="o">+</span> <span class="n">oneHotDiagnoses</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">                                            );</span>
-<span class="s1">                                            &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemaName</span><span class="p">)</span>
+<span class="s1">                                            &#39;&#39;&#39;</span>
 
     <span class="n">joinEverythingQueryString</span>           <span class="o">=</span>   <span class="s1">&#39;&#39;&#39;</span>
 <span class="s1">                                            create table </span><span class="si">{0}</span><span class="s1">.comorbid as</span>
@@ -516,15 +573,12 @@
 <span class="s1">                                            on </span><span class="si">{0}</span><span class="s1">.temp4.patientid = </span><span class="si">{0}</span><span class="s1">.temp2.patientid</span>
 <span class="s1">                                            ) as x</span>
 <span class="s1">                                            where CAST (age AS INTEGER) &gt; 0</span>
-<span class="s1">                                            and (&#39;&#39;&#39;</span> <span class="o">+</span> <span class="n">getFilterString</span><span class="p">(</span><span class="s1">&#39;visit_type&#39;</span><span class="p">,</span> <span class="n">jsonConfig</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">][</span><span class="s2">&quot;settingFilterPath&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;)</span>
+<span class="s1">                                            and (&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemaName</span><span class="p">)</span> <span class="o">+</span> <span class="n">getFilterString</span><span class="p">(</span><span class="s1">&#39;visit_type&#39;</span><span class="p">,</span> <span class="n">jsonConfig</span><span class="p">[</span><span class="s2">&quot;inputs&quot;</span><span class="p">][</span><span class="s2">&quot;settingFilterPath&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;&#39;&#39;)</span>
 <span class="s1">                                            );</span>
-<span class="s1">                                            &#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">schemaName</span><span class="p">)</span>
+<span class="s1">                                            &#39;&#39;&#39;</span>
 
 
     <span class="n">fullTableName</span> <span class="o">=</span> <span class="n">schemaName</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">tableName</span>
-
-
-    <span class="nb">print</span><span class="p">(</span><span class="ow">not</span> <span class="n">checkTableExistence</span><span class="p">(</span><span class="n">schemaName</span><span class="p">,</span> <span class="n">tableName</span><span class="p">))</span>
 
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">checkTableExistence</span><span class="p">(</span><span class="n">schemaName</span><span class="p">,</span> <span class="n">tableName</span><span class="p">):</span>

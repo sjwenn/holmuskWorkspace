@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="modules.JWComorbid.reportGenerator package" href="modules.JWComorbid.reportGenerator.html" />
+    <link rel="next" title="modules.JWComorbid.table1 package" href="modules.JWComorbid.table1.html" />
     <link rel="prev" title="modules.JWComorbid.getUsefulInfo package" href="modules.JWComorbid.getUsefulInfo.html" /> 
 </head>
 
@@ -87,6 +87,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="modules.JWComorbid.html">modules.JWComorbid package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="modules.JWComorbid.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.JWComorbid.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.JWComorbid.html#module-modules.JWComorbid.JWComorbid">modules.JWComorbid.JWComorbid module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="modules.JWComorbid.html#module-modules.JWComorbid">Module contents</a></li>
 </ul>
 </li>
@@ -184,8 +186,30 @@
 
 <dl class="function">
 <dt id="modules.JWComorbid.preProcessDB.preProcessDB.getFilterString">
-<code class="sig-prename descclassname">modules.JWComorbid.preProcessDB.preProcessDB.</code><code class="sig-name descname">getFilterString</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">column</em>, <em class="sig-param">filterJSON</em>, <em class="sig-param">typeCategory=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/JWComorbid/preProcessDB/preProcessDB.html#getFilterString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.JWComorbid.preProcessDB.preProcessDB.getFilterString" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-prename descclassname">modules.JWComorbid.preProcessDB.preProcessDB.</code><code class="sig-name descname">getFilterString</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">column</em>, <em class="sig-param">filterPath</em>, <em class="sig-param">typeCategory=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/JWComorbid/preProcessDB/preProcessDB.html#getFilterString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.JWComorbid.preProcessDB.preProcessDB.getFilterString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates part of a query string (the filter part) from a CSV filter.</p>
+<p>An example sex filter can be founnd <a class="reference external" href="https://drive.google.com/open?id=1ZDMyZPgKf8Ty9B3GIFU-EVrjccQ3qEdQ">here.</a></p>
+<p>The same format is used for other filters.</p>
+<dl class="simple">
+<dt>Decorators:</dt><dd><p>lD.log</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>{logger} -- Logger</strong> (<em>logger</em>) – </p></li>
+<li><p><strong>{str} -- Name of the SQL column the filter is working on</strong> (<em>column</em>) – </p></li>
+<li><p><strong>{str} -- Path to the filter</strong> (<em>filterPath</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p><strong>{str} -- Set it to the type you wanht the column to cast to</strong><strong> (</strong><strong>default</strong> (<em>typeCategory</em>) – {‘’})</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>str – Filter query</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="modules.JWComorbid.preProcessDB.preProcessDB.getRelabelString">
@@ -195,7 +219,26 @@
 <dl class="function">
 <dt id="modules.JWComorbid.preProcessDB.preProcessDB.headerParse">
 <code class="sig-prename descclassname">modules.JWComorbid.preProcessDB.preProcessDB.</code><code class="sig-name descname">headerParse</code><span class="sig-paren">(</span><em class="sig-param">logger</em>, <em class="sig-param">headers</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/modules/JWComorbid/preProcessDB/preProcessDB.html#headerParse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#modules.JWComorbid.preProcessDB.preProcessDB.headerParse" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Replaces characters  that would be a problem for pgIO by underscores.</p>
+<p>Meant for use in database header names.</p>
+<p>Note: It would be better to escape these characters with unique
+identifiers so we can revert them losslessly but for now this will do.</p>
+<dl class="simple">
+<dt>Decorators:</dt><dd><p>lD.log</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>{logger} -- Logger</strong> (<em>logger</em>) – </p></li>
+<li><p><strong>{str} -- Header to be modified</strong> (<em>headers</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>str – Modified header</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="function">
 <dt id="modules.JWComorbid.preProcessDB.preProcessDB.main">
@@ -231,8 +274,9 @@
 <div class="section" id="module-modules.JWComorbid.preProcessDB">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-modules.JWComorbid.preProcessDB" title="Permalink to this headline">¶</a></h2>
 <p>Runs SQL commands to work with database tables to generate a master table which has all needed information.</p>
-<p>The table will then be fetched and saved as data/intermediate/db.pickle .
+<p>The table will then be fetched and saved as db.pickle .
 This is a very heavy module and is going to be replaced after the SQL-python-pgIO-psycopg2 wrapper thing is done.</p>
+<p>The save location for db.pickle is specified in the JSON under outputs.</p>
 <div class="section" id="before-you-begin">
 <h3>Before you Begin<a class="headerlink" href="#before-you-begin" title="Permalink to this headline">¶</a></h3>
 <p>Make sure that the configuration files are properly set, as mentioned in the Specifcations
@@ -278,7 +322,7 @@ folder.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="modules.JWComorbid.reportGenerator.html" class="btn btn-neutral float-right" title="modules.JWComorbid.reportGenerator package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="modules.JWComorbid.table1.html" class="btn btn-neutral float-right" title="modules.JWComorbid.table1 package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="modules.JWComorbid.getUsefulInfo.html" class="btn btn-neutral float-left" title="modules.JWComorbid.getUsefulInfo package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

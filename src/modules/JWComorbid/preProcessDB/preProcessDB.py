@@ -26,8 +26,47 @@ dbName     = jsonConfig["inputs"]["dbName"]
 tableName = jsonConfig["inputs"]["tableName"]
 schemaName = jsonConfig["inputs"]["schemaName"]
 
+rawSchemaName = jsonConfig["inputs"]["rawSchemaName"]
+
+ # This code
+ #  _ __ ___   __ _ _   _ 
+ # | '_ ` _ \ / _` | | | |
+ # | | | | | | (_| | |_| |
+ # |_| |_| |_|\__,_|\__, |
+ #                  |___/          
+ # | |__   ___ 
+ # | '_ \ / _ \
+ # | |_) |  __/
+ # |_.__/ \___|
+ #  ____  _____ ____  _        _    ____ _____ ____  
+ # |  _ \| ____|  _ \| |      / \  / ___| ____|  _ \ 
+ # | |_) |  _| | |_) | |     / _ \| |   |  _| | | | |
+ # |  _ <| |___|  __/| |___ / ___ \ |___| |___| |_| |
+ # |_| \_\_____|_|   |_____/_/   \_\____|_____|____/ 
+ #  ___  ___   ___  _ __  
+ # / __|/ _ \ / _ \| '_ \   
+ # \__ \ (_) | (_) | | | |
+ # |___/\___/ \___/|_| |_|
+
 @lD.log(logBase + '.headerParse')
 def headerParse(logger, headers):
+    '''Replaces characters  that would be a problem for pgIO by underscores.
+
+    Meant for use in database header names.
+    
+    Note: It would be better to escape these characters with unique 
+    identifiers so we can revert them losslessly but for now this will do.
+    
+    Decorators:
+        lD.log
+    
+    Arguments:
+        logger {logger} -- Logger
+        headers {str} -- Header to be modified
+    
+    Returns:
+        str -- Modified header
+    '''
 
     headers = headers.replace('/', '_').replace(' ', '_').replace('-', '_').replace(',', '_')
     headers = re.sub(r'\([^)]*\)','', headers)
@@ -36,9 +75,29 @@ def headerParse(logger, headers):
     return headers
 
 @lD.log(logBase + '.getFilterString')
-def getFilterString(logger, column, filterJSON, typeCategory=''):
+def getFilterString(logger, column, filterPath, typeCategory=''):
+    '''Generates part of a query string (the filter part) from a CSV filter.
 
-    filter = pd.read_csv(filterJSON)
+    An example sex filter can be founnd `here. <https://drive.google.com/open?id=1ZDMyZPgKf8Ty9B3GIFU-EVrjccQ3qEdQ>`_
+
+    The same format is used for other filters.
+
+    Decorators:
+        lD.log
+    
+    Arguments:
+        logger {logger} -- Logger
+        column {str} -- Name of the SQL column the filter is working on
+        filterPath {str} -- Path to the filter
+    
+    Keyword Arguments:
+        typeCategory {str} -- Set it to the type you wanht the column to cast to (default: {''})
+    
+    Returns:
+        str -- Filter query
+    '''
+
+    filter = pd.read_csv(filterPath)
 
     # Create filter string
     queryString = '('
@@ -155,7 +214,7 @@ def subroutineJoinTypepatient(logger):
             upperBound = idx + recursionChunkSize
 
             queryString =       '''
-                                INSERT into {}.temp2
+                                INSERT into {0}.temp2
                                 with cte as
                                 (
                                 select *,
@@ -166,20 +225,20 @@ def subroutineJoinTypepatient(logger):
                                     typepatient.age, typepatient.visit_type
                                     from
                                     (
-                                        select patientid, race, sex from rwe_version1_1.background 
-                                        where CAST (patientid as INTEGER) >= {} and CAST (patientid as INTEGER) < {}
+                                        select patientid, race, sex from {3}.background 
+                                        where CAST (patientid as INTEGER) >= {1} and CAST (patientid as INTEGER) < {2}
                                         and
                                         race is not null
                                         and
-                                        '''.format(schemaName, lowerBound, upperBound) + raceFilter + '''
+                                        '''.format(schemaName, lowerBound, upperBound, rawSchemaName) + raceFilter + '''
                                         and
                                         ''' + sexFilter + '''
                                     ) as background
                                     inner join 
                                     (
-                                        select patientid, age, visit_type from rwe_version1_1.typepatient
+                                        select patientid, age, visit_type from {0}.typepatient
                                         where 
-                                        ''' + settingFilter + '''
+                                        '''.format(rawSchemaName) + settingFilter + '''
                                         and (age IS NOT NULL )
                                     ) as typepatient
                                     on typepatient.patientid = background.patientid
@@ -215,7 +274,7 @@ def subroutineJoinTypepatient(logger):
                             '''.format(schemaName)
     if createTable(schemaName, 'temp2', createTemp2String):
 
-        maxID = pgIO.getAllData("select max(CAST (patientid as INTEGER)) from rwe_version1_1.background", dbName = dbName )[0][0]
+        maxID = pgIO.getAllData("select max(CAST (patientid as INTEGER)) from {0}.background".format(rawSchemaName), dbName = dbName )[0][0]
         print(maxID)
         recursiveQuery(maxID)
 
@@ -246,19 +305,19 @@ def subroutineJoinDiagnoses(logger):
                                     select  patientid, dsmno
                                     from    
                                     (
-                                        select temp2.patientid, rwe_version1_1.pdiagnose.dsmno
+                                        select temp2.patientid, {3}.pdiagnose.dsmno
                                         from
                                         (
                                             select patientid from {0}.temp2
                                             where CAST  (patientid as INTEGER) >= {1} and CAST (patientid as INTEGER) < {2}
                                         ) as temp2
-                                        inner join rwe_version1_1.pdiagnose 
-                                        on CAST(rwe_version1_1.pdiagnose.patientid as TEXT) = CAST(temp2.patientid as TEXT)
+                                        inner join {3}.pdiagnose 
+                                        on CAST({3}.pdiagnose.patientid as TEXT) = CAST(temp2.patientid as TEXT)
                                     ) as x
                                     group by patientid, dsmno
                                 ) as y
                                 on CAST(y.patientid as TEXT) = CAST(temp2.patientid as TEXT)
-                                '''.format(schemaName, lowerBound, upperBound)
+                                '''.format(schemaName, lowerBound, upperBound, rawSchemaName)
         
             isSuccesfulFlag = pgIO.commitData(queryString , dbName = dbName)
             print("ID {} to {}: {}".format(lowerBound, upperBound, isSuccesfulFlag))
@@ -286,7 +345,7 @@ def subroutineJoinDiagnoses(logger):
                             '''.format(schemaName)
     if createTable(schemaName, 'temp3', createTemp3String):
 
-        maxID = pgIO.getAllData("select max(CAST (patientid as INTEGER)) from {}.temp2".format(schemaName), dbName = dbName )[0][0]
+        maxID = pgIO.getAllData("select max(CAST (patientid as INTEGER)) from {0}.temp2".format(schemaName), dbName = dbName )[0][0]
         print(maxID)
         recursiveQuery(maxID)
 
@@ -352,7 +411,7 @@ def main(logger, resultsDict):
  
 
     oneHotDiagnosesQueryString          =   '''
-                                            create table {}.temp4 as(
+                                            create table {0}.temp4 as(
                                             '''.format(schemaName) + oneHotDiagnoses() + '''
                                             );
                                             '''
@@ -376,12 +435,9 @@ def main(logger, resultsDict):
     fullTableName = schemaName + "." + tableName
 
 
-    print(not checkTableExistence(schemaName, tableName))
-
-
     if not checkTableExistence(schemaName, tableName):
 
-        print('[preProcessDB] {}.{} not found. Generating now.'.format(schemaName, tableName))
+        print('[preProcessDB] {0}.{1} not found. Generating now.'.format(schemaName, tableName))
 
         print('[preProcessDB] Running queries. This might take a while ...')
 
@@ -412,7 +468,7 @@ def main(logger, resultsDict):
 
     else:
 
-        print('[preProcessDB] {}.{} found. Skipping generation'.format(schemaName, tableName))
+        print('[preProcessDB] {0}.{1} found. Skipping generation'.format(schemaName, tableName))
 
     genRetrieve = pgIO.getDataIterator("select * from " + fullTableName, 
                                         dbName = dbName, 
@@ -421,8 +477,8 @@ def main(logger, resultsDict):
     dbColumnQueryString =       '''
                                 SELECT column_name
                                 FROM information_schema.columns
-                                WHERE table_schema = '{}'
-                                AND table_name = '{}'
+                                WHERE table_schema = '{0}'
+                                AND table_name = '{1}'
                                 '''.format(schemaName, tableName)
 
     dbColumns = pgIO.getAllData(dbColumnQueryString, dbName = dbName)

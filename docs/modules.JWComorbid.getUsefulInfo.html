@@ -87,6 +87,8 @@
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="modules.JWComorbid.html">modules.JWComorbid package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="modules.JWComorbid.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.JWComorbid.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="modules.JWComorbid.html#module-modules.JWComorbid.JWComorbid">modules.JWComorbid.JWComorbid module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="modules.JWComorbid.html#module-modules.JWComorbid">Module contents</a></li>
 </ul>
 </li>
@@ -180,13 +182,14 @@
 </div>
 <div class="section" id="module-modules.JWComorbid.getUsefulInfo">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-modules.JWComorbid.getUsefulInfo" title="Permalink to this headline">¶</a></h2>
-<p>[one line description of the module]</p>
-<p>[this is a
-multiline description of what the module does.]</p>
+<p>Retrieves commonly used/useful data, such as but not limited to lists and metrics, from the master database table.</p>
+<p>Loads data from db.pickle, creates a dict and stores useful data along with the original database in it.
+Finally, saves the dict as data.pickle.</p>
+<p>The save location for these pickles are specified in the JSON, under inputs and outputs for db.pickle and data.pickle, respectively.</p>
 <div class="section" id="before-you-begin">
 <h3>Before you Begin<a class="headerlink" href="#before-you-begin" title="Permalink to this headline">¶</a></h3>
 <p>Make sure that the configuration files are properly set, as mentioned in the Specifcations
-section. Also, [add any other housekeeping that needs to be done before starting the module].</p>
+section.</p>
 </div>
 <div class="section" id="details-of-operation">
 <h3>Details of Operation<a class="headerlink" href="#details-of-operation" title="Permalink to this headline">¶</a></h3>

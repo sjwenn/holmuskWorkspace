@@ -13,11 +13,13 @@
         "dsmDiagnosesPath" : "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv",
         
         "schemaName" : "jingwen",
-        "tableName"  : "comorbid"
+        "tableName"  : "comorbid",
+
+        "rawSchemaName" : "rwe_version1_1"
     }, 
     "outputs" : {
-        "rawPath": "../data/intermediate/",
-    	"intermediatePath": "../data/intermediate/"
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/"
     },
     "params"  : {
         "useCacheFlag": 0

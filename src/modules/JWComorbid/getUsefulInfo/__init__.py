@@ -1,13 +1,15 @@
-'''[one line description of the module]
+'''Retrieves commonly used/useful data, such as but not limited to lists and metrics, from the master database table.
 
-[this is a 
-multiline description of what the module does.] 
+Loads data from db.pickle, creates a dict and stores useful data along with the original database in it.
+Finally, saves the dict as data.pickle.
+
+The save location for these pickles are specified in the JSON, under inputs and outputs for db.pickle and data.pickle, respectively.
 
 Before you Begin
 ================
 
 Make sure that the configuration files are properly set, as mentioned in the Specifcations 
-section. Also, [add any other housekeeping that needs to be done before starting the module]. 
+section.
 
 Details of Operation
 ====================
@@ -21,10 +23,7 @@ the module performs.
 Results
 =======
 
-[
-You want to describe the results of running this module. This would include instances of
-the database that the module updates, as well as any other files that the module creates. 
-]
+The expected output would be a pickle being created at "data/intermediate/data.pickle".
 
 Specifications:
 ===============
@@ -33,12 +32,6 @@ Specifications for running the module is described below. Note that all the json
 unless otherwise specified will be placed in the folder ``config`` in the main project
 folder.
 
-Specifications for the database:
---------------------------------
-
-[
-Note the tables within the various databases that will be affected by this module.
-]
 
 Specifications for ``modules.json``
 -----------------------------------
@@ -48,19 +41,10 @@ Make sure that the ``execute`` statement within the modules file is set to True.
 .. code-block:: python
     :emphasize-lines: 3
 
-    "moduleName" : "module1",
-    "path"       : "modules/module1/module1.py",
+    "moduleName" : "getUsefulInfo",
+    "path"       : "modules/JWComorbid/getUsefulInfo/getUsefulInfo.py",
     "execute"    : true,
     "description": "",
     "owner"      : ""
-
-
-Specification for [any other files]
------------------------------------
-
-[
-Make sure that you specify all the other files whose parameters will need to be
-changed. 
-]
 
 '''

@@ -2,19 +2,19 @@
     "inputs"  : {
         "dbName": "mindlincnew",
 
-        "rawPath": "../data/intermediate/",
-        "intermediatePath": "../data/intermediate/",
+        "rawPath"           : "../data/intermediate/",
+        "intermediatePath"  : "../data/intermediate/",
 
-        "raceFilterPath": "/home/jingwen/Downloads/Race_Filter.csv",
-        "settingFilterPath": "/home/jingwen/Downloads/Setting_Filter.csv",
+        "raceFilterPath"    : "/home/jingwen/Downloads/Race_Filter.csv",
+        "settingFilterPath" : "/home/jingwen/Downloads/Setting_Filter.csv",
 
-        "dsmSUDPath": "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
-        "dsmDiagnosesPath": "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv"
+        "dsmSUDPath"        : "/home/jingwen/Downloads/DSM Numbers - SUD Categories.csv",
+        "dsmDiagnosesPath"  : "/home/jingwen/Downloads/DSM Numbers - Diganoses.csv"
         
     }, 
     "outputs" : {
-        "rawPath": "../data/intermediate/",
-        "intermediatePath": "../data/intermediate/"
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/"
     },
     "params"  : {
         "useCacheFlag": 0

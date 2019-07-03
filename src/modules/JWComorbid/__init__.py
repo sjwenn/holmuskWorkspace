@@ -68,12 +68,6 @@ from figure1.py, don't sweat it. I don't think it affects the plotting of Figure
 limits the DPI. I'm not too sure how to fix it but it happens for some environments.
 
 
-Results
-=======
-
-The tables should be printed in stdout.
-In addition, Figure 1 should be saved to /manuscript/figure1.png
-
 Specifications:
 ===============
 
@@ -130,5 +124,12 @@ For example:
 	"owner"      : ""
 	
 There are a bunch like the above; one for every module in JWComorbid. Set those to "true" too.
+
+
+Results
+=======
+
+The tables should be printed in stdout.
+In addition, Figure 1 should be saved to /manuscript/figure1.png
 
 '''

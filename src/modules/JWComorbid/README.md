@@ -1,7 +1,5 @@
 # JWComobid Collection of Modules
 
-### Hello! This is the JWComorbid collection of modules. 
-
 > **TL;DR** 
 To activate me, modify `/config/modules.json` by making ```"execute": true``` in my module.
 i.e.
@@ -17,7 +15,9 @@ i.e.
 >A "run all" override can be found in `/config/modules/JWComorbid/JWComorbid.json`.
 It will cause the module loader to ignore whatever is in `/config/modules/JWComorbid/modules.json` and run everything.
 
-These modules are created to replicate a study titled 
+### Hello! This is the JWComorbid collection of modules. 
+
+They are created to replicate a study titled 
 "Comorbid substance use disorders with other Axis I and II mental disorders
 among treatment-seeking Asian Americans, Native Hawaiians/Pacific Islanders, and mixed-race people".
 

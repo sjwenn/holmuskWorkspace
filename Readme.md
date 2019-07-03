@@ -1,12 +1,6 @@
 # Comorbid Substance Use Disorders 
 
-A replication of a [study done in 2013](https://www.sciencedirect.com/science/article/abs/pii/S0022395613002732?via%3Dihub), however using data currently in the MindLinc database.
-
-| Tables        | Are           | Cool  |
-| ------------- |:-------------:| -----:|
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      | centered      |   $12 
-| zebra stripes | are neat      |    $1 |
+A replication of a [study done in 2013](https://www.sciencedirect.com/science/article/abs/pii/S0022395613002732?via%3Dihub), using data currently in the MindLinc database.
 
 ## Getting Started
 

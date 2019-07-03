@@ -1,5 +1,4 @@
 # JWComobid Collection of Modules
-__________
 
 Hello! This is the JWComorbid collection of modules. 
 
@@ -18,14 +17,12 @@ Each module falls into one of these layers:
 
 
 ## Fetch and Preprocess Layer
-------
 ### preprocessDB.py
 
 Runs SQL commands to work with database tables to generate a master table which has all needed information. 
 Table will then be fetched and saved as data/intermediate/db.pickle .
 
 ## Data Extraction Layer
-------
 ### getUsefulInfo.py
 
 Retrieves useful/commonly used information such as metrics and category lists from the master table.
@@ -34,7 +31,6 @@ Data will then be saved in 	data/intermediate/data.pickle .
 
 
 ## Results Layer
-------
 ### table1.py
 
 Generates Table 1, which is the overview of characteristics with respect to each race.

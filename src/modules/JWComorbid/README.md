@@ -11,7 +11,8 @@ i.e.
 "owner" : ""
 ```
 >To toggle individual modules, modify `/config/modules/JWComorbid/modules.json`.
-A "run all" override can be found in `/config/modules/JWComorbid/JWComorbid.json`.
+
+>A "run all" override can be found in `/config/modules/JWComorbid/JWComorbid.json`.
 It will ignore whatever is in `/config/modules/JWComorbid/modules.json` and run everything.
 
 ### Hello! This is the JWComorbid collection of modules. 

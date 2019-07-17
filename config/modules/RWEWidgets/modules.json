@@ -1,0 +1,9 @@
+[
+    {
+        "moduleName" : "widgets",
+        "path"       : "modules/RWEWidgets/comorbid.py",
+        "execute"    : true,
+        "description": "",
+        "owner"      : ""
+    }
+]

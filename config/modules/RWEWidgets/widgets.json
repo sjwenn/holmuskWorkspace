@@ -1,0 +1,16 @@
+{
+    "inputs"  : {
+    	"dbName": "mindlincnew",
+
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/",
+
+        "rawSchemaName" : "rwe_version1_1"
+    }, 
+    "outputs" : {
+        "rawPath"          : "../data/intermediate/",
+        "intermediatePath" : "../data/intermediate/"
+    },
+    "params"  : {
+    }
+}
